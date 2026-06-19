@@ -1,6 +1,6 @@
 # WPFastr
 
-WPFastr provides a cross-platform observable collection that incrementally updates through a consumer-supplied UI dispatcher. Framework-specific dispatcher integrations live in separate packages.
+WPFastr provides cross-platform atomic and incremental item-source updates through a consumer-supplied UI dispatcher. Framework-specific dispatcher integrations live in separate packages.
 
 Both packages retain the .NET 6 compatibility floor:
 
@@ -30,6 +30,27 @@ WPF applications can install the Windows package, which brings in the matching c
 ```powershell
 dotnet add package Olivercode.WPFastr.Windows --version VERSION --source github
 ```
+
+## Atomic visible-items swaps
+
+`BufferedItemsSource<T>` materializes the next snapshot, then replaces its `VisibleItems` property in one dispatched assignment. Bind through that property:
+
+```xml
+<ItemsControl ItemsSource="{Binding MyItems.VisibleItems}" />
+```
+
+```csharp
+using Olicode.WPFastr.Collections;
+
+public BufferedItemsSource<FileItem> MyItems { get; }
+
+MyItems = new BufferedItemsSource<FileItem>(dispatcherService);
+
+var version = MyItems.BeginUpdate();
+await MyItems.ReplaceRangeAsync(newItems, version);
+```
+
+`BufferedItemsSource<T>` implements `IBufferedItemsSource` and `INotifyPropertyChanged`. It contains no control or framework dependency: WPF, Avalonia, and MAUI bindings all observe the same `VisibleItems` property change.
 
 ## Dispatcher observable collections
 
