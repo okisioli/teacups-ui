@@ -3,7 +3,7 @@ using Olicode.WPFastr.Threading;
 
 namespace Olicode.WPFastr.Collections;
 
-public class DispatcherObservableCollection<T> : ObservableCollection<T>, INotifyCollectionReplacement
+public class DispatcherObservableCollection<T> : ObservableCollection<T>
 {
     private readonly IDispatcherService dispatcherService;
     private long currentUpdateVersion;
@@ -21,8 +21,6 @@ public class DispatcherObservableCollection<T> : ObservableCollection<T>, INotif
         BatchSize = batchSize;
         DispatchPriority = dispatchPriority;
     }
-
-    public event EventHandler? ReplacementStarting;
 
     public event EventHandler? IsBusyChanged;
 
@@ -71,7 +69,6 @@ public class DispatcherObservableCollection<T> : ObservableCollection<T>, INotif
     {
         using var busyScope = BeginBusyScope();
 
-        ReplacementStarting?.Invoke(this, EventArgs.Empty);
         var materializedItems = newItems.ToList();
         var oldItemCount = await GetCountAsync(updateVersion);
 
