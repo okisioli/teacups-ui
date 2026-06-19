@@ -8,11 +8,11 @@ public sealed class BufferedBrowserViewModel : BrowserViewModelBase
 {
     public BufferedBrowserViewModel(Dispatcher dispatcher)
     {
-        CurrentFiles = new DispatcherObservableCollection<FileItem>(
+        CurrentFiles = new BufferedItemsSource<FileItem>(
             new WpfDispatcherService(dispatcher));
     }
 
-    public DispatcherObservableCollection<FileItem> CurrentFiles { get; }
+    public BufferedItemsSource<FileItem> CurrentFiles { get; }
 
     protected override async Task ReplaceFilesAsync(IReadOnlyList<FileItem> files, long updateVersion)
     {

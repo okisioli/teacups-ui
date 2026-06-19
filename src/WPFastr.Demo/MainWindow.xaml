@@ -100,7 +100,7 @@
         <TabControl Background="#F5F7FA"
                     BorderThickness="0"
                     Padding="0">
-            <TabItem Header="WPFastr DispatcherObservableCollection"
+            <TabItem Header="WPFastr Atomic BufferedItemsSource"
                      DataContext="{Binding BufferedBrowser}">
                 <Grid Background="#F5F7FA">
                     <Grid.ColumnDefinitions>
@@ -141,7 +141,7 @@
                             </Grid>
                         </Border>
 
-                        <ListBox ItemsSource="{Binding CurrentFiles}"
+                        <ListBox ItemsSource="{Binding CurrentFiles.VisibleItems}"
                                  behaviors:ItemsControlScroll.ResetOnItemsReset="True"
                                  Background="Transparent"
                                  BorderThickness="0"
