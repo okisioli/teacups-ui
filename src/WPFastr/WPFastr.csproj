@@ -9,7 +9,7 @@
     <Version>1.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Oliver</Authors>
-    <Description>Cross-platform dispatcher collections and buffered items control abstractions.</Description>
+    <Description>Cross-platform observable collections with dispatcher-aware incremental updates.</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/oli-g-sk/Olivercode.WPFastr</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>

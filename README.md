@@ -1,11 +1,11 @@
 # WPFastr
 
-WPFastr provides cross-platform collection helpers for incrementally replacing large item sets without blocking a UI thread. Framework-specific UI integration lives in separate adapter packages.
+WPFastr provides a cross-platform observable collection that incrementally updates through a consumer-supplied UI dispatcher. Framework-specific dispatcher integrations live in separate packages.
 
 Both packages retain the .NET 6 compatibility floor:
 
 - `Olivercode.WPFastr` targets `net6.0` and contains no WPF dependency.
-- `Olivercode.WPFastr.Windows` targets `net6.0-windows`, references the core package, and provides WPF adapters and attached behaviors.
+- `Olivercode.WPFastr.Windows` targets `net6.0-windows`, references the core package, and provides WPF integration.
 
 ## Install
 
@@ -25,24 +25,42 @@ Install the core package in platform-neutral projects:
 dotnet add package Olivercode.WPFastr --version VERSION --source github
 ```
 
-Install the Windows package in WPF projects. It brings in the matching core dependency:
+WPF applications can install the Windows package, which brings in the matching core dependency:
 
 ```powershell
 dotnet add package Olivercode.WPFastr.Windows --version VERSION --source github
 ```
 
-## Dispatcher collections
+## Dispatcher observable collections
 
-`DispatcherCollection<T>` is available on every .NET 6 platform. The consumer supplies an `IDispatcherService`, allowing each UI framework to map the cross-platform `DispatchPriority` values to its own dispatcher:
+`DispatcherObservableCollection<T>` is a normal `ObservableCollection<T>`, so WPF, Avalonia, MAUI, and other frameworks can bind to it directly:
+
+```xml
+<ItemsControl ItemsSource="{Binding MyItems}" />
+```
+
+The view model supplies the appropriate framework dispatcher:
 
 ```csharp
 using Olicode.WPFastr.Collections;
-using Olicode.WPFastr.Threading;
 
-var files = new DispatcherCollection<FileItem>(dispatcherService);
-var version = files.BeginUpdate();
-await files.ReplaceRangeAsync(newFiles, version);
+public DispatcherObservableCollection<FileItem> MyItems { get; }
+
+MyItems = new DispatcherObservableCollection<FileItem>(
+    dispatcherService,
+    batchSize: 16);
+
+var version = MyItems.BeginUpdate();
+await MyItems.ReplaceRangeAsync(newItems, version);
 ```
+
+Each dispatcher callback processes at most `BatchSize` changes. Control then returns to the framework dispatcher before the next batch, keeping the UI responsive. The default batch size is `1`, which preserves maximum yielding; larger values trade some responsiveness for throughput.
+
+Calling `BeginUpdate()` invalidates older update versions. In-flight operations check their version between and within dispatched batches, allowing stale replacements to stop without applying the remaining items.
+
+## Dispatcher services
+
+Core only defines `IDispatcherService` and the framework-neutral `DispatchPriority` enum. Applications or framework packages supply the implementation.
 
 The Windows package includes `WpfDispatcherService`:
 
@@ -52,51 +70,15 @@ using Olicode.WPFastr.Windows.Threading;
 var dispatcherService = new WpfDispatcherService(Application.Current.Dispatcher);
 ```
 
-Avalonia, MAUI, and other consumers can implement `IDispatcherService` without referencing WPF.
-
-## ItemsControl abstraction
-
-The core package contains `BufferedItemsController`, which owns the collection buffering algorithm. It depends only on `IItemsControlAdapter` and `IDispatcherService`:
-
-```csharp
-using Olicode.WPFastr.Controls;
-
-var controller = new BufferedItemsController(itemsControlAdapter, dispatcherService);
-controller.SetSource(source);
-```
-
-A framework adapter only needs to expose its control's item source:
-
-```csharp
-public sealed class FrameworkItemsControlAdapter : IItemsControlAdapter
-{
-    private readonly FrameworkItemsControl control;
-
-    public IEnumerable? ItemsSource
-    {
-        get => control.ItemsSource;
-        set => control.ItemsSource = value;
-    }
-}
-```
-
-Call `Detach()` when the native control unloads and `SetSource(...)` when it reloads. The Windows package handles this lifecycle automatically for WPF.
-
-## WPF buffered items
-
-Bind `BufferedItems.Source` instead of `ItemsSource`. The behavior works with `ListBox`, `ListView`, or any other WPF `ItemsControl`:
-
-```xml
-<Window xmlns:behaviors="clr-namespace:Olicode.WPFastr.Windows.Behaviors;assembly=Olicode.WPFastr.Windows">
-    <ListBox behaviors:BufferedItems.Source="{Binding Files}" />
-</Window>
-```
+A future Avalonia package only needs to provide an `AvaloniaDispatcherService` that maps `DispatchPriority` to Avalonia's dispatcher.
 
 ## WPF scroll reset
 
-Scroll position is preserved by default. Opt in to returning to the top when the source is replaced or reset:
+`ItemsControlScroll` remains a WPF-only behavior. Scroll position is preserved by default; opt in to returning to the top when the source is reset:
 
 ```xml
-<ListBox ItemsSource="{Binding Files}"
-         behaviors:ItemsControlScroll.ResetOnItemsReset="True" />
+<Window xmlns:behaviors="clr-namespace:Olicode.WPFastr.Windows.Behaviors;assembly=Olicode.WPFastr.Windows">
+    <ListBox ItemsSource="{Binding MyItems}"
+             behaviors:ItemsControlScroll.ResetOnItemsReset="True" />
+</Window>
 ```
