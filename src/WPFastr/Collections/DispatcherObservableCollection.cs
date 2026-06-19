@@ -3,23 +3,32 @@ using Olicode.WPFastr.Threading;
 
 namespace Olicode.WPFastr.Collections;
 
-// TODO move to a standalone library
-// TODO allow adjusting of priority
-// TODO allow setting "batch size" for add & clear operations
-public class DispatcherCollection<T> : ObservableCollection<T>, INotifyCollectionReplacement
+public class DispatcherObservableCollection<T> : ObservableCollection<T>, INotifyCollectionReplacement
 {
     private readonly IDispatcherService dispatcherService;
     private long currentUpdateVersion;
     private int busyOperationCount;
 
-    public DispatcherCollection(IDispatcherService dispatcherService)
+    public DispatcherObservableCollection(
+        IDispatcherService dispatcherService,
+        int batchSize = 1,
+        DispatchPriority dispatchPriority = DispatchPriority.Background)
     {
+        if (batchSize < 1)
+            throw new ArgumentOutOfRangeException(nameof(batchSize), "Batch size must be at least one.");
+
         this.dispatcherService = dispatcherService;
+        BatchSize = batchSize;
+        DispatchPriority = dispatchPriority;
     }
 
     public event EventHandler? ReplacementStarting;
-    
+
     public event EventHandler? IsBusyChanged;
+
+    public int BatchSize { get; }
+
+    public DispatchPriority DispatchPriority { get; }
 
     public bool IsBusy => Volatile.Read(ref busyOperationCount) > 0;
 
@@ -38,15 +47,23 @@ public class DispatcherCollection<T> : ObservableCollection<T>, INotifyCollectio
         using var busyScope = BeginBusyScope();
         using var enumerator = newItems.GetEnumerator();
 
-        while (IsCurrent(updateVersion) && enumerator.MoveNext())
+        while (IsCurrent(updateVersion))
         {
-            var item = enumerator.Current;
-            
+            var batch = TakeBatch(enumerator);
+
+            if (batch.Count == 0)
+                return;
+
             await dispatcherService.InvokeAsync(() =>
             {
-                if (IsCurrent(updateVersion))
+                foreach (var item in batch)
+                {
+                    if (!IsCurrent(updateVersion))
+                        return;
+
                     Add(item);
-            }, DispatchPriority.Background);
+                }
+            }, DispatchPriority);
         }
     }
 
@@ -67,7 +84,7 @@ public class DispatcherCollection<T> : ObservableCollection<T>, INotifyCollectio
             return;
         }
 
-        await RemoveFirstItemAsync(updateVersion);
+        await RemoveFirstItemsAsync(updateVersion, 1);
         oldItemCount--;
 
         var clearTask = RemoveFirstItemsAsync(updateVersion, oldItemCount);
@@ -78,23 +95,17 @@ public class DispatcherCollection<T> : ObservableCollection<T>, INotifyCollectio
     public async Task ClearAsync(long updateVersion)
     {
         using var busyScope = BeginBusyScope();
+        await RemoveFirstItemsAsync(updateVersion, int.MaxValue);
+    }
 
-        while (IsCurrent(updateVersion))
-        {
-            var removedItem = false;
+    private List<T> TakeBatch(IEnumerator<T> enumerator)
+    {
+        var batch = new List<T>(BatchSize);
 
-            await dispatcherService.InvokeAsync(() =>
-            {
-                if (!IsCurrent(updateVersion) || Count == 0)
-                    return;
+        while (batch.Count < BatchSize && enumerator.MoveNext())
+            batch.Add(enumerator.Current);
 
-                RemoveAt(0);
-                removedItem = true;
-            }, DispatchPriority.Background);
-
-            if (!removedItem)
-                break;
-        }
+        return batch;
     }
 
     private async Task<int> GetCountAsync(long updateVersion)
@@ -105,24 +116,36 @@ public class DispatcherCollection<T> : ObservableCollection<T>, INotifyCollectio
         {
             if (IsCurrent(updateVersion))
                 count = Count;
-        }, DispatchPriority.Background);
+        }, DispatchPriority);
 
         return count;
     }
 
     private async Task RemoveFirstItemsAsync(long updateVersion, int count)
     {
-        for (var i = 0; IsCurrent(updateVersion) && i < count; i++)
-            await RemoveFirstItemAsync(updateVersion);
-    }
+        var remaining = count;
 
-    private async Task RemoveFirstItemAsync(long updateVersion)
-    {
-        await dispatcherService.InvokeAsync(() =>
+        while (IsCurrent(updateVersion) && remaining > 0)
         {
-            if (IsCurrent(updateVersion) && Count > 0)
-                RemoveAt(0);
-        }, DispatchPriority.Background);
+            var removedCount = 0;
+
+            await dispatcherService.InvokeAsync(() =>
+            {
+                while (IsCurrent(updateVersion) &&
+                       removedCount < BatchSize &&
+                       removedCount < remaining &&
+                       Count > 0)
+                {
+                    RemoveAt(0);
+                    removedCount++;
+                }
+            }, DispatchPriority);
+
+            if (removedCount == 0)
+                return;
+
+            remaining -= removedCount;
+        }
     }
 
     private IDisposable BeginBusyScope()
@@ -141,10 +164,10 @@ public class DispatcherCollection<T> : ObservableCollection<T>, INotifyCollectio
 
     private sealed class BusyScope : IDisposable
     {
-        private readonly DispatcherCollection<T> collection;
+        private readonly DispatcherObservableCollection<T> collection;
         private bool disposed;
 
-        public BusyScope(DispatcherCollection<T> collection)
+        public BusyScope(DispatcherObservableCollection<T> collection)
         {
             this.collection = collection;
         }
