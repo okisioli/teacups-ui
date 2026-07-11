@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Teacups.UI.Core\Teacups.UI.Core.csproj" />
+      <ProjectReference Include="..\\Teacups.UI.Core\\Teacups.UI.Core.csproj" />
     </ItemGroup>
 
 </Project>
