@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="src/Teacups.UI.Core/Teacups.UI.Core.csproj" />
+  <Project Path="Teacups.UI.Core.WPF/Teacups.UI.Core.WPF.csproj" />
 </Solution>
