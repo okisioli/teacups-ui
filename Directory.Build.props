@@ -9,4 +9,16 @@
     <BaseOutputPath>$(MSBuildThisFileDirectory)build\bin\$(MSBuildProjectName)\</BaseOutputPath>
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)build\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>$(AssemblyName)</PackageId>
+
+    <Authors>Okisioli</Authors>
+    <Company>Teacups</Company>
+
+    <RepositoryUrl>https://github.com/oli-g-sk/teacups-ui</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
 </Project>
