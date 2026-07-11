@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+      <AssemblyName>Teacups.UI.Core</AssemblyName>
+      <RootNamespace>Teacups.UI.Core</RootNamespace>
     </PropertyGroup>
 
 </Project>
