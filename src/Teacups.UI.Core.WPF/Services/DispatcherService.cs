@@ -6,7 +6,7 @@ namespace Teacups.UI.Core.WPF.Services;
 
 public class DispatcherService(Dispatcher dispatcher) : IDispatcherService
 {
-    public Task InvokeAsync(Action action, IDispatcherService.DispatcherPriority priority = IDispatcherService.DispatcherPriority.Normal)
+    public Task InvokeAsync(Action action, Priority priority = Priority.Normal)
     {
         if (dispatcher.CheckAccess())
         {
