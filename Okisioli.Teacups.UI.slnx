@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Okisioli.Teacups.UI.Core/Okisioli.Teacups.UI.Core.csproj" />
+  <Project Path="src/Okisioli.Teacups.UI.Core.WPF/Okisioli.Teacups.UI.Core.WPF.csproj" />
+</Solution>

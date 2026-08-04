@@ -14,7 +14,7 @@
     <PackageId>$(AssemblyName)</PackageId>
 
     <Authors>Okisioli</Authors>
-    <Company>Teacups</Company>
+    <Company>Okisioli</Company>
 
     <RepositoryUrl>https://github.com/oli-g-sk/teacups-ui</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

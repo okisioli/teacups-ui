@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <AssemblyName>Teacups.UI.Core</AssemblyName>
-      <RootNamespace>Teacups.UI.Core</RootNamespace>
+      <AssemblyName>Okisioli.Teacups.UI.Core</AssemblyName>
+      <RootNamespace>Okisioli.Teacups.UI.Core</RootNamespace>
       <PackageVersion>0.1.0</PackageVersion>
       <PackageDescription>
-        Base library providing abstractions for every other UI-related component in the Teacup utils family.
+        Base library providing abstractions for every other UI-related component in the Okisioli.Teacups family.
         Contains interfaces to be implemented in a framework-specific way (WPF, Avalonia), abstracting away their specifics.
       </PackageDescription>
     </PropertyGroup>

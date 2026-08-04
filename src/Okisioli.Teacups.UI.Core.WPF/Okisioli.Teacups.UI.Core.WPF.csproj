@@ -7,10 +7,12 @@
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Version>0.1.0</Version>
+        <AssemblyName>Okisioli.Teacups.UI.Core.WPF</AssemblyName>
+        <RootNamespace>Okisioli.Teacups.UI.Core.WPF</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\\Teacups.UI.Core\\Teacups.UI.Core.csproj" />
+      <ProjectReference Include="..\\Okisioli.Teacups.UI.Core\\Okisioli.Teacups.UI.Core.csproj" />
     </ItemGroup>
 
 </Project>
