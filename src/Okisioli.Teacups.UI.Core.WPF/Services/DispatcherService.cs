@@ -1,8 +1,8 @@
 using System.Windows.Threading;
-using Teacups.UI.Core.Services;
-using Priority = Teacups.UI.Core.Services.IDispatcherService.DispatcherPriority;
+using Okisioli.Teacups.UI.Core.Services;
+using Priority = Okisioli.Teacups.UI.Core.Services.IDispatcherService.DispatcherPriority;
 
-namespace Teacups.UI.Core.WPF.Services;
+namespace Okisioli.Teacups.UI.Core.WPF.Services;
 
 public class DispatcherService(Dispatcher dispatcher) : IDispatcherService
 {
