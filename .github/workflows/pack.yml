@@ -1,4 +1,4 @@
-name: Publish NuGet
+name: Publish to NuGet.org
 
 on:
   workflow_dispatch:
@@ -7,10 +7,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - uses: actions/checkout@v4
 
@@ -18,11 +14,20 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - run: dotnet restore
-      - run: dotnet build --no-restore -c Release
-      - run: dotnet pack --no-build -c Release -o out
-      - run: >
-          dotnet nuget push out/*.nupkg
-          --api-key ${{ secrets.GITHUB_TOKEN }}
-          --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
-          --skip-duplicate
+      - run: dotnet restore Okisioli.Teacups.UI.slnx
+      - run: dotnet build Okisioli.Teacups.UI.slnx --no-restore -c Release
+      - run: dotnet pack Okisioli.Teacups.UI.slnx --no-build -c Release -o out
+      - name: Publish to NuGet.org
+        shell: bash
+        run: |
+          shopt -s nullglob
+          packages=(out/*.nupkg)
+          if (( ${#packages[@]} == 0 )); then
+            echo "No packages were produced."
+            exit 1
+          fi
+          for package in "${packages[@]}"; do
+            dotnet nuget push "$package" \
+              --source "https://api.nuget.org/v3/index.json" \
+              --api-key "${{ secrets.NUGET_API_KEY }}"
+          done
