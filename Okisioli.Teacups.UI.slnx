@@ -1,4 +1,5 @@
 <Solution>
-  <Project Path="src/Okisioli.Teacups.UI.Core/Okisioli.Teacups.UI.Core.csproj" />
-  <Project Path="src/Okisioli.Teacups.UI.Core.WPF/Okisioli.Teacups.UI.Core.WPF.csproj" />
+  <Project Path="src/Okisioli.Teacups.UI/Okisioli.Teacups.UI.csproj" />
+  <Project Path="src/Okisioli.Teacups.UI.WPF/Okisioli.Teacups.UI.WPF.csproj" />
+  <Project Path="src/Okisioli.Teacups.UI.Behaviors.WPF/Okisioli.Teacups.UI.Behaviors.WPF.csproj" />
 </Solution>
