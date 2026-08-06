@@ -7,13 +7,13 @@
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Version>0.2.0</Version>
-        <AssemblyName>Okisioli.Teacups.UI.WPF</AssemblyName>
-        <RootNamespace>Okisioli.Teacups.UI.WPF</RootNamespace>
+        <AssemblyName>Okisioli.Teacups.UI.Core.WPF</AssemblyName>
+        <RootNamespace>Okisioli.Teacups.UI.Core.WPF</RootNamespace>
         <PackageDescription>WPF implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\\Okisioli.Teacups.UI\\Okisioli.Teacups.UI.csproj" />
+      <ProjectReference Include="..\\Okisioli.Teacups.UI.Core\\Okisioli.Teacups.UI.Core.csproj" />
     </ItemGroup>
 
 </Project>

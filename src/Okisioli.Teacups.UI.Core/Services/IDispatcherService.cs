@@ -1,4 +1,4 @@
-namespace Okisioli.Teacups.UI.Services;
+namespace Okisioli.Teacups.UI.Core.Services;
 
 public interface IDispatcherService
 {
