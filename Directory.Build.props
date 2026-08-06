@@ -6,8 +6,8 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
-    <BaseOutputPath>$(MSBuildThisFileDirectory)build\bin\$(MSBuildProjectName)\</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)build\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)build</ArtifactsPath>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)publish</PackageOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
