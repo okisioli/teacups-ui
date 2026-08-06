@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 
-namespace Okisioli.Teacups.Controls.Avalonia;
+namespace Okisioli.Teacups.UI.Controls.Avalonia;
 
 /// <summary>
 /// Produces the geometry for the circular progress track.

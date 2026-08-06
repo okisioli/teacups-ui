@@ -10,6 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
-    <ProjectReference Include="..\Okisioli.Teacups.Controls.Avalonia\Okisioli.Teacups.Controls.Avalonia.csproj" />
+    <ProjectReference Include="..\Okisioli.Teacups.UI.Controls.Avalonia\Okisioli.Teacups.UI.Controls.Avalonia.csproj" />
   </ItemGroup>
 </Project>

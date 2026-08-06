@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>Okisioli.Teacups.Controls.Avalonia</PackageId>
-    <Version>0.1.0</Version>
+    <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
+    <Version>0.3.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>

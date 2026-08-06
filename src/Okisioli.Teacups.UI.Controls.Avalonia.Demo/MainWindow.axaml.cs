@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Okisioli.Teacups.Controls.Avalonia.Demo;
+namespace Okisioli.Teacups.UI.Controls.Avalonia.Demo;
 
 public partial class MainWindow : Window
 {
