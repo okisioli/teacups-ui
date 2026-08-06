@@ -1,4 +1,4 @@
-# Okisioli.Teacups.Controls.Avalonia
+# Okisioli.Teacups.UI.Controls.Avalonia
 
 Reusable Avalonia control styles.
 
@@ -7,13 +7,13 @@ Reusable Avalonia control styles.
 Import the style dictionary in your application resources:
 
 ```xml
-<StyleInclude Source="avares://Okisioli.Teacups.Controls.Avalonia/Themes/CircularProgressBar.axaml" />
+<StyleInclude Source="avares://Okisioli.Teacups.UI.Controls.Avalonia/Themes/CircularProgressBar.axaml" />
 ```
 
 Then apply the `circular` class to an ordinary `ProgressBar`. The ring uses `Foreground` for the filled part and `Background` for the empty part.
 
 ```xml
-<ProgressBar xmlns:local="clr-namespace:Okisioli.Teacups.Controls.Avalonia;assembly=Okisioli.Teacups.Controls.Avalonia"
+<ProgressBar xmlns:local="clr-namespace:Okisioli.Teacups.UI.Controls.Avalonia;assembly=Okisioli.Teacups.UI.Controls.Avalonia"
              Classes="circular"
              Width="160"
              Height="160"

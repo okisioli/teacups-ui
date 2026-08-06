@@ -1,6 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:Okisioli.Teacups.Controls.Avalonia;assembly=Okisioli.Teacups.Controls.Avalonia">
+        xmlns:local="clr-namespace:Okisioli.Teacups.UI.Controls.Avalonia;assembly=Okisioli.Teacups.UI.Controls.Avalonia">
   <Styles.Resources>
     <local:CircularProgressTrackGeometryConverter x:Key="CircularProgressTrackGeometryConverter" />
     <local:CircularProgressValueGeometryConverter x:Key="CircularProgressValueGeometryConverter" />

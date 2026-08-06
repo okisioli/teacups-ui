@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 
-namespace Okisioli.Teacups.Controls.Avalonia;
+namespace Okisioli.Teacups.UI.Controls.Avalonia;
 
 /// <summary>
 /// Provides configuration properties for the circular <see cref="ProgressBar"/> style.
