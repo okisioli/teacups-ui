@@ -4,9 +4,9 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.1.0</Version>
-        <AssemblyName>Okisioli.Teacups.UI.Avalonia</AssemblyName>
-        <RootNamespace>Okisioli.Teacups.UI.Avalonia</RootNamespace>
+        <Version>0.2.0</Version>
+        <AssemblyName>Okisioli.Teacups.UI.Core.Avalonia</AssemblyName>
+        <RootNamespace>Okisioli.Teacups.UI.Core.Avalonia</RootNamespace>
         <PackageDescription>Avalonia implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>
     </PropertyGroup>
 

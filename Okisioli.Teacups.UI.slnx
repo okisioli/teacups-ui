@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="src/Okisioli.Teacups.UI/Okisioli.Teacups.UI.csproj" />
   <Project Path="src/Okisioli.Teacups.UI.WPF/Okisioli.Teacups.UI.WPF.csproj" />
-  <Project Path="src/Okisioli.Teacups.UI.Avalonia/Okisioli.Teacups.UI.Avalonia.csproj" />
+  <Project Path="src/Okisioli.Teacups.UI.Core.Avalonia/Okisioli.Teacups.UI.Core.Avalonia.csproj" />
   <Project Path="src/Okisioli.Teacups.UI.Behaviors.WPF/Okisioli.Teacups.UI.Behaviors.WPF.csproj" />
 </Solution>

@@ -2,7 +2,7 @@ using Avalonia.Threading;
 using Okisioli.Teacups.UI.Services;
 using Priority = Okisioli.Teacups.UI.Services.IDispatcherService.DispatcherPriority;
 
-namespace Okisioli.Teacups.UI.Avalonia.Services;
+namespace Okisioli.Teacups.UI.Core.Avalonia.Services;
 
 public class DispatcherService(Dispatcher dispatcher) : IDispatcherService
 {
