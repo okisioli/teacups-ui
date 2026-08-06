@@ -3,6 +3,6 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <!-- Add your PackageVersion items here -->
+    <PackageVersion Include="Avalonia" Version="12.1.0" />
   </ItemGroup>
 </Project>
