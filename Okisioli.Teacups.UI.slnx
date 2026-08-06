@@ -4,4 +4,6 @@
   <Project Path="src/Okisioli.Teacups.UI.Core.Avalonia/Okisioli.Teacups.UI.Core.Avalonia.csproj" />
   <Project Path="src/Okisioli.Teacups.UI.Behaviors.WPF/Okisioli.Teacups.UI.Behaviors.WPF.csproj" />
   <Project Path="src/Okisioli.Teacups.UI.Behaviors.Avalonia/Okisioli.Teacups.UI.Behaviors.Avalonia.csproj" />
+  <Project Path="src/Okisioli.Teacups.Controls.Avalonia/Okisioli.Teacups.Controls.Avalonia.csproj" />
+  <Project Path="src/Okisioli.Teacups.Controls.Avalonia.Demo/Okisioli.Teacups.Controls.Avalonia.Demo.csproj" />
 </Solution>

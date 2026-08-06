@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Okisioli.Teacups.Controls.Avalonia;assembly=Okisioli.Teacups.Controls.Avalonia"
+        x:Class="Okisioli.Teacups.Controls.Avalonia.Demo.MainWindow"
+        Width="760"
+        Height="500"
+        MinWidth="620"
+        MinHeight="420"
+        Title="Circular ProgressBar demo">
+  <Grid Margin="36" ColumnDefinitions="280,*" ColumnSpacing="44">
+    <Border Grid.Column="0"
+            Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+            CornerRadius="16"
+            Padding="28">
+      <StackPanel HorizontalAlignment="Center" Spacing="18">
+        <ProgressBar x:Name="DemoProgress"
+                     Classes="circular"
+                     Width="190"
+                     Height="190"
+                     Minimum="0"
+                     Maximum="100"
+                     Value="64"
+                     Background="#323946"
+                     Foreground="#4FD1C5"
+                     local:CircularProgress.RingThickness="14" />
+        <TextBlock HorizontalAlignment="Center"
+                   FontSize="20"
+                   FontWeight="SemiBold"
+                   Text="{Binding #DemoProgress.Value, StringFormat={}{0:0}% complete}" />
+      </StackPanel>
+    </Border>
+
+    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="16">
+      <TextBlock FontSize="28" FontWeight="SemiBold" Text="Circular ProgressBar" />
+      <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                 TextWrapping="Wrap"
+                 Text="This is an ordinary ProgressBar using the circular style from the controls package." />
+
+      <TextBlock Margin="0,12,0,0" Text="Progress" />
+      <Slider Minimum="0"
+              Maximum="100"
+              Value="{Binding #DemoProgress.Value, Mode=TwoWay}" />
+
+      <TextBlock Text="Ring thickness" />
+      <Slider Minimum="1"
+              Maximum="40"
+              Value="{Binding #DemoProgress.(local:CircularProgress.RingThickness), Mode=TwoWay}" />
+
+      <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                 TextWrapping="Wrap"
+                 Text="Foreground is the filled arc; Background is the remaining ring." />
+    </StackPanel>
+  </Grid>
+</Window>
