@@ -1,0 +1,40 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Okisioli.Teacups.Controls.Avalonia;assembly=Okisioli.Teacups.Controls.Avalonia">
+  <Styles.Resources>
+    <local:CircularProgressTrackGeometryConverter x:Key="CircularProgressTrackGeometryConverter" />
+    <local:CircularProgressValueGeometryConverter x:Key="CircularProgressValueGeometryConverter" />
+  </Styles.Resources>
+
+  <Style Selector="ProgressBar.circular">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Path Stroke="{TemplateBinding Background}"
+                StrokeThickness="{Binding Path=(local:CircularProgress.RingThickness), RelativeSource={RelativeSource TemplatedParent}}">
+            <Path.Data>
+              <MultiBinding Converter="{StaticResource CircularProgressTrackGeometryConverter}">
+                <Binding Path="Bounds" RelativeSource="{RelativeSource TemplatedParent}" />
+                <Binding Path="(local:CircularProgress.RingThickness)" RelativeSource="{RelativeSource TemplatedParent}" />
+              </MultiBinding>
+            </Path.Data>
+          </Path>
+          <Border x:Name="PART_Indicator">
+            <Path Stroke="{TemplateBinding Foreground}"
+                  StrokeThickness="{Binding Path=(local:CircularProgress.RingThickness), RelativeSource={RelativeSource TemplatedParent}}">
+              <Path.Data>
+                <MultiBinding Converter="{StaticResource CircularProgressValueGeometryConverter}">
+                  <Binding Path="Bounds" RelativeSource="{RelativeSource TemplatedParent}" />
+                  <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" />
+                  <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}" />
+                  <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}" />
+                  <Binding Path="(local:CircularProgress.RingThickness)" RelativeSource="{RelativeSource TemplatedParent}" />
+                </MultiBinding>
+              </Path.Data>
+            </Path>
+          </Border>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+</Styles>
