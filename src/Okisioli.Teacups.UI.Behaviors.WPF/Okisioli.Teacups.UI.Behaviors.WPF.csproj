@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <PackageId>Okisioli.Teacups.UI.Behaviors.WPF</PackageId>
+    <Version>0.2.0</Version>
+    <Description>Reusable WPF and XAML behaviors for .NET desktop applications.</Description>
+    <PackageReleaseNotes />
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+</Project>
