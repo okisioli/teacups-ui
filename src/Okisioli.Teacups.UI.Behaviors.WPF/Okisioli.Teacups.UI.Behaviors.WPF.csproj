@@ -3,7 +3,7 @@
     <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <PackageId>Okisioli.Teacups.UI.Behaviors.WPF</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Description>Reusable WPF and XAML behaviors for .NET desktop applications.</Description>
     <PackageReleaseNotes />
     <EnableWindowsTargeting>true</EnableWindowsTargeting>

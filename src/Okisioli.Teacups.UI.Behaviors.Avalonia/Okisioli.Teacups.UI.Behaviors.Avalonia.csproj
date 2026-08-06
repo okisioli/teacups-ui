@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Okisioli.Teacups.UI.Behaviors.Avalonia</PackageId>
+    <Version>0.2.1</Version>
+    <Description>Reusable Avalonia behaviors for .NET desktop applications.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+  </ItemGroup>
+</Project>
