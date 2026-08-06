@@ -19,20 +19,19 @@
               </MultiBinding>
             </Path.Data>
           </Path>
-          <Border x:Name="PART_Indicator">
-            <Path Stroke="{TemplateBinding Foreground}"
-                  StrokeThickness="{Binding Path=(local:CircularProgress.RingThickness), RelativeSource={RelativeSource TemplatedParent}}">
-              <Path.Data>
-                <MultiBinding Converter="{StaticResource CircularProgressValueGeometryConverter}">
-                  <Binding Path="Bounds" RelativeSource="{RelativeSource TemplatedParent}" />
-                  <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" />
-                  <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}" />
-                  <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}" />
-                  <Binding Path="(local:CircularProgress.RingThickness)" RelativeSource="{RelativeSource TemplatedParent}" />
-                </MultiBinding>
-              </Path.Data>
-            </Path>
-          </Border>
+          <Border x:Name="PART_Indicator" Opacity="0" />
+          <Path Stroke="{TemplateBinding Foreground}"
+                StrokeThickness="{Binding Path=(local:CircularProgress.RingThickness), RelativeSource={RelativeSource TemplatedParent}}">
+            <Path.Data>
+              <MultiBinding Converter="{StaticResource CircularProgressValueGeometryConverter}">
+                <Binding Path="Bounds" RelativeSource="{RelativeSource TemplatedParent}" />
+                <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" />
+                <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}" />
+                <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}" />
+                <Binding Path="(local:CircularProgress.RingThickness)" RelativeSource="{RelativeSource TemplatedParent}" />
+              </MultiBinding>
+            </Path.Data>
+          </Path>
         </Grid>
       </ControlTemplate>
     </Setter>
