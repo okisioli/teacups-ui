@@ -40,7 +40,7 @@ public sealed class CircularProgressValueGeometryConverter : IMultiValueConverte
     /// <inheritdoc />
     public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values.Count != 5 || values[0] is not Rect bounds || bounds.Width <= 0d || bounds.Height <= 0d)
+        if (values.Count != 6 || values[0] is not Rect bounds || bounds.Width <= 0d || bounds.Height <= 0d)
             return null;
 
         if (!TryGetDouble(values[1], out var value)
@@ -51,7 +51,8 @@ public sealed class CircularProgressValueGeometryConverter : IMultiValueConverte
             return null;
         }
 
-        return CircularProgressGeometry.CreateValue(bounds, value, minimum, maximum, thickness);
+        var reverse = values[5] is bool boolValue && boolValue;
+        return CircularProgressGeometry.CreateValue(bounds, value, minimum, maximum, thickness, reverse);
     }
 
     private static bool TryGetDouble(object? value, out double result)
@@ -76,7 +77,13 @@ internal static class CircularProgressGeometry
         return Parse($"M {centerX} {centerY - radius} A {radius} {radius} 0 0 1 {centerX} {centerY + radius} A {radius} {radius} 0 0 1 {centerX} {centerY - radius}");
     }
 
-    public static Geometry? CreateValue(Rect bounds, double value, double minimum, double maximum, double thickness)
+    public static Geometry? CreateValue(
+        Rect bounds,
+        double value,
+        double minimum,
+        double maximum,
+        double thickness,
+        bool reverse)
     {
         if (!TryGetRing(bounds, thickness, out var centerX, out var centerY, out var radius) || maximum <= minimum)
             return null;
@@ -93,7 +100,8 @@ internal static class CircularProgressGeometry
         var endY = centerY - (radius * Math.Cos(angle));
         var isLargeArc = progress > 0.5d ? 1 : 0;
 
-        return Parse($"M {centerX} {centerY - radius} A {radius} {radius} 0 {isLargeArc} 1 {endX} {endY}");
+        var sweepDirection = reverse ? 0 : 1;
+        return Parse($"M {centerX} {centerY - radius} A {radius} {radius} 0 {isLargeArc} {sweepDirection} {endX} {endY}");
     }
 
     private static bool TryGetRing(Rect bounds, double thickness, out double centerX, out double centerY, out double radius)

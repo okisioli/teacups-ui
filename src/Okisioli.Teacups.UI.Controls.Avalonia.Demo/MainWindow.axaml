@@ -46,6 +46,9 @@
               Maximum="40"
               Value="{Binding #DemoProgress.(local:CircularProgress.RingThickness), Mode=TwoWay}" />
 
+      <CheckBox Content="Reverse (counter-clockwise)"
+                IsChecked="{Binding #DemoProgress.(local:CircularProgress.Reverse), Mode=TwoWay}" />
+
       <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                  TextWrapping="Wrap"
                  Text="Foreground is the filled arc; Background is the remaining ring." />
