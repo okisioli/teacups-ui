@@ -96,7 +96,8 @@ internal static class CircularProgressGeometry
             return CreateTrack(bounds, thickness);
 
         var angle = progress * 2d * Math.PI;
-        var endX = centerX + (radius * Math.Sin(angle));
+        var horizontalDirection = reverse ? -1d : 1d;
+        var endX = centerX + (horizontalDirection * radius * Math.Sin(angle));
         var endY = centerY - (radius * Math.Cos(angle));
         var isLargeArc = progress > 0.5d ? 1 : 0;
 
