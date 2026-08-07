@@ -36,4 +36,28 @@ public sealed class CircularProgress
     {
         return element.GetValue(RingThicknessProperty);
     }
+
+    /// <summary>
+    /// Defines whether the filled portion of a circular progress ring grows counter-clockwise.
+    /// </summary>
+    public static readonly AttachedProperty<bool> ReverseProperty =
+        AvaloniaProperty.RegisterAttached<CircularProgress, ProgressBar, bool>(
+            "Reverse",
+            defaultValue: false);
+
+    /// <summary>
+    /// Sets whether the filled portion of a circular progress ring grows counter-clockwise.
+    /// </summary>
+    public static void SetReverse(ProgressBar element, bool value)
+    {
+        element.SetValue(ReverseProperty, value);
+    }
+
+    /// <summary>
+    /// Gets whether the filled portion of a circular progress ring grows counter-clockwise.
+    /// </summary>
+    public static bool GetReverse(ProgressBar element)
+    {
+        return element.GetValue(ReverseProperty);
+    }
 }

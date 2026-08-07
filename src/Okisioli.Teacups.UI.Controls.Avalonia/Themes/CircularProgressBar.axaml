@@ -29,6 +29,7 @@
                 <Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}" />
                 <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}" />
                 <Binding Path="(local:CircularProgress.RingThickness)" RelativeSource="{RelativeSource TemplatedParent}" />
+                <Binding Path="(local:CircularProgress.Reverse)" RelativeSource="{RelativeSource TemplatedParent}" />
               </MultiBinding>
             </Path.Data>
           </Path>
