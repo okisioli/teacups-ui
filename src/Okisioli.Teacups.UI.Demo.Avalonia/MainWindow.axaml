@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Okisioli.Teacups.UI.Controls.Avalonia;assembly=Okisioli.Teacups.UI.Controls.Avalonia"
-        x:Class="Okisioli.Teacups.UI.Controls.Avalonia.Demo.MainWindow"
+        x:Class="Okisioli.Teacups.UI.Demo.Avalonia.MainWindow"
         Width="760"
         Height="500"
         MinWidth="620"
