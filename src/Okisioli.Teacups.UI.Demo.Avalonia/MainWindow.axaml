@@ -1,13 +1,19 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Okisioli.Teacups.UI.Controls.Avalonia;assembly=Okisioli.Teacups.UI.Controls.Avalonia"
+        xmlns:demo="clr-namespace:Okisioli.Teacups.UI.Demo.Avalonia"
+        xmlns:behaviors="clr-namespace:Okisioli.Teacups.UI.Behaviors.Avalonia;assembly=Okisioli.Teacups.UI.Behaviors.Avalonia"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Xaml.Behaviors.Interactivity"
         x:Class="Okisioli.Teacups.UI.Demo.Avalonia.MainWindow"
+        x:DataType="demo:MainWindow"
         Width="760"
         Height="500"
         MinWidth="620"
         MinHeight="420"
-        Title="Circular ProgressBar demo">
-  <Grid Margin="36" ColumnDefinitions="280,*" ColumnSpacing="44">
+        Title="Teacups UI demo">
+  <TabControl Margin="20">
+    <TabItem Header="Circular ProgressBar">
+      <Grid Margin="16" ColumnDefinitions="280,*" ColumnSpacing="44">
     <Border Grid.Column="0"
             Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
             CornerRadius="16"
@@ -53,5 +59,30 @@
                  TextWrapping="Wrap"
                  Text="Foreground is the filled arc; Background is the remaining ring." />
     </StackPanel>
-  </Grid>
+      </Grid>
+    </TabItem>
+
+    <TabItem Header="Behaviors">
+      <StackPanel Margin="28" Spacing="16">
+        <TextBlock FontSize="28" FontWeight="SemiBold" Text="Behavior demos" />
+        <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                   TextWrapping="Wrap"
+                   Text="Try each interaction, then check the console for the message produced by the behavior." />
+
+        <TextBlock Margin="0,12,0,0" Text="Long press" />
+        <Button HorizontalAlignment="Left" Content="Press and hold me for half a second">
+          <i:Interaction.Behaviors>
+            <behaviors:LongPressBehavior Command="{Binding LongPressCommand}" Duration="0:0:0.5" />
+          </i:Interaction.Behaviors>
+        </Button>
+
+        <TextBlock Margin="0,12,0,0" Text="List item double-click" />
+        <ListBox Width="320" Height="120" ItemsSource="{Binding DemoItems}">
+          <i:Interaction.Behaviors>
+            <behaviors:ListBoxDoubleClickBehavior Command="{Binding ListBoxDoubleClickCommand}" />
+          </i:Interaction.Behaviors>
+        </ListBox>
+      </StackPanel>
+    </TabItem>
+  </TabControl>
 </Window>
