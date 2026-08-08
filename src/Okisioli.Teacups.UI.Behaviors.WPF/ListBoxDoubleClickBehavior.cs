@@ -2,61 +2,48 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Xaml.Behaviors;
 
 namespace Okisioli.Teacups.UI.Behaviors.WPF;
 
-public static class ListBoxDoubleClickBehavior
+public sealed class ListBoxDoubleClickBehavior : Behavior<ListBox>
 {
     public static readonly DependencyProperty CommandProperty =
-        DependencyProperty.RegisterAttached(
-            "Command",
+        DependencyProperty.Register(
+            nameof(Command),
             typeof(ICommand),
-            typeof(ListBoxDoubleClickBehavior),
-            new PropertyMetadata(null, OnCommandChanged));
+            typeof(ListBoxDoubleClickBehavior));
 
-    public static void SetCommand(DependencyObject element, ICommand? value)
+    public ICommand? Command
     {
-        element.SetValue(CommandProperty, value);
+        get => (ICommand?)GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
     }
 
-    public static ICommand? GetCommand(DependencyObject element)
+    protected override void OnAttached()
     {
-        return (ICommand?)element.GetValue(CommandProperty);
+        AssociatedObject.MouseDoubleClick += OnMouseDoubleClick;
+        base.OnAttached();
     }
 
-    private static void OnCommandChanged(DependencyObject dependencyObject,
-        DependencyPropertyChangedEventArgs eventArgs)
+    protected override void OnDetaching()
     {
-        if (dependencyObject is not ListBox listBox)
+        AssociatedObject.MouseDoubleClick -= OnMouseDoubleClick;
+        base.OnDetaching();
+    }
+
+    private void OnMouseDoubleClick(object sender, MouseButtonEventArgs eventArgs)
+    {
+        if (eventArgs.OriginalSource is not DependencyObject source)
             return;
-
-        if (eventArgs.OldValue is not null)
-            listBox.MouseDoubleClick -= OnMouseDoubleClick;
-
-        if (eventArgs.NewValue is not null)
-            listBox.MouseDoubleClick += OnMouseDoubleClick;
-    }
-
-    private static void OnMouseDoubleClick(object sender, MouseButtonEventArgs eventArgs)
-    {
-        if (sender is not ListBox listBox
-            || eventArgs.OriginalSource is not DependencyObject source)
-        {
-            return;
-        }
 
         var item = FindAncestor<ListBoxItem>(source);
+        var parameter = item?.DataContext;
 
-        if (item is null)
+        if (item is null || Command?.CanExecute(parameter) != true)
             return;
 
-        var command = GetCommand(listBox);
-        var parameter = item.DataContext;
-
-        if (command?.CanExecute(parameter) != true)
-            return;
-
-        command.Execute(parameter);
+        Command.Execute(parameter);
         eventArgs.Handled = true;
     }
 

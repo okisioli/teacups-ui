@@ -1,148 +1,101 @@
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Xaml.Interactivity;
 
 namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 
-public sealed class LongPressBehavior
+public sealed class LongPressBehavior : Behavior<Control>
 {
-    private static readonly ConditionalWeakTable<Control, PressState> PressStates = new();
+    private CancellationTokenSource? cancellationTokenSource;
+    private bool hasInvoked;
 
-    public static readonly AttachedProperty<ICommand?> CommandProperty =
-        AvaloniaProperty.RegisterAttached<LongPressBehavior, Control, ICommand?>("Command");
+    public static readonly StyledProperty<ICommand?> CommandProperty =
+        AvaloniaProperty.Register<LongPressBehavior, ICommand?>(nameof(Command));
 
-    public static readonly AttachedProperty<TimeSpan> DurationProperty =
-        AvaloniaProperty.RegisterAttached<LongPressBehavior, Control, TimeSpan>(
-            "Duration",
+    public static readonly StyledProperty<TimeSpan> DurationProperty =
+        AvaloniaProperty.Register<LongPressBehavior, TimeSpan>(
+            nameof(Duration),
             TimeSpan.FromMilliseconds(500),
             validate: duration => duration >= TimeSpan.Zero);
 
-    static LongPressBehavior()
+    public ICommand? Command
     {
-        CommandProperty.Changed.AddClassHandler<Control>(OnCommandChanged);
+        get => GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
     }
 
-    private LongPressBehavior()
+    public TimeSpan Duration
     {
+        get => GetValue(DurationProperty);
+        set => SetValue(DurationProperty, value);
     }
 
-    public static void SetCommand(Control element, ICommand? value)
+    protected override void OnAttached()
     {
-        element.SetValue(CommandProperty, value);
+        AssociatedObject!.PointerPressed += OnPointerPressed;
+        AssociatedObject.PointerReleased += OnPointerReleased;
+        AssociatedObject.PointerExited += OnPointerExited;
+        AssociatedObject.PointerCaptureLost += OnPointerCaptureLost;
+        base.OnAttached();
     }
 
-    public static ICommand? GetCommand(Control element)
+    protected override void OnDetaching()
     {
-        return element.GetValue(CommandProperty);
+        CancelPress();
+        AssociatedObject!.PointerPressed -= OnPointerPressed;
+        AssociatedObject.PointerReleased -= OnPointerReleased;
+        AssociatedObject.PointerExited -= OnPointerExited;
+        AssociatedObject.PointerCaptureLost -= OnPointerCaptureLost;
+        base.OnDetaching();
     }
 
-    public static void SetDuration(Control element, TimeSpan value)
+    private async void OnPointerPressed(object? sender, PointerPressedEventArgs eventArgs)
     {
-        element.SetValue(DurationProperty, value);
-    }
-
-    public static TimeSpan GetDuration(Control element)
-    {
-        return element.GetValue(DurationProperty);
-    }
-
-    private static void OnCommandChanged(Control control, AvaloniaPropertyChangedEventArgs eventArgs)
-    {
-        var state = PressStates.GetValue(control, _ => new PressState());
-        state.Cancel();
-
-        if (eventArgs.OldValue is not null)
-        {
-            control.PointerPressed -= OnPointerPressed;
-            control.PointerReleased -= OnPointerReleased;
-            control.PointerExited -= OnPointerExited;
-            control.PointerCaptureLost -= OnPointerCaptureLost;
-        }
-
-        if (eventArgs.NewValue is not null)
-        {
-            control.PointerPressed += OnPointerPressed;
-            control.PointerReleased += OnPointerReleased;
-            control.PointerExited += OnPointerExited;
-            control.PointerCaptureLost += OnPointerCaptureLost;
-        }
-    }
-
-    private static async void OnPointerPressed(object? sender, PointerPressedEventArgs eventArgs)
-    {
-        if (sender is not Control control)
-            return;
-
-        var state = PressStates.GetValue(control, _ => new PressState());
-        state.Start();
+        CancelPress();
+        cancellationTokenSource = new CancellationTokenSource();
+        hasInvoked = false;
 
         try
         {
-            await Task.Delay(GetDuration(control), state.CancellationToken);
+            await Task.Delay(Duration, cancellationTokenSource.Token);
         }
         catch (TaskCanceledException)
         {
             return;
         }
 
-        var command = GetCommand(control);
-        if (command?.CanExecute(control.DataContext) != true)
+        if (AssociatedObject is not { } associatedObject
+            || Command?.CanExecute(associatedObject.DataContext) != true)
             return;
 
-        state.HasInvoked = true;
-        command.Execute(control.DataContext);
+        hasInvoked = true;
+        Command.Execute(associatedObject.DataContext);
     }
 
-    private static void OnPointerReleased(object? sender, PointerReleasedEventArgs eventArgs)
+    private void OnPointerReleased(object? sender, PointerReleasedEventArgs eventArgs)
     {
-        if (sender is not Control control)
-            return;
+        CancelPress();
 
-        var state = PressStates.GetValue(control, _ => new PressState());
-        state.Cancel();
-
-        if (state.HasInvoked)
+        if (hasInvoked)
             eventArgs.Handled = true;
     }
 
-    private static void OnPointerExited(object? sender, PointerEventArgs eventArgs)
+    private void OnPointerExited(object? sender, PointerEventArgs eventArgs)
     {
-        CancelPress(sender);
+        CancelPress();
     }
 
-    private static void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs eventArgs)
+    private void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs eventArgs)
     {
-        CancelPress(sender);
+        CancelPress();
     }
 
-    private static void CancelPress(object? sender)
+    private void CancelPress()
     {
-        if (sender is Control control && PressStates.TryGetValue(control, out var state))
-            state.Cancel();
-    }
-
-    private sealed class PressState
-    {
-        private CancellationTokenSource? cancellationTokenSource;
-
-        public CancellationToken CancellationToken => cancellationTokenSource?.Token ?? CancellationToken.None;
-
-        public bool HasInvoked { get; set; }
-
-        public void Start()
-        {
-            Cancel();
-            cancellationTokenSource = new CancellationTokenSource();
-            HasInvoked = false;
-        }
-
-        public void Cancel()
-        {
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
-            cancellationTokenSource = null;
-        }
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource?.Dispose();
+        cancellationTokenSource = null;
     }
 }

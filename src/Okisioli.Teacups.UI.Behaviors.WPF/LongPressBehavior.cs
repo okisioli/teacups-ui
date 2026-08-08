@@ -1,146 +1,102 @@
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Xaml.Behaviors;
 
 namespace Okisioli.Teacups.UI.Behaviors.WPF;
 
-public static class LongPressBehavior
+public sealed class LongPressBehavior : Behavior<FrameworkElement>
 {
-    private static readonly ConditionalWeakTable<FrameworkElement, PressState> PressStates = new();
+    private CancellationTokenSource? cancellationTokenSource;
+    private bool hasInvoked;
 
     public static readonly DependencyProperty CommandProperty =
-        DependencyProperty.RegisterAttached(
-            "Command",
+        DependencyProperty.Register(
+            nameof(Command),
             typeof(ICommand),
-            typeof(LongPressBehavior),
-            new PropertyMetadata(null, OnCommandChanged));
+            typeof(LongPressBehavior));
 
     public static readonly DependencyProperty DurationProperty =
-        DependencyProperty.RegisterAttached(
-            "Duration",
+        DependencyProperty.Register(
+            nameof(Duration),
             typeof(TimeSpan),
             typeof(LongPressBehavior),
             new PropertyMetadata(TimeSpan.FromMilliseconds(500)));
 
-    public static void SetCommand(FrameworkElement element, ICommand? value)
+    public ICommand? Command
     {
-        element.SetValue(CommandProperty, value);
+        get => (ICommand?)GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
     }
 
-    public static ICommand? GetCommand(FrameworkElement element)
+    public TimeSpan Duration
     {
-        return (ICommand?)element.GetValue(CommandProperty);
+        get => (TimeSpan)GetValue(DurationProperty);
+        set => SetValue(DurationProperty, value);
     }
 
-    public static void SetDuration(FrameworkElement element, TimeSpan value)
+    protected override void OnAttached()
     {
-        element.SetValue(DurationProperty, value);
+        AssociatedObject.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
+        AssociatedObject.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
+        AssociatedObject.MouseLeave += OnMouseLeave;
+        AssociatedObject.LostMouseCapture += OnLostMouseCapture;
+        base.OnAttached();
     }
 
-    public static TimeSpan GetDuration(FrameworkElement element)
+    protected override void OnDetaching()
     {
-        return (TimeSpan)element.GetValue(DurationProperty);
+        CancelPress();
+        AssociatedObject.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
+        AssociatedObject.PreviewMouseLeftButtonUp -= OnMouseLeftButtonUp;
+        AssociatedObject.MouseLeave -= OnMouseLeave;
+        AssociatedObject.LostMouseCapture -= OnLostMouseCapture;
+        base.OnDetaching();
     }
 
-    private static void OnCommandChanged(DependencyObject dependencyObject,
-        DependencyPropertyChangedEventArgs eventArgs)
+    private async void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs eventArgs)
     {
-        if (dependencyObject is not FrameworkElement element)
-            return;
-
-        var state = PressStates.GetValue(element, _ => new PressState());
-        state.Cancel();
-
-        if (eventArgs.OldValue is not null)
-        {
-            element.PreviewMouseLeftButtonDown -= OnMouseLeftButtonDown;
-            element.PreviewMouseLeftButtonUp -= OnMouseLeftButtonUp;
-            element.MouseLeave -= OnMouseLeave;
-            element.LostMouseCapture -= OnLostMouseCapture;
-        }
-
-        if (eventArgs.NewValue is not null)
-        {
-            element.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
-            element.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
-            element.MouseLeave += OnMouseLeave;
-            element.LostMouseCapture += OnLostMouseCapture;
-        }
-    }
-
-    private static async void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs eventArgs)
-    {
-        if (sender is not FrameworkElement element)
-            return;
-
-        var state = PressStates.GetValue(element, _ => new PressState());
-        state.Start();
+        CancelPress();
+        cancellationTokenSource = new CancellationTokenSource();
+        hasInvoked = false;
 
         try
         {
-            await Task.Delay(GetDuration(element), state.CancellationToken);
+            await Task.Delay(Duration, cancellationTokenSource.Token);
         }
         catch (TaskCanceledException)
         {
             return;
         }
 
-        var command = GetCommand(element);
-        if (command?.CanExecute(element.DataContext) != true)
+        if (Command?.CanExecute(AssociatedObject.DataContext) != true)
             return;
 
-        state.HasInvoked = true;
-        command.Execute(element.DataContext);
+        hasInvoked = true;
+        Command.Execute(AssociatedObject.DataContext);
     }
 
-    private static void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs eventArgs)
+    private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs eventArgs)
     {
-        if (sender is not FrameworkElement element)
-            return;
+        CancelPress();
 
-        var state = PressStates.GetValue(element, _ => new PressState());
-        state.Cancel();
-
-        if (state.HasInvoked)
+        if (hasInvoked)
             eventArgs.Handled = true;
     }
 
-    private static void OnMouseLeave(object sender, MouseEventArgs eventArgs)
+    private void OnMouseLeave(object sender, MouseEventArgs eventArgs)
     {
-        CancelPress(sender);
+        CancelPress();
     }
 
-    private static void OnLostMouseCapture(object sender, MouseEventArgs eventArgs)
+    private void OnLostMouseCapture(object sender, MouseEventArgs eventArgs)
     {
-        CancelPress(sender);
+        CancelPress();
     }
 
-    private static void CancelPress(object sender)
+    private void CancelPress()
     {
-        if (sender is FrameworkElement element && PressStates.TryGetValue(element, out var state))
-            state.Cancel();
-    }
-
-    private sealed class PressState
-    {
-        private CancellationTokenSource? cancellationTokenSource;
-
-        public CancellationToken CancellationToken => cancellationTokenSource?.Token ?? CancellationToken.None;
-
-        public bool HasInvoked { get; set; }
-
-        public void Start()
-        {
-            Cancel();
-            cancellationTokenSource = new CancellationTokenSource();
-            HasInvoked = false;
-        }
-
-        public void Cancel()
-        {
-            cancellationTokenSource?.Cancel();
-            cancellationTokenSource?.Dispose();
-            cancellationTokenSource = null;
-        }
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource?.Dispose();
+        cancellationTokenSource = null;
     }
 }
