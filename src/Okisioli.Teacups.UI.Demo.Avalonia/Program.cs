@@ -1,6 +1,6 @@
 using Avalonia;
 
-namespace Okisioli.Teacups.UI.Controls.Avalonia.Demo;
+namespace Okisioli.Teacups.UI.Demo.Avalonia;
 
 internal static class Program
 {

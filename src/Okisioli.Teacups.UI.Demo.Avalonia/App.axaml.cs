@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 
-namespace Okisioli.Teacups.UI.Controls.Avalonia.Demo;
+namespace Okisioli.Teacups.UI.Demo.Avalonia;
 
 public partial class App : Application
 {

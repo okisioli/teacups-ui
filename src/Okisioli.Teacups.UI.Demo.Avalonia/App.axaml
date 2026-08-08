@@ -1,6 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="Okisioli.Teacups.UI.Controls.Avalonia.Demo.App">
+             x:Class="Okisioli.Teacups.UI.Demo.Avalonia.App">
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="avares://Okisioli.Teacups.UI.Controls.Avalonia/Themes/CircularProgressBar.axaml" />
