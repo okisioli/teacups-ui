@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <Version>0.3.0</Version>
+      <Version>0.4.0</Version>
       <AssemblyName>Okisioli.Teacups.UI.Core</AssemblyName>
       <RootNamespace>Okisioli.Teacups.UI.Core</RootNamespace>
-      <PackageVersion>0.2.0</PackageVersion>
+      <PackageVersion>0.4.0</PackageVersion>
+      <PackageReleaseNotes>Dispatcher Service was moved out of the Services sub-namespace.</PackageReleaseNotes>
       <PackageDescription>
         Base library providing abstractions for every other UI-related component in the Okisioli.Teacups family.
         Contains interfaces to be implemented in a framework-specific way (WPF, Avalonia), abstracting away their specifics.
