@@ -2,8 +2,9 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <PackageId>Okisioli.Teacups.UI.Behaviors.Avalonia</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Description>Reusable Avalonia behaviors for .NET desktop applications.</Description>
+    <PackageReleaseNotes>Adds LongPressBehavior with configurable invocation duration.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

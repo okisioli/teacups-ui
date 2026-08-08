@@ -3,9 +3,9 @@
     <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <PackageId>Okisioli.Teacups.UI.Behaviors.WPF</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Description>Reusable WPF and XAML behaviors for .NET desktop applications.</Description>
-    <PackageReleaseNotes />
+    <PackageReleaseNotes>Adds LongPressBehavior with configurable invocation duration.</PackageReleaseNotes>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 </Project>
