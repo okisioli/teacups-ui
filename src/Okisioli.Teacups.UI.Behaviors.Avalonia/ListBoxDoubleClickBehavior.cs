@@ -3,59 +3,45 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.VisualTree;
+using Avalonia.Xaml.Interactivity;
 
 namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 
-public sealed class ListBoxDoubleClickBehavior
+public sealed class ListBoxDoubleClickBehavior : Behavior<ListBox>
 {
-    public static readonly AttachedProperty<ICommand?> CommandProperty =
-        AvaloniaProperty.RegisterAttached<ListBoxDoubleClickBehavior, ListBox, ICommand?>("Command");
+    public static readonly StyledProperty<ICommand?> CommandProperty =
+        AvaloniaProperty.Register<ListBoxDoubleClickBehavior, ICommand?>(nameof(Command));
 
-    static ListBoxDoubleClickBehavior()
+    public ICommand? Command
     {
-        CommandProperty.Changed.AddClassHandler<ListBox>(OnCommandChanged);
+        get => GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
     }
 
-    private ListBoxDoubleClickBehavior()
+    protected override void OnAttached()
     {
+        AssociatedObject!.DoubleTapped += OnDoubleTapped;
+        base.OnAttached();
     }
 
-    public static void SetCommand(ListBox element, ICommand? value)
+    protected override void OnDetaching()
     {
-        element.SetValue(CommandProperty, value);
+        AssociatedObject!.DoubleTapped -= OnDoubleTapped;
+        base.OnDetaching();
     }
 
-    public static ICommand? GetCommand(ListBox element)
+    private void OnDoubleTapped(object? sender, TappedEventArgs eventArgs)
     {
-        return element.GetValue(CommandProperty);
-    }
-
-    private static void OnCommandChanged(ListBox listBox, AvaloniaPropertyChangedEventArgs eventArgs)
-    {
-        if (eventArgs.OldValue is not null)
-            listBox.DoubleTapped -= OnDoubleTapped;
-
-        if (eventArgs.NewValue is not null)
-            listBox.DoubleTapped += OnDoubleTapped;
-    }
-
-    private static void OnDoubleTapped(object? sender, TappedEventArgs eventArgs)
-    {
-        if (sender is not ListBox listBox || eventArgs.Source is not Visual source)
+        if (eventArgs.Source is not Visual source)
             return;
 
         var item = FindAncestor<ListBoxItem>(source);
+        var parameter = item?.DataContext;
 
-        if (item is null)
+        if (item is null || Command?.CanExecute(parameter) != true)
             return;
 
-        var command = GetCommand(listBox);
-        var parameter = item.DataContext;
-
-        if (command?.CanExecute(parameter) != true)
-            return;
-
-        command.Execute(parameter);
+        Command.Execute(parameter);
         eventArgs.Handled = true;
     }
 
