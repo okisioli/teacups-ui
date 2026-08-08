@@ -6,7 +6,8 @@
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.3.0</Version>
+        <Version>0.4.0</Version>
+        <PackageReleaseNotes>Dispatcher Service was moved out of the Services sub-namespace.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.WPF</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.WPF</RootNamespace>
         <PackageDescription>WPF implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>

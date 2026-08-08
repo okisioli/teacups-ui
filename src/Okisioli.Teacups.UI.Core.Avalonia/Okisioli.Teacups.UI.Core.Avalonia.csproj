@@ -4,7 +4,8 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.3.0</Version>
+        <Version>0.4.0</Version>
+        <PackageReleaseNotes>Dispatcher Service was moved out of the Services sub-namespace.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.Avalonia</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.Avalonia</RootNamespace>
         <PackageDescription>Avalonia implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>
