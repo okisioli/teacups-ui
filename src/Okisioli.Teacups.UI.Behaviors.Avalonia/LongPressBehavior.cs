@@ -2,6 +2,7 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Xaml.Interactivity;
 
 namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
@@ -34,8 +35,14 @@ public sealed class LongPressBehavior : Behavior<Control>
 
     protected override void OnAttached()
     {
-        AssociatedObject!.PointerPressed += OnPointerPressed;
-        AssociatedObject.PointerReleased += OnPointerReleased;
+        AssociatedObject!.AddHandler(
+            InputElement.PointerPressedEvent,
+            OnPointerPressed,
+            RoutingStrategies.Tunnel);
+        AssociatedObject.AddHandler(
+            InputElement.PointerReleasedEvent,
+            OnPointerReleased,
+            RoutingStrategies.Tunnel);
         AssociatedObject.PointerExited += OnPointerExited;
         AssociatedObject.PointerCaptureLost += OnPointerCaptureLost;
         base.OnAttached();
@@ -44,8 +51,8 @@ public sealed class LongPressBehavior : Behavior<Control>
     protected override void OnDetaching()
     {
         CancelPress();
-        AssociatedObject!.PointerPressed -= OnPointerPressed;
-        AssociatedObject.PointerReleased -= OnPointerReleased;
+        AssociatedObject!.RemoveHandler(InputElement.PointerPressedEvent, OnPointerPressed);
+        AssociatedObject.RemoveHandler(InputElement.PointerReleasedEvent, OnPointerReleased);
         AssociatedObject.PointerExited -= OnPointerExited;
         AssociatedObject.PointerCaptureLost -= OnPointerCaptureLost;
         base.OnDetaching();
