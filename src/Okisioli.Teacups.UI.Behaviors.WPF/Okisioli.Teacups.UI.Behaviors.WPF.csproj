@@ -3,9 +3,9 @@
     <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <PackageId>Okisioli.Teacups.UI.Behaviors.WPF</PackageId>
-    <Version>0.5.0</Version>
+    <Version>0.6.0</Version>
     <Description>Reusable WPF and XAML behaviors for .NET desktop applications.</Description>
-    <PackageReleaseNotes>Use standard XAML Behavior base classes for ListBoxDoubleClickBehavior and LongPressBehavior.</PackageReleaseNotes>
+    <PackageReleaseNotes>Synchronize the package version with the Avalonia behaviors package; no behavioral changes.</PackageReleaseNotes>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
