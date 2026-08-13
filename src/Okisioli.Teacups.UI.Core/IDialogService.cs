@@ -13,4 +13,11 @@ public interface IDialogService<TViewModel, TView>
     /// <param name="viewModel">The view model to display in the dialog.</param>
     /// <returns><see langword="true"/> when the dialog is accepted; otherwise, <see langword="false"/>.</returns>
     Task<bool> ShowDialogAsync(TViewModel viewModel);
+
+    /// <summary>
+    /// Creates and shows a dialog view model with a completion mediator scoped to that dialog instance.
+    /// </summary>
+    /// <param name="viewModelFactory">Creates the view model that will use the supplied completion mediator.</param>
+    /// <returns><see langword="true"/> when the dialog is accepted; otherwise, <see langword="false"/>.</returns>
+    Task<bool> ShowDialogAsync(Func<IDialogCompletion, TViewModel> viewModelFactory);
 }
