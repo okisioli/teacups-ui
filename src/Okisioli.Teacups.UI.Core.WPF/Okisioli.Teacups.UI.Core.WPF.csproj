@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.5.0</Version>
-        <PackageReleaseNotes>Added a generic WPF dialog service that hosts user controls in a library-owned modal window.</PackageReleaseNotes>
+        <Version>0.6.0</Version>
+        <PackageReleaseNotes>Added dialog view-model confirmation and cancellation support; closing a dialog, including Escape, now cancels it.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.WPF</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.WPF</RootNamespace>
         <PackageDescription>WPF implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>

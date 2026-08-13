@@ -12,8 +12,16 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage) : I
     where TView : UserControl, new()
 {
     /// <inheritdoc />
-    public async Task<bool> ShowDialogAsync(TViewModel viewModel)
+    public Task<bool> ShowDialogAsync(TViewModel viewModel)
     {
+        return ShowDialogAsync(_ => viewModel);
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ShowDialogAsync(Func<IDialogCompletion, TViewModel> viewModelFactory)
+    {
+        var completion = new DialogCompletion();
+        var viewModel = viewModelFactory(completion);
         var view = new TView
         {
             DataContext = viewModel
@@ -26,8 +34,6 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage) : I
 
         NavigationPage.SetHasNavigationBar(page, false);
 
-        var result = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-
         void OnPopped(object? sender, NavigationEventArgs args)
         {
             if (args.Page != page)
@@ -36,7 +42,7 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage) : I
             }
 
             navigationPage.Popped -= OnPopped;
-            result.TrySetResult(false);
+            completion.Cancel();
         }
 
         navigationPage.Popped += OnPopped;
@@ -51,6 +57,14 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage) : I
             throw;
         }
 
-        return await result.Task;
+        var result = await completion.Result;
+        navigationPage.Popped -= OnPopped;
+
+        if (result && navigationPage.Navigation?.NavigationStack.Contains(page) == true)
+        {
+            await navigationPage.PopAsync();
+        }
+
+        return result;
     }
 }

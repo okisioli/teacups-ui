@@ -14,10 +14,18 @@ public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogSe
     where TView : UserControl, new()
 {
     /// <inheritdoc />
-    public async Task<bool> ShowDialogAsync(TViewModel viewModel)
+    public Task<bool> ShowDialogAsync(TViewModel viewModel)
     {
+        return ShowDialogAsync(_ => viewModel);
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ShowDialogAsync(Func<IDialogCompletion, TViewModel> viewModelFactory)
+    {
+        var completion = new DialogCompletion();
         var operation = dispatcher.InvokeAsync(() =>
         {
+            var viewModel = viewModelFactory(completion);
             var view = new TView
             {
                 DataContext = viewModel
@@ -28,9 +36,21 @@ public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogSe
                 Content = view
             };
 
-            return window.ShowDialog() ?? false;
+            window.Closed += (_, _) => completion.Cancel();
+            _ = completion.Result.ContinueWith(
+                _ => dispatcher.BeginInvoke(() =>
+                {
+                    if (window.IsVisible)
+                    {
+                        window.Close();
+                    }
+                }),
+                TaskScheduler.Default);
+
+            window.ShowDialog();
         });
 
-        return await operation.Task;
+        await operation.Task;
+        return await completion.Result;
     }
 }
