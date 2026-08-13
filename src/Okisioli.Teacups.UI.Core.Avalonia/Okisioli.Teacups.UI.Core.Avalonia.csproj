@@ -4,8 +4,8 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.5.0</Version>
-        <PackageReleaseNotes>Added an Avalonia dialog service that presents dialog views as full-screen navigation pages.</PackageReleaseNotes>
+        <Version>0.6.0</Version>
+        <PackageReleaseNotes>Added dialog view-model confirmation and cancellation support; back navigation now cancels the dialog.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.Avalonia</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.Avalonia</RootNamespace>
         <PackageDescription>Avalonia implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>
