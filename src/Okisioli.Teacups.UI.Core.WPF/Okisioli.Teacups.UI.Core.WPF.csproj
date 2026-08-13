@@ -7,7 +7,7 @@
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Version>0.6.0</Version>
-        <PackageReleaseNotes>Added dialog view-model confirmation and cancellation support; closing a dialog, including Escape, now cancels it.</PackageReleaseNotes>
+        <PackageReleaseNotes>Framework-specific WPF implementation of the Teacups UI Core abstractions.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.WPF</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.WPF</RootNamespace>
         <PackageDescription>WPF implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>
