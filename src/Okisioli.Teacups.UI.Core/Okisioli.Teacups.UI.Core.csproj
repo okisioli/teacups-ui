@@ -5,7 +5,7 @@
       <AssemblyName>Okisioli.Teacups.UI.Core</AssemblyName>
       <RootNamespace>Okisioli.Teacups.UI.Core</RootNamespace>
       <PackageVersion>0.6.0</PackageVersion>
-      <PackageReleaseNotes>Added dialog-instance completion mediators for confirming or cancelling dialogs from their view models.</PackageReleaseNotes>
+      <PackageReleaseNotes>Added the dialog-service abstraction and an MVVM dialog completion contract for confirming or cancelling dialogs.</PackageReleaseNotes>
       <PackageDescription>
         Base library providing abstractions for every other UI-related component in the Okisioli.Teacups family.
         Contains interfaces to be implemented in a framework-specific way (WPF, Avalonia), abstracting away their specifics.
