@@ -8,7 +8,7 @@ namespace Okisioli.Teacups.UI.Core.Avalonia;
 /// </summary>
 /// <typeparam name="TViewModel">The type of the dialog view model.</typeparam>
 /// <typeparam name="TView">The type of the dialog view.</typeparam>
-public class DialogService<TViewModel, TView>(NavigationPage navigationPage) : IDialogService<TViewModel, TView>
+public class DialogService<TViewModel, TView>(NavigationPage navigationPage, bool confirmOnBackNavigation) : IDialogService<TViewModel, TView>
     where TView : UserControl, new()
 {
     /// <inheritdoc />
@@ -42,7 +42,14 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage) : I
             }
 
             navigationPage.Popped -= OnPopped;
-            completion.Cancel();
+            if (confirmOnBackNavigation)
+            {
+                completion.Confirm();
+            }
+            else
+            {
+                completion.Cancel();
+            }
         }
 
         navigationPage.Popped += OnPopped;
