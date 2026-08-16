@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Okisioli.Teacups.UI.Core\Okisioli.Teacups.UI.Core.csproj" />
+    <ProjectReference Include="..\Okisioli.Teacups.UI.Core.WPF\Okisioli.Teacups.UI.Core.WPF.csproj" />
+  </ItemGroup>
+</Project>
