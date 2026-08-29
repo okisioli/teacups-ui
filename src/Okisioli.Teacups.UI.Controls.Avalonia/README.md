@@ -2,6 +2,23 @@
 
 Reusable Avalonia control styles.
 
+## Bottom sheet
+
+`BottomSheet` displays its normal content and can overlay optional `SheetContent` at the bottom.
+
+```xml
+<controls:BottomSheet xmlns:controls="clr-namespace:Okisioli.Teacups.UI.Controls.Avalonia;assembly=Okisioli.Teacups.UI.Controls.Avalonia"
+                      IsExpanded="{Binding IsSomethingOpen}">
+  <controls:BottomSheet.SheetContent>
+    <SomeArbitraryControl />
+  </controls:BottomSheet.SheetContent>
+
+  <MainPageContent />
+</controls:BottomSheet>
+```
+
+The sheet takes its height from its content, stretches to the available width, and overlays the main content when expanded.
+
 ## Circular progress bar
 
 Import the style dictionary in your application resources:
