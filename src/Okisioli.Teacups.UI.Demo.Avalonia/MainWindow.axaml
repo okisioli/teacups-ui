@@ -80,6 +80,31 @@
       </StackPanel>
     </TabItem>
 
+    <TabItem Header="Bottom Sheet">
+      <local:BottomSheet x:Name="DemoBottomSheet" Margin="16">
+        <local:BottomSheet.SheetContent>
+          <StackPanel Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" Spacing="8">
+            <TextBlock Margin="16,16,16,0" FontWeight="SemiBold" Text="Sheet content" />
+            <TextBox Margin="16,0" Text="First text box" />
+            <TextBox Margin="16,0" Text="Second text box" />
+            <TextBox Margin="16,0,16,16" Text="Third text box" />
+          </StackPanel>
+        </local:BottomSheet.SheetContent>
+
+        <Grid Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+            <TextBlock HorizontalAlignment="Center" FontSize="28" FontWeight="SemiBold" Text="Bottom Sheet" />
+            <TextBlock HorizontalAlignment="Center"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                       Text="Toggle the auto-sized sheet over this content." />
+            <ToggleButton HorizontalAlignment="Center"
+                          Content="Show sheet"
+                          IsChecked="{Binding #DemoBottomSheet.IsExpanded, Mode=TwoWay}" />
+          </StackPanel>
+        </Grid>
+      </local:BottomSheet>
+    </TabItem>
+
     <TabItem Header="Dialogs">
       <StackPanel Margin="28" Spacing="16" VerticalAlignment="Center">
         <TextBlock FontSize="28" FontWeight="SemiBold" Text="Dialog service" />

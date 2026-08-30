@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
-    <Version>0.3.1</Version>
+    <Version>0.4.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
+    <PackageReleaseNotes>Add the BottomSheet control for displaying optional overlay content at the bottom of a view.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
