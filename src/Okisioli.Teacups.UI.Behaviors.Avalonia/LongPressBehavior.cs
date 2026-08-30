@@ -7,26 +7,31 @@ using Avalonia.Xaml.Interactivity;
 
 namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 
+/// <summary>Invokes a command when a control is pressed for a configured duration.</summary>
 public sealed class LongPressBehavior : Behavior<Control>
 {
     private CancellationTokenSource? cancellationTokenSource;
     private bool hasInvoked;
 
+    /// <summary>Defines the command invoked after a successful long press.</summary>
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<LongPressBehavior, ICommand?>(nameof(Command));
 
+    /// <summary>Defines the minimum press duration before the command is invoked.</summary>
     public static readonly StyledProperty<TimeSpan> DurationProperty =
         AvaloniaProperty.Register<LongPressBehavior, TimeSpan>(
             nameof(Duration),
             TimeSpan.FromMilliseconds(500),
             validate: duration => duration >= TimeSpan.Zero);
 
+    /// <summary>Gets or sets the command invoked after a successful long press.</summary>
     public ICommand? Command
     {
         get => GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
 
+    /// <summary>Gets or sets the minimum press duration before the command is invoked.</summary>
     public TimeSpan Duration
     {
         get => GetValue(DurationProperty);

@@ -7,6 +7,8 @@ namespace Okisioli.Teacups.UI.Core.Avalonia;
 /// <summary>
 /// Shows Avalonia user controls as full-screen pages in a navigation stack.
 /// </summary>
+/// <param name="navigationPage">The navigation page used to host dialog pages.</param>
+/// <param name="confirmOnBackNavigation">Whether back navigation accepts rather than cancels the dialog.</param>
 /// <typeparam name="TViewModel">The type of the dialog view model.</typeparam>
 /// <typeparam name="TView">The type of the dialog view.</typeparam>
 public class DialogService<TViewModel, TView>(NavigationPage navigationPage, bool confirmOnBackNavigation) : IDialogService<TViewModel, TView>

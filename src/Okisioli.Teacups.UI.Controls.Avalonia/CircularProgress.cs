@@ -24,6 +24,8 @@ public sealed class CircularProgress
     /// <summary>
     /// Sets the thickness, in device-independent pixels, of a circular progress ring.
     /// </summary>
+    /// <param name="element">The progress bar to configure.</param>
+    /// <param name="value">The ring thickness in device-independent pixels.</param>
     public static void SetRingThickness(ProgressBar element, double value)
     {
         element.SetValue(RingThicknessProperty, value);
@@ -32,6 +34,7 @@ public sealed class CircularProgress
     /// <summary>
     /// Gets the thickness, in device-independent pixels, of a circular progress ring.
     /// </summary>
+    /// <param name="element">The progress bar to inspect.</param>
     public static double GetRingThickness(ProgressBar element)
     {
         return element.GetValue(RingThicknessProperty);
@@ -48,6 +51,8 @@ public sealed class CircularProgress
     /// <summary>
     /// Sets whether the filled portion of a circular progress ring grows counter-clockwise.
     /// </summary>
+    /// <param name="element">The progress bar to configure.</param>
+    /// <param name="value">Whether the filled portion grows counter-clockwise.</param>
     public static void SetReverse(ProgressBar element, bool value)
     {
         element.SetValue(ReverseProperty, value);
@@ -56,6 +61,7 @@ public sealed class CircularProgress
     /// <summary>
     /// Gets whether the filled portion of a circular progress ring grows counter-clockwise.
     /// </summary>
+    /// <param name="element">The progress bar to inspect.</param>
     public static bool GetReverse(ProgressBar element)
     {
         return element.GetValue(ReverseProperty);

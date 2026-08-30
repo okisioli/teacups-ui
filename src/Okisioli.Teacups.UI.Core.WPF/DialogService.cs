@@ -8,6 +8,7 @@ namespace Okisioli.Teacups.UI.Core.WPF;
 /// <summary>
 /// Shows WPF user controls in a library-owned modal dialog window.
 /// </summary>
+/// <param name="dispatcher">The WPF dispatcher on which to show the dialog.</param>
 /// <typeparam name="TViewModel">The type of the dialog view model.</typeparam>
 /// <typeparam name="TView">The type of the dialog view.</typeparam>
 public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogService<TViewModel, TView>

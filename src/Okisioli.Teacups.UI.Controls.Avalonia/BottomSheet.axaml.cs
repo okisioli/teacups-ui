@@ -28,6 +28,7 @@ public partial class BottomSheet : UserControl
     private bool isInitializingLayout;
     private bool isRestoringLayout;
 
+    /// <summary>Initializes a bottom-sheet control.</summary>
     public BottomSheet()
     {
         isInitializingLayout = true;

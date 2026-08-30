@@ -6,14 +6,17 @@ using Microsoft.Xaml.Behaviors;
 
 namespace Okisioli.Teacups.UI.Behaviors.WPF;
 
+/// <summary>Invokes a command when a list-box item is double-clicked.</summary>
 public sealed class ListBoxDoubleClickBehavior : Behavior<ListBox>
 {
+    /// <summary>Defines the command invoked for the double-clicked item's data context.</summary>
     public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register(
             nameof(Command),
             typeof(ICommand),
             typeof(ListBoxDoubleClickBehavior));
 
+    /// <summary>Gets or sets the command invoked for the double-clicked item's data context.</summary>
     public ICommand? Command
     {
         get => (ICommand?)GetValue(CommandProperty);

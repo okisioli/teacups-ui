@@ -4,17 +4,20 @@ using Microsoft.Xaml.Behaviors;
 
 namespace Okisioli.Teacups.UI.Behaviors.WPF;
 
+/// <summary>Invokes a command when a control is pressed for a configured duration.</summary>
 public sealed class LongPressBehavior : Behavior<FrameworkElement>
 {
     private CancellationTokenSource? cancellationTokenSource;
     private bool hasInvoked;
 
+    /// <summary>Defines the command invoked after a successful long press.</summary>
     public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register(
             nameof(Command),
             typeof(ICommand),
             typeof(LongPressBehavior));
 
+    /// <summary>Defines the minimum press duration before the command is invoked.</summary>
     public static readonly DependencyProperty DurationProperty =
         DependencyProperty.Register(
             nameof(Duration),
@@ -22,12 +25,14 @@ public sealed class LongPressBehavior : Behavior<FrameworkElement>
             typeof(LongPressBehavior),
             new PropertyMetadata(TimeSpan.FromMilliseconds(500)));
 
+    /// <summary>Gets or sets the command invoked after a successful long press.</summary>
     public ICommand? Command
     {
         get => (ICommand?)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
 
+    /// <summary>Gets or sets the minimum press duration before the command is invoked.</summary>
     public TimeSpan Duration
     {
         get => (TimeSpan)GetValue(DurationProperty);
