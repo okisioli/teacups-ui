@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Okisioli.Teacups.UI.Core;
 
 namespace Okisioli.Teacups.UI.Core.Avalonia;
@@ -29,7 +30,8 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage, boo
 
         var page = new ContentPage
         {
-            Content = view
+            Content = view,
+            Focusable = true
         };
 
         NavigationPage.SetHasNavigationBar(page, false);
@@ -52,22 +54,37 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage, boo
             }
         }
 
+        async void OnKeyDown(object? sender, KeyEventArgs args)
+        {
+            if (args.Key != Key.Escape || navigationPage.Navigation?.NavigationStack.Contains(page) != true)
+            {
+                return;
+            }
+
+            args.Handled = true;
+            await navigationPage.PopAsync();
+        }
+
         navigationPage.Popped += OnPopped;
+        page.KeyDown += OnKeyDown;
 
         try
         {
             await navigationPage.PushAsync(page);
+            page.Focus();
         }
         catch
         {
             navigationPage.Popped -= OnPopped;
+            page.KeyDown -= OnKeyDown;
             throw;
         }
 
         var result = await completion.Result;
         navigationPage.Popped -= OnPopped;
+        page.KeyDown -= OnKeyDown;
 
-        if (result && navigationPage.Navigation?.NavigationStack.Contains(page) == true)
+        if (navigationPage.Navigation?.NavigationStack.Contains(page) == true)
         {
             await navigationPage.PopAsync();
         }
