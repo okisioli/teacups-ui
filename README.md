@@ -19,7 +19,7 @@ The `Demo.Avalonia` and `Controls.Avalonia.Demo` projects demonstrate selected A
 
 `IDialogService<TViewModel, TView>` shows a view for a dialog view model and returns `true` for acceptance or `false` for cancellation. Use its factory overload when the view model should receive the dialog-scoped `IDialogCompletion`; call `Confirm()` or `Cancel()` from the view model's commands.
 
-`IDispatcherService` provides a framework-neutral way to schedule an `Action` on the UI dispatcher, with normal and high priorities.
+`IDispatcherService` queues an `Action` on the UI dispatcher, even when called from the UI thread. Its priorities, from lowest to highest, are `ApplicationIdle`, `Background`, `Input`, and `Normal`, mapped to the matching native WPF or Avalonia priority. The default is `Normal`; use `Background` for incremental collection updates that should yield to input and rendering. Replace uses of the former `High` priority with `Input`.
 
 ## Framework implementations
 

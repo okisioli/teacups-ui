@@ -8,15 +8,15 @@ public class DispatcherService(Dispatcher dispatcher) : IDispatcherService
 {
     public Task InvokeAsync(Action action, Priority priority = Priority.Normal)
     {
-        if (dispatcher.CheckAccess())
+        var dispatcherPriority = priority switch
         {
-            action();
-            return Task.CompletedTask;
-        }
+            Priority.ApplicationIdle => DispatcherPriority.ApplicationIdle,
+            Priority.Background => DispatcherPriority.Background,
+            Priority.Input => DispatcherPriority.Input,
+            Priority.Normal => DispatcherPriority.Normal,
+            _ => throw new ArgumentOutOfRangeException(nameof(priority), priority, null),
+        };
 
-        return dispatcher.InvokeAsync(action, priority == Priority.Normal
-                    ? DispatcherPriority.ApplicationIdle
-                    : DispatcherPriority.Input)
-            .Task;
+        return dispatcher.InvokeAsync(action, dispatcherPriority).Task;
     }
 }
