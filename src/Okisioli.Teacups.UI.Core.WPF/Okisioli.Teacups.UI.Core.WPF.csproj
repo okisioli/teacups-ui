@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.11.0</Version>
-        <PackageReleaseNotes>Aligned Teacups packages at version 0.11.0 and standardized on .NET 10.</PackageReleaseNotes>
+        <Version>0.11.1</Version>
+        <PackageReleaseNotes>Fix the UI-freezing regression by always queueing dispatcher actions and exposing ApplicationIdle, Background, Input, and Normal priorities.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.WPF</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.WPF</RootNamespace>
         <PackageDescription>WPF implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>
