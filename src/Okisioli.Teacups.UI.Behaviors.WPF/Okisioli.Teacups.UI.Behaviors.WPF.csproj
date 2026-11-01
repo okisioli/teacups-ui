@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <PackageId>Okisioli.Teacups.UI.Behaviors.WPF</PackageId>
-    <Version>0.6.0</Version>
+    <Version>0.11.0</Version>
     <Description>Reusable WPF and XAML behaviors for .NET desktop applications.</Description>
-    <PackageReleaseNotes>Synchronize the package version with the Avalonia behaviors package; no behavioral changes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Aligned Teacups packages at version 0.11.0 and standardized on .NET 10.</PackageReleaseNotes>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 

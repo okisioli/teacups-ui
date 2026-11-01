@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.6.0</Version>
-        <PackageReleaseNotes>Framework-specific Avalonia implementation of the Teacups UI Core abstractions.</PackageReleaseNotes>
+        <Version>0.11.0</Version>
+        <PackageReleaseNotes>Aligned Teacups packages at version 0.11.0 and standardized on .NET 10.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.Avalonia</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.Avalonia</RootNamespace>
         <PackageDescription>Avalonia implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>
