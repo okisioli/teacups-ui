@@ -6,6 +6,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -15,8 +18,13 @@ jobs:
           dotnet-version: "10.0.x"
 
       - run: dotnet restore Okisioli.Teacups.UI.slnx
-      - run: dotnet build Okisioli.Teacups.UI.slnx --no-restore -c Release
+      - run: dotnet build Okisioli.Teacups.UI.slnx --no-restore -c Release -m:1
       - run: dotnet pack Okisioli.Teacups.UI.slnx --no-build -c Release -o publish
+      - name: Authenticate to NuGet
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: oli.G
       - name: Publish to NuGet.org
         shell: bash
         run: |
@@ -29,6 +37,6 @@ jobs:
           for package in "${packages[@]}"; do
             dotnet nuget push "$package" \
               --source "https://api.nuget.org/v3/index.json" \
-              --api-key "${{ secrets.NUGET_API_KEY }}" \
+              --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
               --skip-duplicate
           done
