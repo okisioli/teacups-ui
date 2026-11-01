@@ -1,11 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <Version>0.6.0</Version>
+      <Version>0.11.0</Version>
       <AssemblyName>Okisioli.Teacups.UI.Core</AssemblyName>
       <RootNamespace>Okisioli.Teacups.UI.Core</RootNamespace>
-      <PackageVersion>0.6.0</PackageVersion>
-      <PackageReleaseNotes>Added the dialog-service abstraction and an MVVM dialog completion contract for confirming or cancelling dialogs.</PackageReleaseNotes>
+      <PackageReleaseNotes>Aligned Teacups packages at version 0.11.0 and standardized on .NET 10.</PackageReleaseNotes>
       <PackageDescription>
         Base library providing abstractions for every other UI-related component in the Okisioli.Teacups family.
         Contains interfaces to be implemented in a framework-specific way (WPF, Avalonia), abstracting away their specifics.
