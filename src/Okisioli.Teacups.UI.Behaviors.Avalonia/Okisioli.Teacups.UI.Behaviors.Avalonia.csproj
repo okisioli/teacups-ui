@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
     <PackageId>Okisioli.Teacups.UI.Behaviors.Avalonia</PackageId>
     <Version>0.6.0</Version>
     <Description>Reusable Avalonia behaviors for .NET desktop applications.</Description>
