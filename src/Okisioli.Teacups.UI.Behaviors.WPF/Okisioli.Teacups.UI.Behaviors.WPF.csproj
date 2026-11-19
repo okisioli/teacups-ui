@@ -3,7 +3,7 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <PackageId>Okisioli.Teacups.UI.Behaviors.WPF</PackageId>
-    <Version>0.12.0</Version>
+    <Version>0.12.1</Version>
     <Description>Reusable WPF and XAML behaviors for .NET desktop applications.</Description>
     <PackageReleaseNotes>Added TextBoxSubmitBehavior and TaggingTextBoxBehavior with submission events, commands, optional clearing, and configurable tag delimiters.</PackageReleaseNotes>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
