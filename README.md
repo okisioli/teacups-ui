@@ -34,3 +34,30 @@ Controls.Avalonia supplies the circular `ProgressBar` style and the `CircularPro
 ## Behaviors
 
 Both behavior packages provide `LongPressBehavior` and `ListBoxDoubleClickBehavior`. `LongPressBehavior` invokes an `ICommand` after a configurable hold (500 ms by default); `ListBoxDoubleClickBehavior` invokes an `ICommand` with the double-clicked list item's data context. The WPF package uses `Microsoft.Xaml.Behaviors`; the Avalonia package uses `Avalonia.Xaml.Interactivity`.
+
+
+### Text box submission and tagging
+
+Both behavior packages provide `TextBoxSubmitBehavior` and its subclass `TaggingTextBoxBehavior` for `TextBox` controls. Attach one through the framework's `Interaction.Behaviors` collection:
+
+```xml
+<TextBox>
+    <i:Interaction.Behaviors>
+        <behaviors:TextBoxSubmitBehavior Command="{Binding SubmitCommand}" />
+    </i:Interaction.Behaviors>
+</TextBox>
+```
+
+Use `xmlns:i="http://schemas.microsoft.com/xaml/behaviors"` for WPF or `xmlns:i="using:Avalonia.Xaml.Interactivity"` for Avalonia. Set `behaviors` to `clr-namespace:Okisioli.Teacups.UI.Behaviors.WPF;assembly=Okisioli.Teacups.UI.Behaviors.WPF` or `using:Okisioli.Teacups.UI.Behaviors.Avalonia`, respectively.
+
+Unmodified Enter submits the current text, including an empty string. `Command` is optional and receives that text as its parameter. The `Submitted` event exposes the same snapshot through `TextSubmittedEventArgs.Text`. The command executes first, then the event fires, then the box clears if `ClearOnSubmit` is enabled. `ClearOnSubmit` defaults to `False` for `TextBoxSubmitBehavior` and `True` for `TaggingTextBoxBehavior`; either can be explicitly overridden. Clearing preserves the text binding. A command returning `false` from `CanExecute` prevents the command, event, and clearing; the confirmation key or delimiter is still consumed. Read-only and disabled boxes do not submit.
+
+For tagging, replace the behavior with:
+
+```xml
+<behaviors:TaggingTextBoxBehavior Command="{Binding AddTagCommand}" Delimiter="," />
+```
+
+`Delimiter` is a single character, defaulting to comma. Use `Delimiter="&#32;"` for a space. It is matched against committed text input rather than a physical key, respecting keyboard layouts and IME character entry. A standalone delimiter submits the entire current text and is not inserted. Multi-character input and pasted text are not split into tags. No trimming or empty-tag filtering is performed; use `CanExecute` for validation.
+
+Avalonia requests an IME return key of `Done` while attached, with explicit text-box `TextInputOptions.ReturnKeyType` settings taking precedence. It handles Enter and standalone newline text confirmation, and avoids submitting on Enter while the text presenter has active IME preedit text. Native keyboard support depends on the platform; mobile keyboard and IME flows should be checked on target devices. Detaching removes the handlers and the behavior's return-key setting.
