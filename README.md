@@ -50,7 +50,7 @@ Both behavior packages provide `TextBoxSubmitBehavior` and its subclass `Tagging
 
 Use `xmlns:i="http://schemas.microsoft.com/xaml/behaviors"` for WPF or `xmlns:i="using:Avalonia.Xaml.Interactivity"` for Avalonia. Set `behaviors` to `clr-namespace:Okisioli.Teacups.UI.Behaviors.WPF;assembly=Okisioli.Teacups.UI.Behaviors.WPF` or `using:Okisioli.Teacups.UI.Behaviors.Avalonia`, respectively.
 
-Unmodified Enter submits the current text, including an empty string. `Command` is optional and receives that text as its parameter. The `Submitted` event exposes the same snapshot through `TextSubmittedEventArgs.Text`. The command executes first, then the event fires, then the box clears. Set `ClearOnSubmit="False"` to retain the text. Clearing preserves the text binding. A command returning `false` from `CanExecute` prevents the command, event, and clearing; the confirmation key or delimiter is still consumed. Read-only and disabled boxes do not submit.
+Unmodified Enter submits the current text, including an empty string. `Command` is optional and receives that text as its parameter. The `Submitted` event exposes the same snapshot through `TextSubmittedEventArgs.Text`. The command executes first, then the event fires, then the box clears if `ClearOnSubmit` is enabled. `ClearOnSubmit` defaults to `False` for `TextBoxSubmitBehavior` and `True` for `TaggingTextBoxBehavior`; either can be explicitly overridden. Clearing preserves the text binding. A command returning `false` from `CanExecute` prevents the command, event, and clearing; the confirmation key or delimiter is still consumed. Read-only and disabled boxes do not submit.
 
 For tagging, replace the behavior with:
 

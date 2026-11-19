@@ -8,6 +8,11 @@ public sealed class TaggingTextBoxBehavior : TextBoxSubmitBehavior
     public static readonly StyledProperty<char> DelimiterProperty =
         AvaloniaProperty.Register<TaggingTextBoxBehavior, char>(nameof(Delimiter), ',');
 
+    static TaggingTextBoxBehavior()
+    {
+        ClearOnSubmitProperty.OverrideDefaultValue<TaggingTextBoxBehavior>(true);
+    }
+
     public char Delimiter
     {
         get => GetValue(DelimiterProperty);

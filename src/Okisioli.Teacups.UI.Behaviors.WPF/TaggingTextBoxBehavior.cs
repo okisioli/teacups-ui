@@ -8,6 +8,11 @@ public sealed class TaggingTextBoxBehavior : TextBoxSubmitBehavior
     public static readonly DependencyProperty DelimiterProperty =
         DependencyProperty.Register(nameof(Delimiter), typeof(char), typeof(TaggingTextBoxBehavior), new PropertyMetadata(','));
 
+    static TaggingTextBoxBehavior()
+    {
+        ClearOnSubmitProperty.OverrideMetadata(typeof(TaggingTextBoxBehavior), new PropertyMetadata(true));
+    }
+
     public char Delimiter
     {
         get => (char)GetValue(DelimiterProperty);

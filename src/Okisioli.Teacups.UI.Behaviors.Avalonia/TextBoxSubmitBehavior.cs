@@ -26,7 +26,7 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
     }
 
     public static readonly StyledProperty<bool> ClearOnSubmitProperty =
-        AvaloniaProperty.Register<TextBoxSubmitBehavior, bool>(nameof(ClearOnSubmit), true);
+        AvaloniaProperty.Register<TextBoxSubmitBehavior, bool>(nameof(ClearOnSubmit), false);
 
     public bool ClearOnSubmit
     {

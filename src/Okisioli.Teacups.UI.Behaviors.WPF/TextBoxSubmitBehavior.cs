@@ -18,7 +18,7 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
     }
 
     public static readonly DependencyProperty ClearOnSubmitProperty =
-        DependencyProperty.Register(nameof(ClearOnSubmit), typeof(bool), typeof(TextBoxSubmitBehavior), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(ClearOnSubmit), typeof(bool), typeof(TextBoxSubmitBehavior), new PropertyMetadata(false));
 
     public bool ClearOnSubmit
     {
