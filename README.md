@@ -21,5 +21,5 @@ Teacups UI is a collection of small, reusable UI building blocks for Teacups app
 
 ## Demos
 
-- [WPF](src/Okisioli.Teacups.UI.Demo.WPF)
-- [Avalonia](src/Okisioli.Teacups.UI.Demo.Avalonia)
+- [WPF](demo/Okisioli.Teacups.UI.Demo.WPF)
+- [Avalonia](demo/Okisioli.Teacups.UI.Demo.Avalonia)
