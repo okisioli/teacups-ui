@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Okisioli.Teacups.UI.Core\Okisioli.Teacups.UI.Core.csproj" />
-    <ProjectReference Include="..\Okisioli.Teacups.UI.Core.WPF\Okisioli.Teacups.UI.Core.WPF.csproj" />
+    <ProjectReference Include="..\..\src\Okisioli.Teacups.UI.Core\Okisioli.Teacups.UI.Core.csproj" />
+    <ProjectReference Include="..\..\src\Okisioli.Teacups.UI.Core.WPF\Okisioli.Teacups.UI.Core.WPF.csproj" />
   </ItemGroup>
 </Project>

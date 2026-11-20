@@ -11,9 +11,9 @@
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Xaml.Behaviors.Interactivity" />
-    <ProjectReference Include="..\Okisioli.Teacups.UI.Behaviors.Avalonia\Okisioli.Teacups.UI.Behaviors.Avalonia.csproj" />
-    <ProjectReference Include="..\Okisioli.Teacups.UI.Controls.Avalonia\Okisioli.Teacups.UI.Controls.Avalonia.csproj" />
-    <ProjectReference Include="..\Okisioli.Teacups.UI.Core\Okisioli.Teacups.UI.Core.csproj" />
-    <ProjectReference Include="..\Okisioli.Teacups.UI.Core.Avalonia\Okisioli.Teacups.UI.Core.Avalonia.csproj" />
+    <ProjectReference Include="..\..\src\Okisioli.Teacups.UI.Behaviors.Avalonia\Okisioli.Teacups.UI.Behaviors.Avalonia.csproj" />
+    <ProjectReference Include="..\..\src\Okisioli.Teacups.UI.Controls.Avalonia\Okisioli.Teacups.UI.Controls.Avalonia.csproj" />
+    <ProjectReference Include="..\..\src\Okisioli.Teacups.UI.Core\Okisioli.Teacups.UI.Core.csproj" />
+    <ProjectReference Include="..\..\src\Okisioli.Teacups.UI.Core.Avalonia\Okisioli.Teacups.UI.Core.Avalonia.csproj" />
   </ItemGroup>
 </Project>
