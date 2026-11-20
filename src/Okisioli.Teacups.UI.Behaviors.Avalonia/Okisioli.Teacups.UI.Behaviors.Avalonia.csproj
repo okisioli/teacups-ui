@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PackageId>Okisioli.Teacups.UI.Behaviors.Avalonia</PackageId>
     <Version>0.12.0</Version>
     <Description>Reusable Avalonia behaviors for .NET desktop applications.</Description>
