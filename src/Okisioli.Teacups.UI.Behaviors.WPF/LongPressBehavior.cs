@@ -4,6 +4,7 @@ using Microsoft.Xaml.Behaviors;
 
 namespace Okisioli.Teacups.UI.Behaviors.WPF;
 
+/// <summary>Runs a command after the user presses and holds the associated control.</summary>
 public sealed class LongPressBehavior : Behavior<FrameworkElement>
 {
     private CancellationTokenSource? cancellationTokenSource;
@@ -22,12 +23,14 @@ public sealed class LongPressBehavior : Behavior<FrameworkElement>
             typeof(LongPressBehavior),
             new PropertyMetadata(TimeSpan.FromMilliseconds(500)));
 
+    /// <summary>Gets or sets the command, which receives the associated control's data context.</summary>
     public ICommand? Command
     {
         get => (ICommand?)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
 
+    /// <summary>Gets or sets how long to hold before invoking the command. Defaults to 500 milliseconds.</summary>
     public TimeSpan Duration
     {
         get => (TimeSpan)GetValue(DurationProperty);

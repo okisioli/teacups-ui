@@ -6,6 +6,10 @@ namespace Okisioli.Teacups.UI.Controls.Avalonia;
 /// <summary>
 /// Provides configuration properties for the circular <see cref="ProgressBar"/> style.
 /// </summary>
+/// <remarks>
+/// Include <c>avares://Okisioli.Teacups.UI.Controls.Avalonia/Themes/CircularProgressBar.axaml</c>
+/// in the application styles and add the <c>circular</c> class to a <see cref="ProgressBar"/>.
+/// </remarks>
 public sealed class CircularProgress
 {
     private CircularProgress()

@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <NoWarn>$(NoWarn);CS1591</NoWarn>
       <Version>0.11.1</Version>
       <AssemblyName>Okisioli.Teacups.UI.Core</AssemblyName>
       <RootNamespace>Okisioli.Teacups.UI.Core</RootNamespace>

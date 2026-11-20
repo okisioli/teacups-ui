@@ -7,11 +7,13 @@ using Avalonia.Xaml.Interactivity;
 
 namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 
+/// <summary>Runs a command when a list box item is double-tapped or double-clicked.</summary>
 public sealed class ListBoxDoubleClickBehavior : Behavior<ListBox>
 {
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<ListBoxDoubleClickBehavior, ICommand?>(nameof(Command));
 
+    /// <summary>Gets or sets the command, which receives the double-tapped or double-clicked item's data context.</summary>
     public ICommand? Command
     {
         get => GetValue(CommandProperty);

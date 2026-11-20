@@ -9,7 +9,9 @@ namespace Okisioli.Teacups.UI.Core.WPF;
 /// Shows WPF user controls in a library-owned modal dialog window.
 /// </summary>
 /// <typeparam name="TViewModel">The type of the dialog view model.</typeparam>
-/// <typeparam name="TView">The type of the dialog view.</typeparam>
+/// <typeparam name="TView">A <see cref="UserControl"/> with a public parameterless constructor.</typeparam>
+/// <param name="dispatcher">The dispatcher for the WPF UI thread.</param>
+/// <remarks>Closing the modal window cancels the dialog.</remarks>
 public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogService<TViewModel, TView>
     where TView : UserControl, new()
 {

@@ -2,7 +2,17 @@ using System.Windows;
 
 namespace Okisioli.Teacups.UI.Behaviors.WPF;
 
-/// <summary>Submits on Enter or a committed delimiter character, which is not inserted.</summary>
+/// <summary>Submits the current text on Enter or when the user enters a delimiter.</summary>
+/// <remarks>
+/// The entire text is submitted as entered, including empty strings and surrounding whitespace.
+/// Use <see cref="System.Windows.Input.ICommand.CanExecute"/> on the submission command to validate it.
+/// </remarks>
+/// <example>
+/// Attach this behavior in the same way as <see cref="TextBoxSubmitBehavior"/>.
+/// <code><![CDATA[
+/// <behaviors:TaggingTextBoxBehavior Command="{Binding AddTagCommand}" Delimiter="," />
+/// ]]></code>
+/// </example>
 public sealed class TaggingTextBoxBehavior : TextBoxSubmitBehavior
 {
     public static readonly DependencyProperty DelimiterProperty =
@@ -13,6 +23,12 @@ public sealed class TaggingTextBoxBehavior : TextBoxSubmitBehavior
         ClearOnSubmitProperty.OverrideMetadata(typeof(TaggingTextBoxBehavior), new PropertyMetadata(true));
     }
 
+    /// <summary>Gets or sets the single delimiter character. Defaults to a comma.</summary>
+    /// <remarks>
+    /// Use <c>Delimiter="&amp;#32;"</c> in XAML for a space. Matching uses committed text input,
+    /// so it follows the keyboard layout and IME character entry. A standalone delimiter is
+    /// consumed. Multi-character input and pasted text are not split into tags.
+    /// </remarks>
     public char Delimiter
     {
         get => (char)GetValue(DelimiterProperty);
