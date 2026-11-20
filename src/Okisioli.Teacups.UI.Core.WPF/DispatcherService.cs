@@ -4,8 +4,12 @@ using Priority = Okisioli.Teacups.UI.Core.IDispatcherService.DispatcherPriority;
 
 namespace Okisioli.Teacups.UI.Core.WPF;
 
+/// <summary>Queues actions on the WPF UI dispatcher.</summary>
+/// <param name="dispatcher">The WPF dispatcher for the UI thread.</param>
 public class DispatcherService(Dispatcher dispatcher) : IDispatcherService
 {
+    /// <inheritdoc />
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="priority"/> is undefined.</exception>
     public Task InvokeAsync(Action action, Priority priority = Priority.Normal)
     {
         var dispatcherPriority = priority switch

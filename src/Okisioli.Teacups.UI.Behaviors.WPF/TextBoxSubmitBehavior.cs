@@ -5,12 +5,23 @@ using Microsoft.Xaml.Behaviors;
 
 namespace Okisioli.Teacups.UI.Behaviors.WPF;
 
-/// <summary>Submits a text box on Enter or platform confirmation.</summary>
+/// <summary>Submits the current text in a <see cref="TextBox"/>.</summary>
+/// <remarks>
+/// <para>Press Enter without modifiers to submit.</para>
+/// <para>
+/// Confirmation input is consumed even when <see cref="ICommand.CanExecute"/> rejects submission.
+/// </para>
+/// </remarks>
 public class TextBoxSubmitBehavior : Behavior<TextBox>
 {
     public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(TextBoxSubmitBehavior));
 
+    /// <summary>Gets or sets the optional command, which receives the submitted text as a string.</summary>
+    /// <remarks>
+    /// If <see cref="ICommand.CanExecute"/> returns <see langword="false"/>, submission stops
+    /// before executing the command, raising <see cref="Submitted"/>, or clearing the text.
+    /// </remarks>
     public ICommand? Command
     {
         get => (ICommand?)GetValue(CommandProperty);
@@ -20,13 +31,19 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
     public static readonly DependencyProperty ClearOnSubmitProperty =
         DependencyProperty.Register(nameof(ClearOnSubmit), typeof(bool), typeof(TextBoxSubmitBehavior), new PropertyMetadata(false));
 
+    /// <summary>Gets or sets whether to clear the text after submission while preserving its binding.</summary>
+    /// <remarks>
+    /// Defaults to <see langword="false"/> here and <see langword="true"/> on
+    /// <see cref="TaggingTextBoxBehavior"/>. Set this property explicitly to override either default.
+    /// </remarks>
     public bool ClearOnSubmit
     {
         get => (bool)GetValue(ClearOnSubmitProperty);
         set => SetValue(ClearOnSubmitProperty, value);
     }
 
-    /// <summary>Raised with the text captured before clearing the text box.</summary>
+    /// <summary>Occurs after the command runs, if set, and before optional clearing.</summary>
+    /// <remarks><see cref="TextSubmittedEventArgs.Text"/> contains the same text passed to the command.</remarks>
     public event EventHandler<TextSubmittedEventArgs>? Submitted;
 
     protected override void OnAttached()
@@ -65,7 +82,15 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
     /// <summary>Determines whether committed text acts as a submission delimiter.</summary>
     protected virtual bool IsSubmitText(string? text) => false;
 
-    /// <summary>Submits the current text unless the box is read-only or the command rejects it.</summary>
+    /// <summary>Submits a snapshot of the current text, including an empty string.</summary>
+    /// <remarks>
+    /// Executes <see cref="Command"/> if set, raises <see cref="Submitted"/>, then clears the text
+    /// if <see cref="ClearOnSubmit"/> is enabled.
+    /// </remarks>
+    /// <returns>
+    /// <see langword="true"/> if submitted. Returns <see langword="false"/> when detached,
+    /// when the text box is disabled or read-only, or when the command rejects the text.
+    /// </returns>
     protected bool TrySubmit()
     {
         var textBox = AssociatedObject;

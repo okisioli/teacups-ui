@@ -19,5 +19,10 @@ public interface IDialogService<TViewModel, TView>
     /// </summary>
     /// <param name="viewModelFactory">Creates the view model that will use the supplied completion mediator.</param>
     /// <returns><see langword="true"/> when the dialog is accepted; otherwise, <see langword="false"/>.</returns>
+    /// <remarks>
+    /// Use this overload when the view model needs to control the result.
+    /// Call <see cref="IDialogCompletion.Confirm"/> or <see cref="IDialogCompletion.Cancel"/>
+    /// from the view model's commands using the completion object passed to the factory.
+    /// </remarks>
     Task<bool> ShowDialogAsync(Func<IDialogCompletion, TViewModel> viewModelFactory);
 }

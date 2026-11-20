@@ -7,6 +7,7 @@ using Avalonia.Xaml.Interactivity;
 
 namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 
+/// <summary>Runs a command after the user presses and holds the associated control.</summary>
 public sealed class LongPressBehavior : Behavior<Control>
 {
     private CancellationTokenSource? cancellationTokenSource;
@@ -21,12 +22,14 @@ public sealed class LongPressBehavior : Behavior<Control>
             TimeSpan.FromMilliseconds(500),
             validate: duration => duration >= TimeSpan.Zero);
 
+    /// <summary>Gets or sets the command, which receives the associated control's data context.</summary>
     public ICommand? Command
     {
         get => GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
 
+    /// <summary>Gets or sets how long to hold before invoking the command. Defaults to 500 milliseconds.</summary>
     public TimeSpan Duration
     {
         get => GetValue(DurationProperty);

@@ -11,7 +11,22 @@ using Avalonia.Xaml.Interactivity;
 
 namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 
-/// <summary>Submits a text box on Enter or platform confirmation.</summary>
+/// <summary>Submits the current text in a <see cref="TextBox"/>.</summary>
+/// <remarks>
+/// <para>
+/// Press Enter without modifiers or use a platform confirmation that commits a standalone newline.
+/// Enter used to accept an active IME composition does not submit the text box.
+/// </para>
+/// <para>
+/// While attached, the behavior requests the <see cref="TextInputReturnKeyType.Done"/> keyboard
+/// return key. An explicit <see cref="TextInputOptions.ReturnKeyTypeProperty"/> setting takes
+/// precedence. Detaching removes the input handlers and the behavior's return-key setting.
+/// Keyboard and IME support vary by platform. Verify input on target devices.
+/// </para>
+/// <para>
+/// Confirmation input is consumed even when <see cref="ICommand.CanExecute"/> rejects submission.
+/// </para>
+/// </remarks>
 public class TextBoxSubmitBehavior : Behavior<TextBox>
 {
     private IDisposable? returnKeySetting;
@@ -19,6 +34,11 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<TextBoxSubmitBehavior, ICommand?>(nameof(Command));
 
+    /// <summary>Gets or sets the optional command, which receives the submitted text as a string.</summary>
+    /// <remarks>
+    /// If <see cref="ICommand.CanExecute"/> returns <see langword="false"/>, submission stops
+    /// before executing the command, raising <see cref="Submitted"/>, or clearing the text.
+    /// </remarks>
     public ICommand? Command
     {
         get => GetValue(CommandProperty);
@@ -28,13 +48,19 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
     public static readonly StyledProperty<bool> ClearOnSubmitProperty =
         AvaloniaProperty.Register<TextBoxSubmitBehavior, bool>(nameof(ClearOnSubmit), false);
 
+    /// <summary>Gets or sets whether to clear the text after submission while preserving its binding.</summary>
+    /// <remarks>
+    /// Defaults to <see langword="false"/> here and <see langword="true"/> on
+    /// <see cref="TaggingTextBoxBehavior"/>. Set this property explicitly to override either default.
+    /// </remarks>
     public bool ClearOnSubmit
     {
         get => GetValue(ClearOnSubmitProperty);
         set => SetValue(ClearOnSubmitProperty, value);
     }
 
-    /// <summary>Raised with the text captured before clearing the text box.</summary>
+    /// <summary>Occurs after the command runs, if set, and before optional clearing.</summary>
+    /// <remarks><see cref="TextSubmittedEventArgs.Text"/> contains the same text passed to the command.</remarks>
     public event EventHandler<TextSubmittedEventArgs>? Submitted;
 
     protected override void OnAttached()
@@ -82,7 +108,15 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
     /// <summary>Determines whether committed text acts as a submission delimiter.</summary>
     protected virtual bool IsSubmitText(string? text) => false;
 
-    /// <summary>Submits the current text unless the box is read-only or the command rejects it.</summary>
+    /// <summary>Submits a snapshot of the current text, including an empty string.</summary>
+    /// <remarks>
+    /// Executes <see cref="Command"/> if set, raises <see cref="Submitted"/>, then clears the text
+    /// if <see cref="ClearOnSubmit"/> is enabled.
+    /// </remarks>
+    /// <returns>
+    /// <see langword="true"/> if submitted. Returns <see langword="false"/> when detached,
+    /// when the text box is disabled or read-only, or when the command rejects the text.
+    /// </returns>
     protected bool TrySubmit()
     {
         var textBox = AssociatedObject;
