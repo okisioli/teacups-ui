@@ -27,17 +27,6 @@ namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 /// Confirmation input is consumed even when <see cref="ICommand.CanExecute"/> rejects submission.
 /// </para>
 /// </remarks>
-/// <example>
-/// Attach the behavior through <c>Interaction.Behaviors</c>.
-/// <code><![CDATA[
-/// <TextBox xmlns:i="using:Avalonia.Xaml.Interactivity"
-///          xmlns:behaviors="using:Okisioli.Teacups.UI.Behaviors.Avalonia">
-///     <i:Interaction.Behaviors>
-///         <behaviors:TextBoxSubmitBehavior Command="{Binding SubmitCommand}" />
-///     </i:Interaction.Behaviors>
-/// </TextBox>
-/// ]]></code>
-/// </example>
 public class TextBoxSubmitBehavior : Behavior<TextBox>
 {
     private IDisposable? returnKeySetting;

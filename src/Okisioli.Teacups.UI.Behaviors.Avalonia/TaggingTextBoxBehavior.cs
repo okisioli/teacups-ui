@@ -7,12 +7,6 @@ namespace Okisioli.Teacups.UI.Behaviors.Avalonia;
 /// The entire text is submitted as entered, including empty strings and surrounding whitespace.
 /// Use <see cref="System.Windows.Input.ICommand.CanExecute"/> on the submission command to validate it.
 /// </remarks>
-/// <example>
-/// Attach this behavior in the same way as <see cref="TextBoxSubmitBehavior"/>.
-/// <code><![CDATA[
-/// <behaviors:TaggingTextBoxBehavior Command="{Binding AddTagCommand}" Delimiter="," />
-/// ]]></code>
-/// </example>
 public sealed class TaggingTextBoxBehavior : TextBoxSubmitBehavior
 {
     public static readonly StyledProperty<char> DelimiterProperty =

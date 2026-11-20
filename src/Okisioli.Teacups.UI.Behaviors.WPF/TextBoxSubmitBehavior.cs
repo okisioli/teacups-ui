@@ -12,17 +12,6 @@ namespace Okisioli.Teacups.UI.Behaviors.WPF;
 /// Confirmation input is consumed even when <see cref="ICommand.CanExecute"/> rejects submission.
 /// </para>
 /// </remarks>
-/// <example>
-/// Attach the behavior through <c>Interaction.Behaviors</c>.
-/// <code><![CDATA[
-/// <TextBox xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-///          xmlns:behaviors="clr-namespace:Okisioli.Teacups.UI.Behaviors.WPF;assembly=Okisioli.Teacups.UI.Behaviors.WPF">
-///     <i:Interaction.Behaviors>
-///         <behaviors:TextBoxSubmitBehavior Command="{Binding SubmitCommand}" />
-///     </i:Interaction.Behaviors>
-/// </TextBox>
-/// ]]></code>
-/// </example>
 public class TextBoxSubmitBehavior : Behavior<TextBox>
 {
     public static readonly DependencyProperty CommandProperty =
