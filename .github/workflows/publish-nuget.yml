@@ -19,7 +19,7 @@ jobs:
 
       - run: dotnet restore Okisioli.Teacups.UI.slnx
       - run: dotnet build Okisioli.Teacups.UI.slnx --no-restore -c Release -m:1
-      - run: dotnet pack Okisioli.Teacups.UI.slnx --no-build -c Release -o publish
+      - run: dotnet pack Okisioli.Teacups.UI.slnx --no-build -c Release -m:1
       - name: Authenticate to NuGet
         uses: NuGet/login@v1
         id: login

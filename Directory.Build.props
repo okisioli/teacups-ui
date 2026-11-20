@@ -10,6 +10,7 @@
 
     <ArtifactsPath>$(MSBuildThisFileDirectory)build</ArtifactsPath>
     <PackageOutputPath>$(MSBuildThisFileDirectory)publish</PackageOutputPath>
+    <PublishDir>$(MSBuildThisFileDirectory)publish/$(MSBuildProjectName)/</PublishDir>
   </PropertyGroup>
 
   <PropertyGroup>
