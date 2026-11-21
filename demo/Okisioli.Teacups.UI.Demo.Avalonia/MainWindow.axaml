@@ -118,7 +118,8 @@
             <TextBlock Margin="16,16,16,0" FontWeight="SemiBold" Text="Sheet content" />
             <TextBox Margin="16,0" Text="First text box" />
             <TextBox Margin="16,0" Text="Second text box" />
-            <TextBox Margin="16,0,16,16" Text="Third text box" />
+            <TextBox Margin="16,0" Text="Third text box" />
+            <Button Margin="16,0,16,16" Content="Close sheet" Click="OnCloseBottomSheetClick" />
           </StackPanel>
         </local:BottomSheet.SheetContent>
 
@@ -128,9 +129,13 @@
             <TextBlock HorizontalAlignment="Center"
                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                        Text="Toggle the auto-sized sheet over this content." />
-            <ToggleButton HorizontalAlignment="Center"
-                          Content="Show sheet"
-                          IsChecked="{Binding #DemoBottomSheet.IsExpanded, Mode=TwoWay}" />
+            <CheckBox HorizontalAlignment="Center"
+                      Content="Modal"
+                      IsChecked="{Binding #DemoBottomSheet.IsModal, Mode=TwoWay}"
+                      IsEnabled="{Binding !#DemoBottomSheet.IsExpanded}" />
+            <Button HorizontalAlignment="Center"
+                    Content="Show sheet"
+                    Click="OnShowBottomSheetClick" />
           </StackPanel>
         </Grid>
       </local:BottomSheet>

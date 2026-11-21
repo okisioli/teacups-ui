@@ -34,6 +34,16 @@ public partial class MainWindow : UserControl
 
     public string DialogResult { get; private set; } = "No dialog result yet.";
 
+    private void OnShowBottomSheetClick(object? sender, RoutedEventArgs args)
+    {
+        DemoBottomSheet.IsExpanded = true;
+    }
+
+    private void OnCloseBottomSheetClick(object? sender, RoutedEventArgs args)
+    {
+        DemoBottomSheet.IsExpanded = false;
+    }
+
     private async void OnShowDialogClick(object? sender, RoutedEventArgs args)
     {
         var accepted = await dialogService.ShowDialogAsync(completion => new DialogViewModel(completion));
