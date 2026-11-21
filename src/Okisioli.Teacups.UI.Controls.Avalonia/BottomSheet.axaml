@@ -4,7 +4,9 @@
              x:Name="Root">
   <Grid>
     <ContentPresenter x:Name="MainContentPresenter" />
-    <ContentPresenter Content="{Binding SheetContent, ElementName=Root}"
+    <ContentPresenter x:Name="SheetContentPresenter"
+                      Background="Transparent"
+                      Content="{Binding SheetContent, ElementName=Root}"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Bottom"
                       IsVisible="{Binding IsExpanded, ElementName=Root}" />
