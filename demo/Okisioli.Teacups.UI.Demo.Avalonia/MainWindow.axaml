@@ -6,7 +6,7 @@
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Xaml.Behaviors.Interactivity"
         x:Class="Okisioli.Teacups.UI.Demo.Avalonia.MainWindow"
         x:DataType="demo:MainWindow">
-  <TabControl Margin="20">
+  <TabControl Margin="20,0,20,20">
     <TabItem Header="Circular ProgressBar">
       <Grid Margin="16" ColumnDefinitions="280,*" ColumnSpacing="44">
     <Border Grid.Column="0"
@@ -58,26 +58,57 @@
     </TabItem>
 
     <TabItem Header="Behaviors">
-      <StackPanel Margin="28" Spacing="16">
-        <TextBlock FontSize="28" FontWeight="SemiBold" Text="Behavior demos" />
-        <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
-                   TextWrapping="Wrap"
-                   Text="Try each interaction, then check the console for the message produced by the behavior." />
+      <ScrollViewer>
+        <StackPanel Margin="28" Spacing="24">
+          <StackPanel Spacing="8">
+            <TextBlock FontWeight="SemiBold" Text="Long press" />
+            <Button HorizontalAlignment="Left" Content="Press and hold me for half a second">
+              <i:Interaction.Behaviors>
+                <behaviors:LongPressBehavior Command="{Binding LongPressCommand}" Duration="0:0:0.5" />
+              </i:Interaction.Behaviors>
+            </Button>
+            <TextBlock x:Name="LongPressResult" />
+          </StackPanel>
 
-        <TextBlock Margin="0,12,0,0" Text="Long press" />
-        <Button HorizontalAlignment="Left" Content="Press and hold me for half a second">
-          <i:Interaction.Behaviors>
-            <behaviors:LongPressBehavior Command="{Binding LongPressCommand}" Duration="0:0:0.5" />
-          </i:Interaction.Behaviors>
-        </Button>
+          <StackPanel Spacing="8">
+            <TextBlock FontWeight="SemiBold" Text="List item double-click" />
+            <ListBox HorizontalAlignment="Left" Width="320" Height="120" ItemsSource="{Binding DemoItems}">
+              <i:Interaction.Behaviors>
+                <behaviors:ListBoxDoubleClickBehavior Command="{Binding ListBoxDoubleClickCommand}" />
+              </i:Interaction.Behaviors>
+            </ListBox>
+            <TextBlock x:Name="ListBoxDoubleClickResult" />
+          </StackPanel>
 
-        <TextBlock Margin="0,12,0,0" Text="List item double-click" />
-        <ListBox Width="320" Height="120" ItemsSource="{Binding DemoItems}">
-          <i:Interaction.Behaviors>
-            <behaviors:ListBoxDoubleClickBehavior Command="{Binding ListBoxDoubleClickCommand}" />
-          </i:Interaction.Behaviors>
-        </ListBox>
-      </StackPanel>
+          <StackPanel Spacing="8">
+            <TextBlock FontWeight="SemiBold" Text="Text box submit" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+              <TextBox AutomationProperties.Name="Text to submit" PlaceholderText="Type text and press Enter">
+                <i:Interaction.Behaviors>
+                  <behaviors:TextBoxSubmitBehavior Command="{Binding TextBoxSubmitCommand}"
+                                                   ClearOnSubmit="{Binding #ClearSubmittedText.IsChecked}" />
+                </i:Interaction.Behaviors>
+              </TextBox>
+              <CheckBox x:Name="ClearSubmittedText" Grid.Column="1" IsChecked="False" Content="Clear on submit" />
+            </Grid>
+            <TextBlock x:Name="TextBoxSubmitResult" TextWrapping="Wrap" />
+          </StackPanel>
+
+          <StackPanel Spacing="8">
+            <TextBlock FontWeight="SemiBold" Text="Tagging text box" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+              <TextBox AutomationProperties.Name="Tag to submit" PlaceholderText="Type a tag and press comma or Enter">
+                <i:Interaction.Behaviors>
+                  <behaviors:TaggingTextBoxBehavior Command="{Binding TagSubmitCommand}"
+                                                    ClearOnSubmit="{Binding #ClearSubmittedTag.IsChecked}" />
+                </i:Interaction.Behaviors>
+              </TextBox>
+              <CheckBox x:Name="ClearSubmittedTag" Grid.Column="1" IsChecked="True" Content="Clear on submit" />
+            </Grid>
+            <TextBlock x:Name="TagSubmitResult" TextWrapping="Wrap" />
+          </StackPanel>
+        </StackPanel>
+      </ScrollViewer>
     </TabItem>
 
     <TabItem Header="Bottom Sheet">
