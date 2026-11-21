@@ -1,9 +1,11 @@
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.VisualTree;
 
@@ -32,11 +34,24 @@ public partial class BottomSheet : UserControl
     public static readonly StyledProperty<bool> IsModalProperty =
         AvaloniaProperty.Register<BottomSheet, bool>(nameof(IsModal), defaultValue: false);
 
+    /// <summary>
+    /// Defines the transition played when the sheet opens.
+    /// </summary>
+    public static readonly StyledProperty<IPageTransition?> OpenTransitionProperty =
+        AvaloniaProperty.Register<BottomSheet, IPageTransition?>(nameof(OpenTransition));
+
+    /// <summary>
+    /// Defines the brush covering the main content when the sheet is open.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> BackdropBrushProperty =
+        AvaloniaProperty.Register<BottomSheet, IBrush?>(nameof(BackdropBrush));
+
     private object? mainContent;
     private object? layoutContent;
     private ContentPresenter? mainContentPresenter;
     private TopLevel? topLevel;
     private Page? page;
+    private CancellationTokenSource? openingTransition;
     private bool isInitializingLayout;
     private bool isRestoringLayout;
 
@@ -88,6 +103,27 @@ public partial class BottomSheet : UserControl
         set => SetValue(IsModalProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the opening transition. Defaults to a vertical slide. Set to
+    /// <see langword="null"/> to show the sheet immediately.
+    /// </summary>
+    /// <remarks>A custom transition receives the sheet as the incoming visual.</remarks>
+    public IPageTransition? OpenTransition
+    {
+        get => GetValue(OpenTransitionProperty);
+        set => SetValue(OpenTransitionProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the brush that fades in behind the sheet after it opens.
+    /// Defaults to 50% black. Set to <see langword="null"/> to hide the backdrop.
+    /// </summary>
+    public IBrush? BackdropBrush
+    {
+        get => GetValue(BackdropBrushProperty);
+        set => SetValue(BackdropBrushProperty, value);
+    }
+
     /// <inheritdoc />
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -106,11 +142,18 @@ public partial class BottomSheet : UserControl
         {
             containingPage.PageNavigationSystemBackButtonPressed += OnHostBackRequested;
         }
+
+        if (IsExpanded)
+        {
+            LayoutUpdated += OnOpeningLayoutUpdated;
+        }
     }
 
     /// <inheritdoc />
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        CancelOpening();
+
         if (page is { } containingPage)
         {
             containingPage.PageNavigationSystemBackButtonPressed -= OnHostBackRequested;
@@ -133,6 +176,18 @@ public partial class BottomSheet : UserControl
     {
         base.OnPropertyChanged(change);
 
+        if (change.Property == IsExpandedProperty && this.IsAttachedToVisualTree())
+        {
+            if (IsExpanded)
+            {
+                LayoutUpdated += OnOpeningLayoutUpdated;
+            }
+            else
+            {
+                CancelOpening();
+            }
+        }
+
         if (isInitializingLayout || isRestoringLayout || change.Property != ContentProperty)
         {
             return;
@@ -144,6 +199,48 @@ public partial class BottomSheet : UserControl
         isRestoringLayout = true;
         base.Content = layoutContent;
         isRestoringLayout = false;
+    }
+
+    private async void OnOpeningLayoutUpdated(object? sender, EventArgs e)
+    {
+        LayoutUpdated -= OnOpeningLayoutUpdated;
+
+        // PageSlide uses the arranged height of the sheet's parent for its travel distance.
+        if (OpenTransition is { } transition)
+        {
+            using var cancellation = new CancellationTokenSource();
+            openingTransition = cancellation;
+            try
+            {
+                await transition.Start(null, SheetContentPresenter, forward: true, cancellation.Token);
+                if (cancellation.IsCancellationRequested)
+                {
+                    return;
+                }
+            }
+            catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+            {
+                return;
+            }
+            finally
+            {
+                if (openingTransition == cancellation)
+                {
+                    openingTransition = null;
+                }
+            }
+        }
+
+        Backdrop.Opacity = 1;
+    }
+
+    private void CancelOpening()
+    {
+        LayoutUpdated -= OnOpeningLayoutUpdated;
+        var cancellation = openingTransition;
+        openingTransition = null;
+        cancellation?.Cancel();
+        Backdrop.Opacity = 0;
     }
 
     private void OnHostKeyDown(object? sender, KeyEventArgs e)

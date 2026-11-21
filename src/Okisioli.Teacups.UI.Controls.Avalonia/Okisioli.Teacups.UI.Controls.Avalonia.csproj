@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
-    <Version>0.12.0</Version>
+    <Version>0.13.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
-    <PackageReleaseNotes>Bottom sheets now close via Escape, system Back, or an outside click or tap by default. Set IsModal to keep the sheet open during those interactions.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bottom sheets now slide in by default and fade in a backdrop over their main content. Set OpenTransition or BackdropBrush to customize or disable either effect.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
