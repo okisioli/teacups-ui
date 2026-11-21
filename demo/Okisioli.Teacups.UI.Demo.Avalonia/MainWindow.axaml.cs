@@ -13,8 +13,10 @@ public partial class MainWindow : UserControl
     {
         this.dialogService = dialogService;
         DemoItems = ["First item", "Second item", "Third item"];
-        LongPressCommand = new DelegateCommand(_ => Console.WriteLine("Long press behavior executed."));
-        ListBoxDoubleClickCommand = new DelegateCommand(item => Console.WriteLine($"ListBox double-click behavior executed for: {item}."));
+        LongPressCommand = new DelegateCommand(_ => LongPressResult.Text = "Long press detected.");
+        ListBoxDoubleClickCommand = new DelegateCommand(item => ListBoxDoubleClickResult.Text = $"Double-clicked: {item}");
+        TextBoxSubmitCommand = new DelegateCommand(text => TextBoxSubmitResult.Text = $"Submitted: \"{text}\"");
+        TagSubmitCommand = new DelegateCommand(tag => TagSubmitResult.Text = $"Last tag: \"{tag}\"");
 
         DataContext = this;
         InitializeComponent();
@@ -25,6 +27,10 @@ public partial class MainWindow : UserControl
     public ICommand LongPressCommand { get; }
 
     public ICommand ListBoxDoubleClickCommand { get; }
+
+    public ICommand TextBoxSubmitCommand { get; }
+
+    public ICommand TagSubmitCommand { get; }
 
     public string DialogResult { get; private set; } = "No dialog result yet.";
 

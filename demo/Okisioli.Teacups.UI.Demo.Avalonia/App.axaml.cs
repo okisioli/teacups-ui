@@ -12,10 +12,12 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var navigationPage = new NavigationPage();
-            navigationPage.Content = new ContentPage
+            var demoPage = new ContentPage
             {
                 Content = new MainWindow(new DialogService<DialogViewModel, DialogView>(navigationPage, confirmOnBackNavigation: false))
             };
+            NavigationPage.SetHasNavigationBar(demoPage, false);
+            navigationPage.Content = demoPage;
 
             desktop.MainWindow = new Window
             {
