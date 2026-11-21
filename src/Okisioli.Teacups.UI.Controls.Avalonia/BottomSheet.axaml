@@ -1,14 +1,34 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Okisioli.Teacups.UI.Controls.Avalonia"
              x:Class="Okisioli.Teacups.UI.Controls.Avalonia.BottomSheet"
              x:Name="Root">
+  <UserControl.Styles>
+    <Style Selector="local|BottomSheet">
+      <Setter Property="OpenTransition">
+        <PageSlide Orientation="Vertical" Duration="0:00:00.25" />
+      </Setter>
+      <Setter Property="BackdropBrush" Value="#80000000" />
+    </Style>
+  </UserControl.Styles>
   <Grid>
     <ContentPresenter x:Name="MainContentPresenter" />
-    <ContentPresenter x:Name="SheetContentPresenter"
-                      Background="Transparent"
-                      Content="{Binding SheetContent, ElementName=Root}"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Bottom"
-                      IsVisible="{Binding IsExpanded, ElementName=Root}" />
+    <Border x:Name="Backdrop"
+            Background="{Binding BackdropBrush, ElementName=Root}"
+            IsHitTestVisible="False"
+            Opacity="0">
+      <Border.Transitions>
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:00:00.15" />
+        </Transitions>
+      </Border.Transitions>
+    </Border>
+    <Grid ClipToBounds="True" IsVisible="{Binding IsExpanded, ElementName=Root}">
+      <Grid VerticalAlignment="Bottom">
+        <ContentPresenter x:Name="SheetContentPresenter"
+                          Background="Transparent"
+                          Content="{Binding SheetContent, ElementName=Root}" />
+      </Grid>
+    </Grid>
   </Grid>
 </UserControl>

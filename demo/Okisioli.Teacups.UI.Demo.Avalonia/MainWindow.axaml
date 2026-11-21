@@ -112,7 +112,7 @@
     </TabItem>
 
     <TabItem Header="Bottom Sheet">
-      <local:BottomSheet x:Name="DemoBottomSheet" Margin="16">
+      <local:BottomSheet x:Name="DemoBottomSheet">
         <local:BottomSheet.SheetContent>
           <StackPanel Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" Spacing="8">
             <TextBlock Margin="16,16,16,0" FontWeight="SemiBold" Text="Sheet content" />
