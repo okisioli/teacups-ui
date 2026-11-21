@@ -11,7 +11,11 @@ namespace Okisioli.Teacups.UI.Core.WPF;
 /// <typeparam name="TViewModel">The type of the dialog view model.</typeparam>
 /// <typeparam name="TView">A <see cref="UserControl"/> with a public parameterless constructor.</typeparam>
 /// <param name="dispatcher">The dispatcher for the WPF UI thread.</param>
-/// <remarks>Closing the modal window cancels the dialog.</remarks>
+/// <remarks>
+/// The dialog centers on the active application window on the supplied dispatcher, or on the screen
+/// when there is no such window. Closing the window or pressing Escape cancels the dialog.
+/// Set <see cref="Button.IsDefault"/> on the view's confirmation button to enable Enter.
+/// </remarks>
 public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogService<TViewModel, TView>
     where TView : UserControl, new()
 {
@@ -37,6 +41,13 @@ public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogSe
             {
                 Content = view
             };
+
+            if (Application.Current is { } application && application.CheckAccess()
+                && application.Windows.OfType<Window>().FirstOrDefault(candidate => candidate.IsActive) is { } owner)
+            {
+                window.Owner = owner;
+                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            }
 
             window.Closed += (_, _) => completion.Cancel();
             _ = completion.Result.ContinueWith(
