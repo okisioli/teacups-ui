@@ -131,7 +131,10 @@ public class TextBoxSubmitBehavior : Behavior<TextBox>
         command?.Execute(text);
         Submitted?.Invoke(this, new TextSubmittedEventArgs(text));
         if (ClearOnSubmit)
+        {
             textBox.SetCurrentValue(TextBox.TextProperty, string.Empty);
+            textBox.Focus();
+        }
         return true;
     }
 }
