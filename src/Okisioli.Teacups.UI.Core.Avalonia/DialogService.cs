@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Okisioli.Teacups.UI.Core;
@@ -14,6 +15,10 @@ namespace Okisioli.Teacups.UI.Core.Avalonia;
 /// <see langword="true"/> to confirm when back navigation pops the dialog page.
 /// <see langword="false"/> to cancel.
 /// </param>
+/// <remarks>
+/// Escape cancels the dialog. Set <see cref="Button.IsDefault"/> on the view's confirmation button
+/// to enable Enter.
+/// </remarks>
 public class DialogService<TViewModel, TView>(NavigationPage navigationPage, bool confirmOnBackNavigation) : IDialogService<TViewModel, TView>
     where TView : UserControl, new()
 {
@@ -48,7 +53,6 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage, boo
                 return;
             }
 
-            navigationPage.Popped -= OnPopped;
             if (confirmOnBackNavigation)
             {
                 completion.Confirm();
@@ -59,15 +63,15 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage, boo
             }
         }
 
-        async void OnKeyDown(object? sender, KeyEventArgs args)
+        void OnKeyDown(object? sender, KeyEventArgs args)
         {
-            if (args.Key != Key.Escape || navigationPage.Navigation?.NavigationStack.Contains(page) != true)
+            if (args.Key != Key.Escape || navigationPage.CurrentPage != page)
             {
                 return;
             }
 
             args.Handled = true;
-            await navigationPage.PopAsync();
+            completion.Cancel();
         }
 
         navigationPage.Popped += OnPopped;
@@ -76,24 +80,55 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage, boo
         try
         {
             await navigationPage.PushAsync(page);
+            if (!navigationPage.NavigationStack.Contains(page))
+            {
+                return false;
+            }
+
             page.Focus();
+            var result = await completion.Result;
+            await DismissAsync(page);
+            return result;
         }
-        catch
+        finally
         {
             navigationPage.Popped -= OnPopped;
             page.KeyDown -= OnKeyDown;
-            throw;
+        }
+    }
+
+    private async Task DismissAsync(Page page)
+    {
+        // Navigation ignores pop and remove requests while a transition is in progress.
+        while (navigationPage.IsNavigating && navigationPage.NavigationStack.Contains(page))
+        {
+            var transitionEnded = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            void OnNavigationChanged(object? sender, AvaloniaPropertyChangedEventArgs args)
+            {
+                if (args.Property == NavigationPage.IsNavigatingProperty && !navigationPage.IsNavigating)
+                {
+                    transitionEnded.TrySetResult();
+                }
+            }
+
+            navigationPage.PropertyChanged += OnNavigationChanged;
+            try
+            {
+                await transitionEnded.Task;
+            }
+            finally
+            {
+                navigationPage.PropertyChanged -= OnNavigationChanged;
+            }
         }
 
-        var result = await completion.Result;
-        navigationPage.Popped -= OnPopped;
-        page.KeyDown -= OnKeyDown;
-
-        if (navigationPage.Navigation?.NavigationStack.Contains(page) == true)
+        if (navigationPage.CurrentPage == page && navigationPage.CanGoBack)
         {
             await navigationPage.PopAsync();
         }
-
-        return result;
+        else if (navigationPage.NavigationStack.Contains(page))
+        {
+            navigationPage.RemovePage(page);
+        }
     }
 }

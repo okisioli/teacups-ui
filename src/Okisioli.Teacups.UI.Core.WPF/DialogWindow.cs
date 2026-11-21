@@ -8,7 +8,8 @@ internal sealed class DialogWindow : Window
     public DialogWindow()
     {
         SizeToContent = SizeToContent.WidthAndHeight;
-        WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        ResizeMode = ResizeMode.NoResize;
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
         PreviewKeyDown += OnPreviewKeyDown;
     }
 
@@ -16,6 +17,7 @@ internal sealed class DialogWindow : Window
     {
         if (args.Key == Key.Escape)
         {
+            args.Handled = true;
             Close();
         }
     }
