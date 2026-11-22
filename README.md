@@ -22,9 +22,12 @@ Teacups UI is a collection of small, reusable UI building blocks for Teacups app
 ## Demos
 
 - [WPF](demo/Okisioli.Teacups.UI.Demo.WPF)
-- [Avalonia](demo/Okisioli.Teacups.UI.Demo.Avalonia)
+- [Avalonia](demo/Okisioli.Teacups.UI.Demo.Avalonia) · [View demo](https://teacups-libs.github.io/teacups-ui/)
 
 To run the Avalonia browser demo locally, install the .NET 10 SDK and run
 `./start.ps1` in PowerShell. The script restores the required WebAssembly workload,
 builds the demo, and prints the local URL. The [desktop host](demo/Okisioli.Teacups.UI.Demo.Avalonia.Desktop)
 can be run from the solution.
+
+The [Avalonia demo workflow](.github/workflows/publish-demo.yml) publishes from
+`main` when the repository's **Settings → Pages → Source** is set to **GitHub Actions**.
