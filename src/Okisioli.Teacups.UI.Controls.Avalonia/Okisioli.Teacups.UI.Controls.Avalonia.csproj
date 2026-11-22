@@ -3,7 +3,7 @@
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
     <Version>0.15.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
-    <PackageReleaseNotes>The bottom sheet backdrop now fades in while the sheet opens.</PackageReleaseNotes>
+    <PackageReleaseNotes>The bottom sheet backdrop now fades in while the sheet opens. The sheet slides in and out by default. TransitionSpeed controls both built-in slides and defaults to 1.5. Set CloseTransition to customize or disable the closing animation.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

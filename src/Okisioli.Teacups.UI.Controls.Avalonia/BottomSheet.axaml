@@ -3,11 +3,13 @@
              xmlns:local="using:Okisioli.Teacups.UI.Controls.Avalonia"
              x:Class="Okisioli.Teacups.UI.Controls.Avalonia.BottomSheet"
              x:Name="Root">
+  <UserControl.Resources>
+    <PageSlide x:Key="DefaultSheetSlide" Orientation="Vertical" Duration="0:00:00.25" />
+  </UserControl.Resources>
   <UserControl.Styles>
     <Style Selector="local|BottomSheet">
-      <Setter Property="OpenTransition">
-        <PageSlide Orientation="Vertical" Duration="0:00:00.25" />
-      </Setter>
+      <Setter Property="OpenTransition" Value="{StaticResource DefaultSheetSlide}" />
+      <Setter Property="CloseTransition" Value="{StaticResource DefaultSheetSlide}" />
       <Setter Property="BackdropBrush" Value="#80000000" />
     </Style>
   </UserControl.Styles>
@@ -23,7 +25,10 @@
         </Transitions>
       </Border.Transitions>
     </Border>
-    <Grid ClipToBounds="True" IsVisible="{Binding IsExpanded, ElementName=Root}">
+    <Grid x:Name="SheetLayer"
+          ClipToBounds="True"
+          IsHitTestVisible="{Binding IsExpanded, ElementName=Root}"
+          IsVisible="False">
       <Grid VerticalAlignment="Bottom">
         <ContentPresenter x:Name="SheetContentPresenter"
                           Background="Transparent"
