@@ -115,7 +115,7 @@ public partial class BottomSheet : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the brush that fades in behind the sheet after it opens.
+    /// Gets or sets the brush that fades in behind the sheet as it opens.
     /// Defaults to 50% black. Set to <see langword="null"/> to hide the backdrop.
     /// </summary>
     public IBrush? BackdropBrush
@@ -204,6 +204,7 @@ public partial class BottomSheet : UserControl
     private async void OnOpeningLayoutUpdated(object? sender, EventArgs e)
     {
         LayoutUpdated -= OnOpeningLayoutUpdated;
+        Backdrop.Opacity = 1;
 
         // PageSlide uses the arranged height of the sheet's parent for its travel distance.
         if (OpenTransition is { } transition)
@@ -213,14 +214,9 @@ public partial class BottomSheet : UserControl
             try
             {
                 await transition.Start(null, SheetContentPresenter, forward: true, cancellation.Token);
-                if (cancellation.IsCancellationRequested)
-                {
-                    return;
-                }
             }
             catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
             {
-                return;
             }
             finally
             {
@@ -230,8 +226,6 @@ public partial class BottomSheet : UserControl
                 }
             }
         }
-
-        Backdrop.Opacity = 1;
     }
 
     private void CancelOpening()
