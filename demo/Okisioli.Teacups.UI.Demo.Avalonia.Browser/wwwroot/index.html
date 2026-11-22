@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacups UI demo</title>
+    <link rel="preload" id="webassembly">
+    <script type="importmap"></script>
+    <script type="module" src="main#[.{fingerprint}].js"></script>
+    <style>
+        body { margin: 0; font: 1rem system-ui, sans-serif; }
+        #demo { height: 100dvh; }
+        #status { position: absolute; inset: 0; display: grid; place-items: center; }
+    </style>
+</head>
+<body>
+    <div id="demo"></div>
+    <div id="status" role="status">Loading the Teacups UI demo…</div>
+</body>
+</html>

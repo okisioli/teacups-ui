@@ -6,6 +6,7 @@
   <Project Path="src/Okisioli.Teacups.UI.Behaviors.Avalonia/Okisioli.Teacups.UI.Behaviors.Avalonia.csproj" />
   <Project Path="src/Okisioli.Teacups.UI.Controls.Avalonia/Okisioli.Teacups.UI.Controls.Avalonia.csproj" />
   <Project Path="demo/Okisioli.Teacups.UI.Demo.Avalonia/Okisioli.Teacups.UI.Demo.Avalonia.csproj" />
+  <Project Path="demo/Okisioli.Teacups.UI.Demo.Avalonia.Desktop/Okisioli.Teacups.UI.Demo.Avalonia.Desktop.csproj" />
   <Project Path="demo/Okisioli.Teacups.UI.Demo.WPF/Okisioli.Teacups.UI.Demo.WPF.csproj" />
   <Project Path="tests/Okisioli.Teacups.UI.Core.WPF.Tests/Okisioli.Teacups.UI.Core.WPF.Tests.csproj" />
   <Project Path="tests/Okisioli.Teacups.UI.Core.Avalonia.Tests/Okisioli.Teacups.UI.Core.Avalonia.Tests.csproj" />
