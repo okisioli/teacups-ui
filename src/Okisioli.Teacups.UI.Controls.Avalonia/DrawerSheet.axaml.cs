@@ -12,52 +12,60 @@ using Avalonia.VisualTree;
 namespace Okisioli.Teacups.UI.Controls.Avalonia;
 
 /// <summary>
-/// Displays content with an optional sheet overlaid at its bottom edge.
+/// Displays content with an optional sheet overlaid at a configurable edge.
 /// </summary>
-public partial class BottomSheet : UserControl
+public partial class DrawerSheet : UserControl
 {
     /// <summary>
-    /// Defines the content displayed in the bottom sheet.
+    /// Defines the content displayed in the sheet.
     /// </summary>
     public static readonly StyledProperty<object?> SheetContentProperty =
-        AvaloniaProperty.Register<BottomSheet, object?>(nameof(SheetContent));
+        AvaloniaProperty.Register<DrawerSheet, object?>(nameof(SheetContent));
 
     /// <summary>
-    /// Defines whether the bottom sheet is visible.
+    /// Defines whether the sheet is visible.
     /// </summary>
     public static readonly StyledProperty<bool> IsExpandedProperty =
-        AvaloniaProperty.Register<BottomSheet, bool>(nameof(IsExpanded), defaultValue: false);
+        AvaloniaProperty.Register<DrawerSheet, bool>(nameof(IsExpanded), defaultValue: false);
 
     /// <summary>
     /// Defines whether the sheet stays open when Escape, system Back, or an outside press occurs.
     /// </summary>
     public static readonly StyledProperty<bool> IsModalProperty =
-        AvaloniaProperty.Register<BottomSheet, bool>(nameof(IsModal), defaultValue: false);
+        AvaloniaProperty.Register<DrawerSheet, bool>(nameof(IsModal), defaultValue: false);
 
     /// <summary>
     /// Defines the transition played when the sheet opens.
     /// </summary>
     public static readonly StyledProperty<IPageTransition?> OpenTransitionProperty =
-        AvaloniaProperty.Register<BottomSheet, IPageTransition?>(nameof(OpenTransition));
+        AvaloniaProperty.Register<DrawerSheet, IPageTransition?>(nameof(OpenTransition));
 
     /// <summary>
     /// Defines the transition played when the sheet closes.
     /// </summary>
     public static readonly StyledProperty<IPageTransition?> CloseTransitionProperty =
-        AvaloniaProperty.Register<BottomSheet, IPageTransition?>(nameof(CloseTransition));
+        AvaloniaProperty.Register<DrawerSheet, IPageTransition?>(nameof(CloseTransition));
 
     /// <summary>
     /// Defines the speed multiplier for the built-in opening and closing transitions.
     /// </summary>
     public static readonly StyledProperty<double> TransitionSpeedProperty =
-        AvaloniaProperty.Register<BottomSheet, double>(
+        AvaloniaProperty.Register<DrawerSheet, double>(
             nameof(TransitionSpeed), defaultValue: 1.5, validate: value => double.IsFinite(value) && value > 0);
 
     /// <summary>
     /// Defines the brush covering the main content when the sheet is open.
     /// </summary>
     public static readonly StyledProperty<IBrush?> BackdropBrushProperty =
-        AvaloniaProperty.Register<BottomSheet, IBrush?>(nameof(BackdropBrush));
+        AvaloniaProperty.Register<DrawerSheet, IBrush?>(nameof(BackdropBrush));
+
+    /// <summary>
+    /// Defines the edge from which the sheet opens.
+    /// </summary>
+    public static readonly StyledProperty<Dock> PlacementProperty =
+        AvaloniaProperty.Register<DrawerSheet, Dock>(
+            nameof(Placement), defaultValue: Dock.Bottom,
+            validate: value => value is Dock.Bottom or Dock.Left or Dock.Top or Dock.Right);
 
     private object? mainContent;
     private object? layoutContent;
@@ -68,7 +76,7 @@ public partial class BottomSheet : UserControl
     private bool isInitializingLayout;
     private bool isRestoringLayout;
 
-    public BottomSheet()
+    public DrawerSheet()
     {
         isInitializingLayout = true;
         InitializeComponent();
@@ -79,7 +87,7 @@ public partial class BottomSheet : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the content displayed behind the bottom sheet.
+    /// Gets or sets the content displayed behind the sheet.
     /// </summary>
     [Content]
     public new object? Content
@@ -89,7 +97,7 @@ public partial class BottomSheet : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the content displayed in the bottom sheet.
+    /// Gets or sets the content displayed in the sheet.
     /// </summary>
     public object? SheetContent
     {
@@ -98,7 +106,17 @@ public partial class BottomSheet : UserControl
     }
 
     /// <summary>
-    /// Gets or sets whether the bottom sheet is visible.
+    /// Gets or sets the edge from which the sheet opens and toward which it closes.
+    /// Defaults to <see cref="Dock.Bottom"/>.
+    /// </summary>
+    public Dock Placement
+    {
+        get => GetValue(PlacementProperty);
+        set => SetValue(PlacementProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the sheet is visible.
     /// </summary>
     public bool IsExpanded
     {
@@ -117,7 +135,7 @@ public partial class BottomSheet : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the opening transition. Defaults to a vertical slide. Set to
+    /// Gets or sets the opening transition. Defaults to a slide from <see cref="Placement"/>. Set to
     /// <see langword="null"/> to show the sheet immediately.
     /// </summary>
     /// <remarks>A custom transition receives the sheet as the incoming visual.</remarks>
@@ -128,7 +146,7 @@ public partial class BottomSheet : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the closing transition. Defaults to a downward slide. Set to
+    /// Gets or sets the closing transition. Defaults to a slide toward <see cref="Placement"/>. Set to
     /// <see langword="null"/> to hide the sheet immediately.
     /// </summary>
     /// <remarks>A custom transition receives the sheet as the outgoing visual with backward direction.</remarks>
@@ -256,7 +274,7 @@ public partial class BottomSheet : UserControl
         LayoutUpdated -= OnOpeningLayoutUpdated;
         Backdrop.Opacity = 1;
 
-        // PageSlide uses the arranged height of the sheet's parent for its travel distance.
+        // PageSlide uses the arranged size of the sheet's parent for its travel distance.
         if (OpenTransition is { } transition)
         {
             StartTransition(transition, opening: true);
@@ -278,6 +296,7 @@ public partial class BottomSheet : UserControl
 
     private async void StartTransition(IPageTransition transition, bool opening)
     {
+        var forward = opening;
         if (transition is PageSlide slide && ReferenceEquals(slide, Resources["DefaultSheetSlide"]))
         {
             var ticks = Math.Round(slide.Duration.Ticks / TransitionSpeed);
@@ -286,7 +305,12 @@ public partial class BottomSheet : UserControl
                 : TimeSpan.FromTicks(Math.Max(1, (long)ticks));
 
             // Style resources can be reused. Give this playback its own duration.
-            transition = new PageSlide(duration, slide.Orientation)
+            var axis = Placement is Dock.Left or Dock.Right
+                ? PageSlide.SlideAxis.Horizontal
+                : PageSlide.SlideAxis.Vertical;
+            // A forward slide enters from the positive side and exits toward the negative side.
+            forward = opening == (Placement is Dock.Bottom or Dock.Right);
+            transition = new PageSlide(duration, axis)
             {
                 FillMode = slide.FillMode,
                 SlideInEasing = slide.SlideInEasing,
@@ -301,7 +325,7 @@ public partial class BottomSheet : UserControl
             await transition.Start(
                 opening ? null : SheetContentPresenter,
                 opening ? SheetContentPresenter : null,
-                forward: opening,
+                forward,
                 cancellation.Token);
         }
         catch (OperationCanceledException) when (cancellation.IsCancellationRequested)

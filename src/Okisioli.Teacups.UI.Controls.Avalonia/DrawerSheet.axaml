@@ -1,13 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Okisioli.Teacups.UI.Controls.Avalonia"
-             x:Class="Okisioli.Teacups.UI.Controls.Avalonia.BottomSheet"
+             x:Class="Okisioli.Teacups.UI.Controls.Avalonia.DrawerSheet"
              x:Name="Root">
   <UserControl.Resources>
-    <PageSlide x:Key="DefaultSheetSlide" Orientation="Vertical" Duration="0:00:00.25" />
+    <PageSlide x:Key="DefaultSheetSlide" Duration="0:00:00.25" />
   </UserControl.Resources>
   <UserControl.Styles>
-    <Style Selector="local|BottomSheet">
+    <Style Selector="local|DrawerSheet">
       <Setter Property="OpenTransition" Value="{StaticResource DefaultSheetSlide}" />
       <Setter Property="CloseTransition" Value="{StaticResource DefaultSheetSlide}" />
       <Setter Property="BackdropBrush" Value="#80000000" />
@@ -25,15 +25,16 @@
         </Transitions>
       </Border.Transitions>
     </Border>
-    <Grid x:Name="SheetLayer"
-          ClipToBounds="True"
-          IsHitTestVisible="{Binding IsExpanded, ElementName=Root}"
-          IsVisible="False">
-      <Grid VerticalAlignment="Bottom">
+    <DockPanel x:Name="SheetLayer"
+               LastChildFill="False"
+               ClipToBounds="True"
+               IsHitTestVisible="{Binding IsExpanded, ElementName=Root}"
+               IsVisible="False">
+      <Grid DockPanel.Dock="{Binding Placement, ElementName=Root}">
         <ContentPresenter x:Name="SheetContentPresenter"
                           Background="Transparent"
                           Content="{Binding SheetContent, ElementName=Root}" />
       </Grid>
-    </Grid>
+    </DockPanel>
   </Grid>
 </UserControl>

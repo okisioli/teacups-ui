@@ -111,34 +111,40 @@
       </ScrollViewer>
     </TabItem>
 
-    <TabItem Header="Bottom Sheet">
-      <local:BottomSheet x:Name="DemoBottomSheet">
-        <local:BottomSheet.SheetContent>
+    <TabItem Header="Drawer Sheet">
+      <local:DrawerSheet x:Name="DemoDrawerSheet">
+        <local:DrawerSheet.SheetContent>
           <StackPanel Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" Spacing="8">
             <TextBlock Margin="16,16,16,0" FontWeight="SemiBold" Text="Sheet content" />
             <TextBox Margin="16,0" Text="First text box" />
             <TextBox Margin="16,0" Text="Second text box" />
             <TextBox Margin="16,0" Text="Third text box" />
-            <Button Margin="16,0,16,16" Content="Close sheet" Click="OnCloseBottomSheetClick" />
+            <Button Margin="16,0,16,16" Content="Close sheet" Click="OnCloseDrawerSheetClick" />
           </StackPanel>
-        </local:BottomSheet.SheetContent>
+        </local:DrawerSheet.SheetContent>
 
         <Grid Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
           <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
-            <TextBlock HorizontalAlignment="Center" FontSize="28" FontWeight="SemiBold" Text="Bottom Sheet" />
+            <TextBlock HorizontalAlignment="Center" FontSize="28" FontWeight="SemiBold" Text="Drawer Sheet" />
             <TextBlock HorizontalAlignment="Center"
                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                        Text="Toggle the auto-sized sheet over this content." />
+            <ComboBox x:Name="DrawerPlacement"
+                      HorizontalAlignment="Center"
+                      AutomationProperties.Name="Drawer placement"
+                      ItemsSource="{Binding DrawerPlacements}"
+                      SelectedIndex="0"
+                      IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}" />
             <CheckBox HorizontalAlignment="Center"
                       Content="Modal"
-                      IsChecked="{Binding #DemoBottomSheet.IsModal, Mode=TwoWay}"
-                      IsEnabled="{Binding !#DemoBottomSheet.IsExpanded}" />
+                      IsChecked="{Binding #DemoDrawerSheet.IsModal, Mode=TwoWay}"
+                      IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}" />
             <Button HorizontalAlignment="Center"
                     Content="Show sheet"
-                    Click="OnShowBottomSheetClick" />
+                    Click="OnShowDrawerSheetClick" />
           </StackPanel>
         </Grid>
-      </local:BottomSheet>
+      </local:DrawerSheet>
     </TabItem>
 
     <TabItem Header="Dialogs">

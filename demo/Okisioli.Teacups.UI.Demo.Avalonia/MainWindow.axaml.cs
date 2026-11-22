@@ -24,6 +24,7 @@ public partial class MainWindow : UserControl
 
     public IReadOnlyList<string> DemoItems { get; }
 
+    public IReadOnlyList<Dock> DrawerPlacements { get; } = [Dock.Bottom, Dock.Left, Dock.Top, Dock.Right];
     public ICommand LongPressCommand { get; }
 
     public ICommand ListBoxDoubleClickCommand { get; }
@@ -34,14 +35,19 @@ public partial class MainWindow : UserControl
 
     public string DialogResult { get; private set; } = "No dialog result yet.";
 
-    private void OnShowBottomSheetClick(object? sender, RoutedEventArgs args)
+    private void OnShowDrawerSheetClick(object? sender, RoutedEventArgs args)
     {
-        DemoBottomSheet.IsExpanded = true;
+        if (DrawerPlacement.SelectedItem is Dock placement)
+        {
+            DemoDrawerSheet.Placement = placement;
+        }
+
+        DemoDrawerSheet.IsExpanded = true;
     }
 
-    private void OnCloseBottomSheetClick(object? sender, RoutedEventArgs args)
+    private void OnCloseDrawerSheetClick(object? sender, RoutedEventArgs args)
     {
-        DemoBottomSheet.IsExpanded = false;
+        DemoDrawerSheet.IsExpanded = false;
     }
 
     private async void OnShowDialogClick(object? sender, RoutedEventArgs args)
