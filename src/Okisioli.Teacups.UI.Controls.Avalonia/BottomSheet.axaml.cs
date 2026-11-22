@@ -41,6 +41,19 @@ public partial class BottomSheet : UserControl
         AvaloniaProperty.Register<BottomSheet, IPageTransition?>(nameof(OpenTransition));
 
     /// <summary>
+    /// Defines the transition played when the sheet closes.
+    /// </summary>
+    public static readonly StyledProperty<IPageTransition?> CloseTransitionProperty =
+        AvaloniaProperty.Register<BottomSheet, IPageTransition?>(nameof(CloseTransition));
+
+    /// <summary>
+    /// Defines the speed multiplier for the built-in opening and closing transitions.
+    /// </summary>
+    public static readonly StyledProperty<double> TransitionSpeedProperty =
+        AvaloniaProperty.Register<BottomSheet, double>(
+            nameof(TransitionSpeed), defaultValue: 1.5, validate: value => double.IsFinite(value) && value > 0);
+
+    /// <summary>
     /// Defines the brush covering the main content when the sheet is open.
     /// </summary>
     public static readonly StyledProperty<IBrush?> BackdropBrushProperty =
@@ -51,7 +64,7 @@ public partial class BottomSheet : UserControl
     private ContentPresenter? mainContentPresenter;
     private TopLevel? topLevel;
     private Page? page;
-    private CancellationTokenSource? openingTransition;
+    private CancellationTokenSource? activeTransition;
     private bool isInitializingLayout;
     private bool isRestoringLayout;
 
@@ -115,7 +128,29 @@ public partial class BottomSheet : UserControl
     }
 
     /// <summary>
-    /// Gets or sets the brush that fades in behind the sheet after it opens.
+    /// Gets or sets the closing transition. Defaults to a downward slide. Set to
+    /// <see langword="null"/> to hide the sheet immediately.
+    /// </summary>
+    /// <remarks>A custom transition receives the sheet as the outgoing visual with backward direction.</remarks>
+    public IPageTransition? CloseTransition
+    {
+        get => GetValue(CloseTransitionProperty);
+        set => SetValue(CloseTransitionProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the positive, finite speed multiplier for both built-in slides.
+    /// Defaults to 1.5, which plays each slide in about 167 milliseconds.
+    /// </summary>
+    /// <remarks>Custom transitions control their own timing.</remarks>
+    public double TransitionSpeed
+    {
+        get => GetValue(TransitionSpeedProperty);
+        set => SetValue(TransitionSpeedProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the brush that fades in behind the sheet as it opens.
     /// Defaults to 50% black. Set to <see langword="null"/> to hide the backdrop.
     /// </summary>
     public IBrush? BackdropBrush
@@ -145,14 +180,16 @@ public partial class BottomSheet : UserControl
 
         if (IsExpanded)
         {
-            LayoutUpdated += OnOpeningLayoutUpdated;
+            OpenSheet();
         }
     }
 
     /// <inheritdoc />
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        CancelOpening();
+        CancelTransition();
+        SheetLayer.IsVisible = false;
+        Backdrop.Opacity = 0;
 
         if (page is { } containingPage)
         {
@@ -178,13 +215,14 @@ public partial class BottomSheet : UserControl
 
         if (change.Property == IsExpandedProperty && this.IsAttachedToVisualTree())
         {
+            CancelTransition();
             if (IsExpanded)
             {
-                LayoutUpdated += OnOpeningLayoutUpdated;
+                OpenSheet();
             }
             else
             {
-                CancelOpening();
+                CloseSheet();
             }
         }
 
@@ -201,46 +239,93 @@ public partial class BottomSheet : UserControl
         isRestoringLayout = false;
     }
 
-    private async void OnOpeningLayoutUpdated(object? sender, EventArgs e)
+    private void OpenSheet()
+    {
+        // An outgoing transition can hide the presenter or leave its animated values in place.
+        SheetContentPresenter.IsVisible = true;
+        SheetContentPresenter.Opacity = 1;
+        SheetContentPresenter.RenderTransform = null;
+        SheetLayer.IsVisible = true;
+
+        LayoutUpdated += OnOpeningLayoutUpdated;
+        SheetLayer.InvalidateArrange();
+    }
+
+    private void OnOpeningLayoutUpdated(object? sender, EventArgs e)
     {
         LayoutUpdated -= OnOpeningLayoutUpdated;
+        Backdrop.Opacity = 1;
 
         // PageSlide uses the arranged height of the sheet's parent for its travel distance.
         if (OpenTransition is { } transition)
         {
-            using var cancellation = new CancellationTokenSource();
-            openingTransition = cancellation;
-            try
+            StartTransition(transition, opening: true);
+        }
+    }
+
+    private void CloseSheet()
+    {
+        Backdrop.Opacity = 0;
+        if (SheetLayer.IsVisible && CloseTransition is { } transition)
+        {
+            StartTransition(transition, opening: false);
+        }
+        else
+        {
+            SheetLayer.IsVisible = false;
+        }
+    }
+
+    private async void StartTransition(IPageTransition transition, bool opening)
+    {
+        if (transition is PageSlide slide && ReferenceEquals(slide, Resources["DefaultSheetSlide"]))
+        {
+            var ticks = Math.Round(slide.Duration.Ticks / TransitionSpeed);
+            var duration = ticks >= TimeSpan.MaxValue.Ticks
+                ? TimeSpan.MaxValue
+                : TimeSpan.FromTicks(Math.Max(1, (long)ticks));
+
+            // Style resources can be reused. Give this playback its own duration.
+            transition = new PageSlide(duration, slide.Orientation)
             {
-                await transition.Start(null, SheetContentPresenter, forward: true, cancellation.Token);
-                if (cancellation.IsCancellationRequested)
+                FillMode = slide.FillMode,
+                SlideInEasing = slide.SlideInEasing,
+                SlideOutEasing = slide.SlideOutEasing,
+            };
+        }
+
+        using var cancellation = new CancellationTokenSource();
+        activeTransition = cancellation;
+        try
+        {
+            await transition.Start(
+                opening ? null : SheetContentPresenter,
+                opening ? SheetContentPresenter : null,
+                forward: opening,
+                cancellation.Token);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            if (activeTransition == cancellation)
+            {
+                activeTransition = null;
+                if (!opening)
                 {
-                    return;
-                }
-            }
-            catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
-            {
-                return;
-            }
-            finally
-            {
-                if (openingTransition == cancellation)
-                {
-                    openingTransition = null;
+                    SheetLayer.IsVisible = false;
                 }
             }
         }
-
-        Backdrop.Opacity = 1;
     }
 
-    private void CancelOpening()
+    private void CancelTransition()
     {
         LayoutUpdated -= OnOpeningLayoutUpdated;
-        var cancellation = openingTransition;
-        openingTransition = null;
+        var cancellation = activeTransition;
+        activeTransition = null;
         cancellation?.Cancel();
-        Backdrop.Opacity = 0;
     }
 
     private void OnHostKeyDown(object? sender, KeyEventArgs e)
