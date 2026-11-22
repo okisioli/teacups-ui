@@ -23,7 +23,11 @@ jobs:
           dotnet-version: "10.0.x"
       - run: dotnet workload install wasm-tools
       - run: dotnet publish "demo/$DEMO_PROJECT/$DEMO_PROJECT.csproj" -c Release -m:1
-      - run: test -f "publish/$DEMO_PROJECT/wwwroot/index.html"
+      - name: Verify the published entry point
+        run: |
+          site="publish/$DEMO_PROJECT/wwwroot"
+          entry=$(sed -n 's/.*<script type="module" src="\([^"]*\)".*/\1/p' "$site/index.html")
+          test -n "$entry" && test -f "$site/$entry"
       - uses: actions/upload-pages-artifact@v4
         if: github.ref == 'refs/heads/main'
         with:
