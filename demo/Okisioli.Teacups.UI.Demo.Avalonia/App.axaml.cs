@@ -11,17 +11,9 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var navigationPage = new NavigationPage();
-            var demoPage = new ContentPage
-            {
-                Content = new MainWindow(new DialogService<DialogViewModel, DialogView>(navigationPage, confirmOnBackNavigation: false))
-            };
-            NavigationPage.SetHasNavigationBar(demoPage, false);
-            navigationPage.Content = demoPage;
-
             desktop.MainWindow = new Window
             {
-                Content = navigationPage,
+                Content = CreateDemoView(),
                 Width = 760,
                 Height = 500,
                 MinWidth = 620,
@@ -29,7 +21,21 @@ public partial class App : Application
                 Title = "Teacups UI demo"
             };
         }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
+        {
+            singleView.MainView = CreateDemoView();
+        }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static NavigationPage CreateDemoView()
+    {
+        var navigationPage = new NavigationPage();
+        var dialogService = new DialogService<DialogViewModel, DialogView>(navigationPage, confirmOnBackNavigation: false);
+        var demoPage = new ContentPage { Content = new MainWindow(dialogService) };
+        NavigationPage.SetHasNavigationBar(demoPage, false);
+        navigationPage.Content = demoPage;
+        return navigationPage;
     }
 }
