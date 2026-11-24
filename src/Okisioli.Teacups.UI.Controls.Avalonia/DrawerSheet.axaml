@@ -33,13 +33,15 @@
                         Background="Transparent"
                         HorizontalAlignment="{Binding SheetHorizontalAlignment, ElementName=Root}"
                         VerticalAlignment="{Binding SheetVerticalAlignment, ElementName=Root}">
-        <ScrollViewer x:Name="SheetScrollViewer"
-                      HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto">
-          <ContentPresenter Content="{Binding SheetContent, ElementName=Root}"
-                            MinWidth="{Binding SheetMinWidth, ElementName=Root}"
-                            MinHeight="{Binding SheetMinHeight, ElementName=Root}" />
-        </ScrollViewer>
+        <ContentPresenter.Content>
+          <ScrollViewer x:Name="SheetScrollViewer"
+                        HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollBarVisibility="Auto">
+            <ContentPresenter Content="{Binding SheetContent, ElementName=Root}"
+                              MinWidth="{Binding SheetMinWidth, ElementName=Root}"
+                              MinHeight="{Binding SheetMinHeight, ElementName=Root}" />
+          </ScrollViewer>
+        </ContentPresenter.Content>
       </ContentPresenter>
     </Grid>
   </Grid>
