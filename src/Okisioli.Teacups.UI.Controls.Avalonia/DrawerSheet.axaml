@@ -25,16 +25,24 @@
         </Transitions>
       </Border.Transitions>
     </Border>
-    <DockPanel x:Name="SheetLayer"
-               LastChildFill="False"
-               ClipToBounds="True"
-               IsHitTestVisible="{Binding IsExpanded, ElementName=Root}"
-               IsVisible="False">
-      <Grid DockPanel.Dock="{Binding Placement, ElementName=Root}">
-        <ContentPresenter x:Name="SheetContentPresenter"
-                          Background="Transparent"
-                          Content="{Binding SheetContent, ElementName=Root}" />
-      </Grid>
-    </DockPanel>
+    <Grid x:Name="SheetLayer"
+          ClipToBounds="True"
+          IsHitTestVisible="{Binding IsExpanded, ElementName=Root}"
+          IsVisible="False">
+      <ContentPresenter x:Name="SheetContentPresenter"
+                        Background="Transparent"
+                        HorizontalAlignment="{Binding SheetHorizontalAlignment, ElementName=Root}"
+                        VerticalAlignment="{Binding SheetVerticalAlignment, ElementName=Root}">
+        <ContentPresenter.Content>
+          <ScrollViewer x:Name="SheetScrollViewer"
+                        HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollBarVisibility="Auto">
+            <ContentPresenter Content="{Binding SheetContent, ElementName=Root}"
+                              MinWidth="{Binding SheetMinWidth, ElementName=Root}"
+                              MinHeight="{Binding SheetMinHeight, ElementName=Root}" />
+          </ScrollViewer>
+        </ContentPresenter.Content>
+      </ContentPresenter>
+    </Grid>
   </Grid>
 </UserControl>

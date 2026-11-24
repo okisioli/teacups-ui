@@ -4,10 +4,11 @@ Reusable Avalonia control styles.
 
 ## Drawer sheet
 
-`DrawerSheet` replaces `BottomSheet` and overlays optional `SheetContent` at the edge selected by `Placement`.
+`DrawerSheet` overlays optional `SheetContent` and scrolls it when it exceeds the available space.
 
 ```xml
 <controls:DrawerSheet xmlns:controls="clr-namespace:Okisioli.Teacups.UI.Controls.Avalonia;assembly=Okisioli.Teacups.UI.Controls.Avalonia"
+                      SheetVerticalAlignment="Bottom"
                       IsExpanded="{Binding IsSomethingOpen}">
   <controls:DrawerSheet.SheetContent>
     <SomeArbitraryControl />
@@ -17,7 +18,7 @@ Reusable Avalonia control styles.
 </controls:DrawerSheet>
 ```
 
-`Placement` uses the Avalonia `Dock` enum and defaults to `Bottom`. Top and bottom sheets stretch across the available width. Left and right sheets stretch across the available height. The sheet sizes to its content along the direction it slides.
+Both axes stretch by default. The example uses `SheetVerticalAlignment="Bottom"` to keep the sheet at the bottom and size its height to its content. Set `Placement` to choose the slide direction.
 
 ## Circular progress bar
 

@@ -3,7 +3,8 @@ using Xunit;
 
 namespace Okisioli.Teacups.UI.Core.Avalonia.Tests;
 
-public sealed class DialogServiceTests(AvaloniaUiThread uiThread) : IClassFixture<AvaloniaUiThread>
+[Collection(nameof(AvaloniaUiTests))]
+public sealed class DialogServiceTests(AvaloniaUiThread uiThread)
 {
     [Theory]
     [InlineData(true)]

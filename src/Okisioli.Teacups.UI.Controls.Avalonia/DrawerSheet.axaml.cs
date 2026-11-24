@@ -5,6 +5,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.VisualTree;
@@ -12,7 +13,7 @@ using Avalonia.VisualTree;
 namespace Okisioli.Teacups.UI.Controls.Avalonia;
 
 /// <summary>
-/// Displays content with an optional sheet overlaid at a configurable edge.
+/// Displays content with an optional scrollable sheet that slides in from a configurable edge.
 /// </summary>
 public partial class DrawerSheet : UserControl
 {
@@ -23,10 +24,44 @@ public partial class DrawerSheet : UserControl
         AvaloniaProperty.Register<DrawerSheet, object?>(nameof(SheetContent));
 
     /// <summary>
+    /// Defines the horizontal alignment of the sheet.
+    /// </summary>
+    public static readonly StyledProperty<HorizontalAlignment> SheetHorizontalAlignmentProperty =
+        AvaloniaProperty.Register<DrawerSheet, HorizontalAlignment>(
+            nameof(SheetHorizontalAlignment), defaultValue: HorizontalAlignment.Stretch);
+
+    /// <summary>
+    /// Defines the vertical alignment of the sheet.
+    /// </summary>
+    public static readonly StyledProperty<VerticalAlignment> SheetVerticalAlignmentProperty =
+        AvaloniaProperty.Register<DrawerSheet, VerticalAlignment>(
+            nameof(SheetVerticalAlignment), defaultValue: VerticalAlignment.Stretch);
+
+    /// <summary>
+    /// Defines the minimum width of the sheet content.
+    /// </summary>
+    public static readonly StyledProperty<double> SheetMinWidthProperty =
+        AvaloniaProperty.Register<DrawerSheet, double>(
+            nameof(SheetMinWidth), validate: value => double.IsFinite(value) && value >= 0);
+
+    /// <summary>
+    /// Defines the minimum height of the sheet content.
+    /// </summary>
+    public static readonly StyledProperty<double> SheetMinHeightProperty =
+        AvaloniaProperty.Register<DrawerSheet, double>(
+            nameof(SheetMinHeight), validate: value => double.IsFinite(value) && value >= 0);
+
+    /// <summary>
     /// Defines whether the sheet is visible.
     /// </summary>
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<DrawerSheet, bool>(nameof(IsExpanded), defaultValue: false);
+
+    /// <summary>
+    /// Defines whether opening the sheet resets its scroll position.
+    /// </summary>
+    public static readonly StyledProperty<bool> ResetScrollPositionProperty =
+        AvaloniaProperty.Register<DrawerSheet, bool>(nameof(ResetScrollPosition), defaultValue: true);
 
     /// <summary>
     /// Defines whether the sheet stays open when Escape, system Back, or an outside press occurs.
@@ -106,6 +141,44 @@ public partial class DrawerSheet : UserControl
     }
 
     /// <summary>
+    /// Gets or sets the sheet's horizontal alignment within the overlay. Defaults to Stretch.
+    /// </summary>
+    public HorizontalAlignment SheetHorizontalAlignment
+    {
+        get => GetValue(SheetHorizontalAlignmentProperty);
+        set => SetValue(SheetHorizontalAlignmentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the sheet's vertical alignment within the overlay. Defaults to Stretch.
+    /// </summary>
+    public VerticalAlignment SheetVerticalAlignment
+    {
+        get => GetValue(SheetVerticalAlignmentProperty);
+        set => SetValue(SheetVerticalAlignmentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the minimum sheet width in device-independent pixels. Defaults to zero.
+    /// The sheet content can scroll if the minimum exceeds the available width.
+    /// </summary>
+    public double SheetMinWidth
+    {
+        get => GetValue(SheetMinWidthProperty);
+        set => SetValue(SheetMinWidthProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the minimum sheet height in device-independent pixels. Defaults to zero.
+    /// The sheet content can scroll if the minimum exceeds the available height.
+    /// </summary>
+    public double SheetMinHeight
+    {
+        get => GetValue(SheetMinHeightProperty);
+        set => SetValue(SheetMinHeightProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets the edge from which the sheet opens and toward which it closes.
     /// Defaults to <see cref="Dock.Bottom"/>.
     /// </summary>
@@ -122,6 +195,16 @@ public partial class DrawerSheet : UserControl
     {
         get => GetValue(IsExpandedProperty);
         set => SetValue(IsExpandedProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether opening the sheet scrolls its content back to the start on both axes.
+    /// Defaults to <see langword="true"/>. Set to <see langword="false"/> to retain the previous position.
+    /// </summary>
+    public bool ResetScrollPosition
+    {
+        get => GetValue(ResetScrollPositionProperty);
+        set => SetValue(ResetScrollPositionProperty, value);
     }
 
     /// <summary>
@@ -259,6 +342,11 @@ public partial class DrawerSheet : UserControl
 
     private void OpenSheet()
     {
+        if (ResetScrollPosition)
+        {
+            SheetScrollViewer.Offset = default;
+        }
+
         // An outgoing transition can hide the presenter or leave its animated values in place.
         SheetContentPresenter.IsVisible = true;
         SheetContentPresenter.Opacity = 1;

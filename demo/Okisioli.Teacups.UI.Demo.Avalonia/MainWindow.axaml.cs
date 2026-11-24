@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Okisioli.Teacups.UI.Core;
 using System.Windows.Input;
 
@@ -25,6 +26,10 @@ public partial class MainWindow : UserControl
     public IReadOnlyList<string> DemoItems { get; }
 
     public IReadOnlyList<Dock> DrawerPlacements { get; } = [Dock.Bottom, Dock.Left, Dock.Top, Dock.Right];
+    public IReadOnlyList<HorizontalAlignment> DrawerHorizontalAlignments { get; } =
+        [HorizontalAlignment.Stretch, HorizontalAlignment.Left, HorizontalAlignment.Center, HorizontalAlignment.Right];
+    public IReadOnlyList<VerticalAlignment> DrawerVerticalAlignments { get; } =
+        [VerticalAlignment.Stretch, VerticalAlignment.Top, VerticalAlignment.Center, VerticalAlignment.Bottom];
     public ICommand LongPressCommand { get; }
 
     public ICommand ListBoxDoubleClickCommand { get; }
@@ -42,6 +47,12 @@ public partial class MainWindow : UserControl
             DemoDrawerSheet.Placement = placement;
         }
 
+        DemoDrawerSheet.SheetHorizontalAlignment =
+            DrawerHorizontalAlignment.SelectedItem is HorizontalAlignment horizontal ? horizontal : HorizontalAlignment.Stretch;
+        DemoDrawerSheet.SheetVerticalAlignment =
+            DrawerVerticalAlignment.SelectedItem is VerticalAlignment vertical ? vertical : VerticalAlignment.Stretch;
+        DemoDrawerSheet.SheetMinWidth = (double)(DrawerMinWidth.Value ?? 0);
+        DemoDrawerSheet.SheetMinHeight = (double)(DrawerMinHeight.Value ?? 0);
         DemoDrawerSheet.IsExpanded = true;
     }
 
