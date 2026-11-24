@@ -5,6 +5,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.VisualTree;
@@ -12,7 +13,7 @@ using Avalonia.VisualTree;
 namespace Okisioli.Teacups.UI.Controls.Avalonia;
 
 /// <summary>
-/// Displays content with an optional sheet overlaid at a configurable edge.
+/// Displays content with an optional scrollable sheet that slides in from a configurable edge.
 /// </summary>
 public partial class DrawerSheet : UserControl
 {
@@ -21,6 +22,34 @@ public partial class DrawerSheet : UserControl
     /// </summary>
     public static readonly StyledProperty<object?> SheetContentProperty =
         AvaloniaProperty.Register<DrawerSheet, object?>(nameof(SheetContent));
+
+    /// <summary>
+    /// Defines the horizontal alignment of the sheet.
+    /// </summary>
+    public static readonly StyledProperty<HorizontalAlignment> SheetHorizontalAlignmentProperty =
+        AvaloniaProperty.Register<DrawerSheet, HorizontalAlignment>(
+            nameof(SheetHorizontalAlignment), defaultValue: HorizontalAlignment.Stretch);
+
+    /// <summary>
+    /// Defines the vertical alignment of the sheet.
+    /// </summary>
+    public static readonly StyledProperty<VerticalAlignment> SheetVerticalAlignmentProperty =
+        AvaloniaProperty.Register<DrawerSheet, VerticalAlignment>(
+            nameof(SheetVerticalAlignment), defaultValue: VerticalAlignment.Stretch);
+
+    /// <summary>
+    /// Defines the minimum width of the sheet content.
+    /// </summary>
+    public static readonly StyledProperty<double> SheetMinWidthProperty =
+        AvaloniaProperty.Register<DrawerSheet, double>(
+            nameof(SheetMinWidth), validate: value => double.IsFinite(value) && value >= 0);
+
+    /// <summary>
+    /// Defines the minimum height of the sheet content.
+    /// </summary>
+    public static readonly StyledProperty<double> SheetMinHeightProperty =
+        AvaloniaProperty.Register<DrawerSheet, double>(
+            nameof(SheetMinHeight), validate: value => double.IsFinite(value) && value >= 0);
 
     /// <summary>
     /// Defines whether the sheet is visible.
@@ -103,6 +132,44 @@ public partial class DrawerSheet : UserControl
     {
         get => GetValue(SheetContentProperty);
         set => SetValue(SheetContentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the sheet's horizontal alignment within the overlay. Defaults to Stretch.
+    /// </summary>
+    public HorizontalAlignment SheetHorizontalAlignment
+    {
+        get => GetValue(SheetHorizontalAlignmentProperty);
+        set => SetValue(SheetHorizontalAlignmentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the sheet's vertical alignment within the overlay. Defaults to Stretch.
+    /// </summary>
+    public VerticalAlignment SheetVerticalAlignment
+    {
+        get => GetValue(SheetVerticalAlignmentProperty);
+        set => SetValue(SheetVerticalAlignmentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the minimum sheet width in device-independent pixels. Defaults to zero.
+    /// The sheet content can scroll if the minimum exceeds the available width.
+    /// </summary>
+    public double SheetMinWidth
+    {
+        get => GetValue(SheetMinWidthProperty);
+        set => SetValue(SheetMinWidthProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the minimum sheet height in device-independent pixels. Defaults to zero.
+    /// The sheet content can scroll if the minimum exceeds the available height.
+    /// </summary>
+    public double SheetMinHeight
+    {
+        get => GetValue(SheetMinHeightProperty);
+        set => SetValue(SheetMinHeightProperty, value);
     }
 
     /// <summary>

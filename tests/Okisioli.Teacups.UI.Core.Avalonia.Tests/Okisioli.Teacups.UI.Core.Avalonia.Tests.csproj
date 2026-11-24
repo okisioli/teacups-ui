@@ -11,6 +11,7 @@
     </PackageReference>
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
+    <ProjectReference Include="../../src/Okisioli.Teacups.UI.Controls.Avalonia/Okisioli.Teacups.UI.Controls.Avalonia.csproj" />
     <ProjectReference Include="../../src/Okisioli.Teacups.UI.Core.Avalonia/Okisioli.Teacups.UI.Core.Avalonia.csproj" />
   </ItemGroup>
 </Project>

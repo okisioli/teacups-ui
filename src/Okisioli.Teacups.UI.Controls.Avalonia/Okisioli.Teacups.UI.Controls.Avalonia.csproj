@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
-    <Version>0.16.0</Version>
+    <Version>0.17.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
-    <PackageReleaseNotes>Renamed BottomSheet to DrawerSheet. Set Placement to slide from Bottom (default), Left, Top, or Right.</PackageReleaseNotes>
+    <PackageReleaseNotes>DrawerSheet now scrolls oversized content and supports independent sheet alignment and minimum dimensions. Both alignments default to Stretch. Placement sets the slide direction.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

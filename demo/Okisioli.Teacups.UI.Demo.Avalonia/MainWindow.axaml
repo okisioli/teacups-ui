@@ -120,30 +120,56 @@
             <TextBox Margin="16,0" Text="Second text box" />
             <TextBox Margin="16,0" Text="Third text box" />
             <Button Margin="16,0,16,16" Content="Close sheet" Click="OnCloseDrawerSheetClick" />
+            <Border Width="1200" Height="900"
+                    Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                    IsVisible="{Binding #DrawerOverflow.IsChecked}">
+              <TextBlock Margin="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="End of sheet content" />
+            </Border>
           </StackPanel>
         </local:DrawerSheet.SheetContent>
 
-        <Grid Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
-          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+        <ScrollViewer Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+          <StackPanel Margin="16" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
             <TextBlock HorizontalAlignment="Center" FontSize="28" FontWeight="SemiBold" Text="Drawer Sheet" />
-            <TextBlock HorizontalAlignment="Center"
-                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
-                       Text="Toggle the auto-sized sheet over this content." />
-            <ComboBox x:Name="DrawerPlacement"
-                      HorizontalAlignment="Center"
-                      AutomationProperties.Name="Drawer placement"
-                      ItemsSource="{Binding DrawerPlacements}"
-                      SelectedIndex="0"
-                      IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}" />
-            <CheckBox HorizontalAlignment="Center"
-                      Content="Modal"
-                      IsChecked="{Binding #DemoDrawerSheet.IsModal, Mode=TwoWay}"
-                      IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}" />
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto"
+                  ColumnSpacing="12" RowSpacing="8"
+                  IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}">
+              <ComboBox x:Name="DrawerPlacement" HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="Slide from"
+                        ItemsSource="{Binding DrawerPlacements}" SelectedIndex="0" />
+              <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Slide from" />
+              <StackPanel Grid.Row="1" Spacing="4">
+                <TextBlock Text="Horizontal alignment" />
+                <ComboBox x:Name="DrawerHorizontalAlignment" HorizontalAlignment="Stretch"
+                          AutomationProperties.Name="Horizontal alignment"
+                          ItemsSource="{Binding DrawerHorizontalAlignments}" SelectedIndex="0" />
+              </StackPanel>
+              <StackPanel Grid.Row="1" Grid.Column="1" Spacing="4">
+                <TextBlock Text="Vertical alignment" />
+                <ComboBox x:Name="DrawerVerticalAlignment" HorizontalAlignment="Stretch"
+                          AutomationProperties.Name="Vertical alignment"
+                          ItemsSource="{Binding DrawerVerticalAlignments}" SelectedIndex="0" />
+              </StackPanel>
+              <StackPanel Grid.Row="2" Spacing="4">
+                <TextBlock Text="Minimum width" />
+                <NumericUpDown x:Name="DrawerMinWidth" AutomationProperties.Name="Minimum width"
+                               Minimum="0" Increment="20" Value="0" />
+              </StackPanel>
+              <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4">
+                <TextBlock Text="Minimum height" />
+                <NumericUpDown x:Name="DrawerMinHeight" AutomationProperties.Name="Minimum height"
+                               Minimum="0" Increment="20" Value="0" />
+              </StackPanel>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Spacing="12" IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}">
+              <CheckBox Content="Modal" IsChecked="{Binding #DemoDrawerSheet.IsModal, Mode=TwoWay}" />
+              <CheckBox x:Name="DrawerOverflow" Content="Oversized content" IsChecked="False" />
+            </StackPanel>
             <Button HorizontalAlignment="Center"
                     Content="Show sheet"
                     Click="OnShowDrawerSheetClick" />
           </StackPanel>
-        </Grid>
+        </ScrollViewer>
       </local:DrawerSheet>
     </TabItem>
 

@@ -1,8 +1,12 @@
 using Avalonia;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
+using Xunit;
 
 namespace Okisioli.Teacups.UI.Core.Avalonia.Tests;
+
+[CollectionDefinition]
+public sealed class AvaloniaUiTests : ICollectionFixture<AvaloniaUiThread>;
 
 public sealed class AvaloniaUiThread : IDisposable
 {
