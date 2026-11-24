@@ -8,6 +8,11 @@ namespace Okisioli.Teacups.UI.Core;
 public interface IDialogService<TViewModel, TView>
 {
     /// <summary>
+    /// Gets or sets whether the dialog uses the platform's full-screen presentation. Defaults to false.
+    /// </summary>
+    bool FullScreen { get; set; }
+
+    /// <summary>
     /// Shows the dialog for the specified view model.
     /// </summary>
     /// <param name="viewModel">The view model to display in the dialog.</param>

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
@@ -17,6 +18,8 @@ namespace Okisioli.Teacups.UI.Controls.Avalonia;
 /// </summary>
 public partial class DrawerSheet : UserControl
 {
+    private static readonly ConditionalWeakTable<TopLevel, List<DrawerSheet>> OpenSheets = new();
+
     /// <summary>
     /// Defines the content displayed in the sheet.
     /// </summary>
@@ -110,6 +113,9 @@ public partial class DrawerSheet : UserControl
     private CancellationTokenSource? activeTransition;
     private bool isInitializingLayout;
     private bool isRestoringLayout;
+
+    /// <summary>Occurs when the sheet is hidden after closing.</summary>
+    public event EventHandler? SheetClosed;
 
     public DrawerSheet()
     {
@@ -288,6 +294,7 @@ public partial class DrawerSheet : UserControl
     /// <inheritdoc />
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        RemoveFromOpenSheets();
         CancelTransition();
         SheetLayer.IsVisible = false;
         Backdrop.Opacity = 0;
@@ -342,6 +349,11 @@ public partial class DrawerSheet : UserControl
 
     private void OpenSheet()
     {
+        if (topLevel is { } host)
+        {
+            OpenSheets.GetOrCreateValue(host).Add(this);
+        }
+
         if (ResetScrollPosition)
         {
             SheetScrollViewer.Offset = default;
@@ -371,6 +383,7 @@ public partial class DrawerSheet : UserControl
 
     private void CloseSheet()
     {
+        RemoveFromOpenSheets();
         Backdrop.Opacity = 0;
         if (SheetLayer.IsVisible && CloseTransition is { } transition)
         {
@@ -378,8 +391,14 @@ public partial class DrawerSheet : UserControl
         }
         else
         {
-            SheetLayer.IsVisible = false;
+            FinishClosing();
         }
+    }
+
+    private void FinishClosing()
+    {
+        SheetLayer.IsVisible = false;
+        SheetClosed?.Invoke(this, EventArgs.Empty);
     }
 
     private async void StartTransition(IPageTransition transition, bool opening)
@@ -426,7 +445,7 @@ public partial class DrawerSheet : UserControl
                 activeTransition = null;
                 if (!opening)
                 {
-                    SheetLayer.IsVisible = false;
+                    FinishClosing();
                 }
             }
         }
@@ -442,7 +461,7 @@ public partial class DrawerSheet : UserControl
 
     private void OnHostKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Escape && IsExpanded && IsEffectivelyVisible && !IsModal)
+        if (!e.Handled && e.Key == Key.Escape && CanHandleDismissal() && !IsModal)
         {
             Dismiss(e);
         }
@@ -450,7 +469,7 @@ public partial class DrawerSheet : UserControl
 
     private void OnHostBackRequested(object? sender, RoutedEventArgs e)
     {
-        if (!IsExpanded || !IsEffectivelyVisible)
+        if (e.Handled || !CanHandleDismissal())
         {
             return;
         }
@@ -467,11 +486,26 @@ public partial class DrawerSheet : UserControl
 
     private void OnHostPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (IsExpanded && IsEffectivelyVisible && !IsModal &&
+        if (!e.Handled && CanHandleDismissal() && !IsModal &&
             (e.Pointer.Type == PointerType.Touch || e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) &&
             e.Source is Visual source && !IsInsideSheet(source))
         {
             Dismiss(e);
+        }
+    }
+
+    private bool CanHandleDismissal()
+    {
+        return IsExpanded && IsEffectivelyVisible &&
+            topLevel is { } host && OpenSheets.TryGetValue(host, out var sheets) &&
+            ReferenceEquals(sheets.FindLast(sheet => sheet.IsEffectivelyVisible), this);
+    }
+
+    private void RemoveFromOpenSheets()
+    {
+        if (topLevel is { } host && OpenSheets.TryGetValue(host, out var sheets))
+        {
+            sheets.Remove(this);
         }
     }
 

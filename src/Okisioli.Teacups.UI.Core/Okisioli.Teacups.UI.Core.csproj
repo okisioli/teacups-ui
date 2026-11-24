@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <Version>0.11.1</Version>
+      <Version>0.12.0</Version>
       <AssemblyName>Okisioli.Teacups.UI.Core</AssemblyName>
       <RootNamespace>Okisioli.Teacups.UI.Core</RootNamespace>
-      <PackageReleaseNotes>Fix the UI-freezing regression by always queueing dispatcher actions and exposing ApplicationIdle, Background, Input, and Normal priorities.</PackageReleaseNotes>
+      <PackageReleaseNotes>Add the FullScreen presentation option to IDialogService.</PackageReleaseNotes>
       <PackageDescription>
         Base library providing abstractions for every other UI-related component in the Okisioli.Teacups family.
         Contains interfaces to be implemented in a framework-specific way (WPF, Avalonia), abstracting away their specifics.

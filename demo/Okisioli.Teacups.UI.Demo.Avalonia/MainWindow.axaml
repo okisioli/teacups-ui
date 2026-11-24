@@ -182,7 +182,8 @@
         <TextBlock FontSize="28" FontWeight="SemiBold" Text="Dialog service" />
         <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                    TextWrapping="Wrap"
-                   Text="Open a full-screen dialog implemented by the Avalonia dialog service." />
+                   Text="Open a centered or full-screen dialog." />
+        <CheckBox x:Name="FullScreenDialog" Content="Full screen" />
         <Button HorizontalAlignment="Left" Content="Show dialog" Click="OnShowDialogClick" />
         <TextBlock Text="{Binding DialogResult}" />
       </StackPanel>

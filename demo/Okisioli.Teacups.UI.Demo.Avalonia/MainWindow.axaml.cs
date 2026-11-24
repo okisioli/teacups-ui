@@ -63,6 +63,7 @@ public partial class MainWindow : UserControl
 
     private async void OnShowDialogClick(object? sender, RoutedEventArgs args)
     {
+        dialogService.FullScreen = FullScreenDialog.IsChecked == true;
         var accepted = await dialogService.ShowDialogAsync(completion => new DialogViewModel(completion));
         DialogResult = accepted ? "Dialog accepted." : "Dialog cancelled.";
         DataContext = null;

@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
-    <Version>0.17.0</Version>
+    <Version>0.18.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
-    <PackageReleaseNotes>DrawerSheet now scrolls oversized content and resets its scroll position on open by default. Both alignments default to Stretch and minimum dimensions are configurable. Placement sets the slide direction.</PackageReleaseNotes>
+    <PackageReleaseNotes>Route dismissal to the most recently opened visible DrawerSheet per top level and notify when its close transition finishes.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
