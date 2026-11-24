@@ -58,6 +58,12 @@ public partial class DrawerSheet : UserControl
         AvaloniaProperty.Register<DrawerSheet, bool>(nameof(IsExpanded), defaultValue: false);
 
     /// <summary>
+    /// Defines whether opening the sheet resets its scroll position.
+    /// </summary>
+    public static readonly StyledProperty<bool> ResetScrollPositionProperty =
+        AvaloniaProperty.Register<DrawerSheet, bool>(nameof(ResetScrollPosition), defaultValue: true);
+
+    /// <summary>
     /// Defines whether the sheet stays open when Escape, system Back, or an outside press occurs.
     /// </summary>
     public static readonly StyledProperty<bool> IsModalProperty =
@@ -189,6 +195,16 @@ public partial class DrawerSheet : UserControl
     {
         get => GetValue(IsExpandedProperty);
         set => SetValue(IsExpandedProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether opening the sheet scrolls its content back to the start on both axes.
+    /// Defaults to <see langword="true"/>. Set to <see langword="false"/> to retain the previous position.
+    /// </summary>
+    public bool ResetScrollPosition
+    {
+        get => GetValue(ResetScrollPositionProperty);
+        set => SetValue(ResetScrollPositionProperty, value);
     }
 
     /// <summary>
@@ -326,6 +342,11 @@ public partial class DrawerSheet : UserControl
 
     private void OpenSheet()
     {
+        if (ResetScrollPosition)
+        {
+            SheetScrollViewer.Offset = default;
+        }
+
         // An outgoing transition can hide the presenter or leave its animated values in place.
         SheetContentPresenter.IsVisible = true;
         SheetContentPresenter.Opacity = 1;

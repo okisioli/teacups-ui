@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Okisioli.Teacups.UI.Core.Avalonia.Tests;
 
-[Collection<AvaloniaUiTests>]
+[Collection(nameof(AvaloniaUiTests))]
 public sealed class DrawerSheetTests(AvaloniaUiThread uiThread)
 {
     private static readonly Size OverlaySize = new(320, 240);
@@ -17,9 +17,8 @@ public sealed class DrawerSheetTests(AvaloniaUiThread uiThread)
     {
         var drawer = new DrawerSheet { SheetContent = new Border { Width = 40, Height = 30 } };
 
-        ArrangeOverlay(drawer);
-
-        Assert.Equal(new Rect(OverlaySize), drawer.FindControl<ContentPresenter>("SheetContentPresenter")!.Bounds);
+        WithOpenDrawer(drawer, _ =>
+            Assert.Equal(new Rect(OverlaySize), drawer.FindControl<ContentPresenter>("SheetContentPresenter")!.Bounds));
         return Task.CompletedTask;
     });
 
@@ -35,9 +34,8 @@ public sealed class DrawerSheetTests(AvaloniaUiThread uiThread)
             SheetMinHeight = 90
         };
 
-        ArrangeOverlay(drawer);
-
-        Assert.Equal(new Rect(200, 150, 120, 90), drawer.FindControl<ContentPresenter>("SheetContentPresenter")!.Bounds);
+        WithOpenDrawer(drawer, _ =>
+            Assert.Equal(new Rect(200, 150, 120, 90), drawer.FindControl<ContentPresenter>("SheetContentPresenter")!.Bounds));
         return Task.CompletedTask;
     });
 
@@ -56,24 +54,72 @@ public sealed class DrawerSheetTests(AvaloniaUiThread uiThread)
             SheetVerticalAlignment = VerticalAlignment.Center
         };
 
-        ArrangeOverlay(drawer);
+        WithOpenDrawer(drawer, _ => ScrollToEnd(drawer.FindControl<ScrollViewer>("SheetScrollViewer")!));
+        return Task.CompletedTask;
+    });
 
-        var scroller = drawer.FindControl<ScrollViewer>("SheetScrollViewer")!;
+    [Theory]
+    [InlineData(null)]
+    [InlineData(false)]
+    public Task IsExpanded_ReopenedAfterScrolling_UsesResetSetting(bool? resetScrollPosition) => uiThread.RunAsync(() =>
+    {
+        var drawer = new DrawerSheet { SheetContent = new Border { Width = 640, Height = 480 } };
+        if (resetScrollPosition is { } reset)
+        {
+            drawer.ResetScrollPosition = reset;
+        }
+
+        WithOpenDrawer(drawer, window =>
+        {
+            var scroller = drawer.FindControl<ScrollViewer>("SheetScrollViewer")!;
+            var initialOffset = scroller.Offset;
+            Assert.Equal(default, initialOffset);
+            var end = ScrollToEnd(scroller);
+            window.UpdateLayout();
+
+            drawer.IsExpanded = false;
+            window.UpdateLayout();
+            drawer.IsExpanded = true;
+            window.UpdateLayout();
+
+            Assert.Equal(resetScrollPosition == false ? end : initialOffset, scroller.Offset);
+        });
+        return Task.CompletedTask;
+    });
+
+    private static Vector ScrollToEnd(ScrollViewer scroller)
+    {
         Assert.True(scroller.Extent.Width > scroller.Viewport.Width);
         Assert.True(scroller.Extent.Height > scroller.Viewport.Height);
         var end = new Vector(scroller.Extent.Width - scroller.Viewport.Width,
             scroller.Extent.Height - scroller.Viewport.Height);
         scroller.Offset = end;
         Assert.Equal(end, scroller.Offset);
-        return Task.CompletedTask;
-    });
+        return end;
+    }
 
-    private static void ArrangeOverlay(DrawerSheet drawer)
+    private static void WithOpenDrawer(DrawerSheet drawer, Action<Window> check)
     {
-        var layer = drawer.FindControl<Grid>("SheetLayer")!;
-        layer.IsVisible = true;
-        drawer.FindControl<ContentPresenter>("SheetContentPresenter")!.UpdateChild();
-        layer.Measure(OverlaySize);
-        layer.Arrange(new Rect(OverlaySize));
+        drawer.OpenTransition = null;
+        drawer.CloseTransition = null;
+        drawer.IsExpanded = true;
+        var window = new Window
+        {
+            Width = OverlaySize.Width,
+            Height = OverlaySize.Height,
+            Content = drawer,
+            ShowInTaskbar = false,
+            ShowActivated = false,
+            Opacity = 0
+        };
+        try
+        {
+            window.Show();
+            check(window);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }

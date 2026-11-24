@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Okisioli.Teacups.UI.Core.Avalonia.Tests;
 
-[CollectionDefinition]
+[CollectionDefinition(nameof(AvaloniaUiTests))]
 public sealed class AvaloniaUiTests : ICollectionFixture<AvaloniaUiThread>;
 
 public sealed class AvaloniaUiThread : IDisposable

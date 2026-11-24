@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Okisioli.Teacups.UI.Core.Avalonia.Tests;
 
-[Collection<AvaloniaUiTests>]
+[Collection(nameof(AvaloniaUiTests))]
 public sealed class DialogServiceTests(AvaloniaUiThread uiThread)
 {
     [Theory]

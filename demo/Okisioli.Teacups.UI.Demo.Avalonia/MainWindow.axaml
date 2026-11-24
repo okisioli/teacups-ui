@@ -161,9 +161,13 @@
                                Minimum="0" Increment="20" Value="0" />
               </StackPanel>
             </Grid>
-            <StackPanel Orientation="Horizontal" Spacing="12" IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}">
-              <CheckBox Content="Modal" IsChecked="{Binding #DemoDrawerSheet.IsModal, Mode=TwoWay}" />
-              <CheckBox x:Name="DrawerOverflow" Content="Oversized content" IsChecked="False" />
+            <StackPanel IsEnabled="{Binding !#DemoDrawerSheet.IsExpanded}">
+              <StackPanel Orientation="Horizontal" Spacing="12">
+                <CheckBox Content="Modal" IsChecked="{Binding #DemoDrawerSheet.IsModal, Mode=TwoWay}" />
+                <CheckBox x:Name="DrawerOverflow" Content="Oversized content" IsChecked="False" />
+              </StackPanel>
+              <CheckBox Content="Reset scroll position on open"
+                        IsChecked="{Binding #DemoDrawerSheet.ResetScrollPosition, Mode=TwoWay}" />
             </StackPanel>
             <Button HorizontalAlignment="Center"
                     Content="Show sheet"
