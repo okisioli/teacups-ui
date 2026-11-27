@@ -208,7 +208,8 @@
         <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                    TextWrapping="Wrap"
                    Text="Open a full-screen dialog implemented by the Avalonia dialog service." />
-        <Button HorizontalAlignment="Left" Content="Show dialog" Click="OnShowDialogClick" />
+        <Button HorizontalAlignment="Left" Content="Show dialog"
+                IsEnabled="{Binding CanShowDialog}" Click="OnShowDialogClick" />
         <TextBlock Text="{Binding DialogResult}" />
       </StackPanel>
     </TabItem>

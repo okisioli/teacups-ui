@@ -8,9 +8,14 @@ namespace Okisioli.Teacups.UI.Demo.Avalonia;
 
 public partial class MainWindow : UserControl
 {
-    private readonly IDialogService<DialogViewModel, DialogView> dialogService;
+    private readonly IDialogService<DialogViewModel, DialogView>? dialogService;
 
-    public MainWindow(IDialogService<DialogViewModel, DialogView> dialogService)
+    public MainWindow()
+        : this(null)
+    {
+    }
+
+    public MainWindow(IDialogService<DialogViewModel, DialogView>? dialogService)
     {
         this.dialogService = dialogService;
         DemoItems = ["First item", "Second item", "Third item"];
@@ -38,6 +43,8 @@ public partial class MainWindow : UserControl
 
     public ICommand TagSubmitCommand { get; }
 
+    public bool CanShowDialog => dialogService is not null;
+
     public string DialogResult { get; private set; } = "No dialog result yet.";
 
     private void OnShowDrawerSheetClick(object? sender, RoutedEventArgs args)
@@ -63,6 +70,11 @@ public partial class MainWindow : UserControl
 
     private async void OnShowDialogClick(object? sender, RoutedEventArgs args)
     {
+        if (dialogService is null)
+        {
+            return;
+        }
+
         var accepted = await dialogService.ShowDialogAsync(completion => new DialogViewModel(completion));
         DialogResult = accepted ? "Dialog accepted." : "Dialog cancelled.";
         DataContext = null;
