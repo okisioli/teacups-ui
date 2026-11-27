@@ -11,6 +11,7 @@ Teacups UI is a collection of small, reusable UI building blocks for Teacups app
 | `Okisioli.Teacups.UI.Core.Avalonia` | Avalonia implementations of Core services. |
 | `Okisioli.Teacups.UI.Controls.Avalonia` | Avalonia controls and styles. |
 | `Okisioli.Teacups.UI.Behaviors.WPF` | WPF interaction behaviors. |
+| `Okisioli.Teacups.UI.Fastr.WPF` | Buffered item sources, incremental collection updates, and optional scroll resets for WPF item controls. |
 | `Okisioli.Teacups.UI.Behaviors.Avalonia` | Avalonia interaction behaviors. |
 
 ## Features
@@ -22,6 +23,7 @@ Teacups UI is a collection of small, reusable UI building blocks for Teacups app
 ## Demos
 
 - [WPF](demo/Okisioli.Teacups.UI.Demo.WPF)
+- [Fastr WPF](demo/Okisioli.Teacups.UI.Fastr.Demo.WPF) · Run the project on Windows with the .NET 10 SDK.
 - [Avalonia](demo/Okisioli.Teacups.UI.Demo.Avalonia) · [View demo](https://teacups-libs.github.io/teacups-ui/)
 
 To run the Avalonia browser demo locally, install the .NET 10 SDK and run
