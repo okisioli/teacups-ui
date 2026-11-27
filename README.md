@@ -25,6 +25,7 @@ A sibling repository, focused on various non-UI functionality and helpers, can b
   - An expandable overlay to serve as a dialog or a "bottom sheet".
   - A an unique three-state floating action button.
   - A circular progress bar.
+- [Fastr](src/Okisioli.Teacups.UI.Fastr.WPF/README.md) aims to speed up UI frameworks with tricks, workarounds, and hacks. It currently supports WPF.
 - XAML interaction behaviors for both WPF and Avalonia, such as:
   - Long press on any element.
   - List item double-taplist item double-click commands.
