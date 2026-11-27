@@ -4,6 +4,8 @@ A (hopefully) growing collection of small, narrow-focused, **reusable UI buildin
 
 Stuff that I (and many of us) wrote many times over and over again. And even if today it's matter of seconds for an agent to write things like this, I don't want to repeat my prompts every time - I'd rather build my own foundation for every future project, and let it evolve over time.
 
+A sibling repository, focused on various non-UI functionality and helpers, can be found at [Teacups](https://github.com/okisioli/teacups).
+
 ## Packages
 
 | Package | Purpose |
@@ -20,9 +22,9 @@ Stuff that I (and many of us) wrote many times over and over again. And even if 
 
 - Dialog and UI dispatcher services for WPF and Avalonia.
 - [Controls for Avalonia](src/Okisioli.Teacups.UI.Controls.Avalonia/README.md), including:
-  - An expandable overlay to serve as a dialog or a "bottom sheet"
-  - A an unique three-state floating action button
-  - A circular progress bar
+  - An expandable overlay to serve as a dialog or a "bottom sheet".
+  - A an unique three-state floating action button.
+  - A circular progress bar.
 - XAML interaction behaviors for both WPF and Avalonia, such as:
   - Long press on any element.
   - List item double-taplist item double-click commands.
