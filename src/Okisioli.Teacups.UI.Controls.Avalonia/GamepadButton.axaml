@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Okisioli.Teacups.UI.Controls.Avalonia.GamepadButton"
+             x:Name="GamepadRoot"
+             Width="250.4" Height="116.8">
+    <UserControl.Resources>
+        <ControlTheme x:Key="ThumbButtonTheme" TargetType="Button">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="32"
+                            BorderBrush="Transparent" BorderThickness="2"
+                            BoxShadow="0 5 18 0 #30000000">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:focus-visible /template/ Border#Surface">
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+            </Style>
+        </ControlTheme>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="Border#TrackFill:not(.picking)">
+            <Style.Animations>
+                <!-- Duration is one half of the breathing cycle. Adjust the keyframes for intensity. -->
+                <Animation Duration="0:0:7" IterationCount="INFINITE" PlaybackDirection="Alternate" Easing="SineEaseInOut">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="0.035" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="0.08" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+    <Grid x:Name="PickerSurface">
+        <Grid.RenderTransform>
+            <TranslateTransform />
+        </Grid.RenderTransform>
+        <Grid x:Name="PickerChoices">
+            <Grid x:Name="Track" Width="90.4" Height="90.4"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                <Grid.RenderTransform>
+                    <TranslateTransform />
+                </Grid.RenderTransform>
+                <Border x:Name="TrackFill" CornerRadius="45.2"
+                        Classes.picking="{Binding #GamepadRoot.IsGestureActive}" />
+                <Border x:Name="TrackOutline" CornerRadius="45.2" BorderThickness="1.5" IsVisible="False" />
+            </Grid>
+            <Border x:Name="LeftChoice" Width="64" Height="64" CornerRadius="32"
+                    Background="{Binding #GamepadRoot.LeftBrush}" Opacity="0"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    IsHitTestVisible="False">
+                <Border.RenderTransform>
+                    <TranslateTransform />
+                </Border.RenderTransform>
+            </Border>
+            <Border x:Name="RightChoice" Width="64" Height="64" CornerRadius="32"
+                    Background="{Binding #GamepadRoot.RightBrush}" Opacity="0"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    IsHitTestVisible="False">
+                <Border.RenderTransform>
+                    <TranslateTransform />
+                </Border.RenderTransform>
+            </Border>
+        </Grid>
+        <Button x:Name="ThumbButton" Width="64" Height="64"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                RenderTransformOrigin="50%,50%"
+                Theme="{StaticResource ThumbButtonTheme}"
+                AutomationProperties.Name="{Binding #GamepadRoot.(AutomationProperties.Name), TargetNullValue='Gamepad button'}"
+                Click="OnThumbClick">
+            <Button.RenderTransform>
+                <TranslateTransform />
+            </Button.RenderTransform>
+            <Path x:Name="ThumbIcon" Width="22" Height="22" Stretch="Uniform"
+                  RenderTransformOrigin="50%,50%"
+                  Fill="{Binding #GamepadRoot.Foreground}"
+                  Data="M9 0 H13 V9 H22 V13 H13 V22 H9 V13 H0 V9 H9 Z">
+                <Path.RenderTransform>
+                    <RotateTransform />
+                </Path.RenderTransform>
+            </Path>
+        </Button>
+    </Grid>
+</UserControl>
