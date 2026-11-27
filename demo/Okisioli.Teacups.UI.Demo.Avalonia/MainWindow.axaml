@@ -57,6 +57,10 @@
       </Grid>
     </TabItem>
 
+    <TabItem Header="Gamepad Button">
+      <local:GamepadButton HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </TabItem>
+
     <TabItem Header="Behaviors">
       <ScrollViewer>
         <StackPanel Margin="28" Spacing="24">
