@@ -1,0 +1,315 @@
+<UserControl x:Class="Okisioli.Teacups.UI.Fastr.WPF.Demo.BrowserPreview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+             xmlns:behaviors="clr-namespace:Okisioli.Teacups.UI.Fastr.WPF.Behaviors;assembly=Fastr.WPF">
+    <UserControl.Resources>
+        <Style x:Key="FolderListStyle" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
+
+        <ItemsPanelTemplate x:Key="FileItemsPanel">
+            <WrapPanel IsItemsHost="True" />
+        </ItemsPanelTemplate>
+
+        <ItemsPanelTemplate x:Key="VirtualizingFileItemsPanel">
+            <vwp:VirtualizingWrapPanel />
+        </ItemsPanelTemplate>
+
+        <Style x:Key="FileItemContainerStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="Height" Value="180" />
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <DataTemplate x:Key="FileItemTemplate">
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Height="99"
+                            Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                        <Grid>
+                            <Image Source="{Binding PreviewImageUrl}"
+                                   Stretch="UniformToFill" />
+
+                            <Border Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="0,0,1,1"
+                                    CornerRadius="4,0,4,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Padding="6,3">
+                                <TextBlock Text="{Binding Extension}"
+                                           Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                           FontSize="11"
+                                           FontWeight="SemiBold" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding Name}"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap"
+                               TextTrimming="CharacterEllipsis"
+                               Margin="0,8,0,6" />
+
+                    <StackPanel Grid.Row="2"
+                                Orientation="Horizontal">
+                        <TextBlock Text="{Binding SizeText}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   FontSize="12" />
+                        <TextBlock Text="  "
+                                   FontSize="12" />
+                        <TextBlock Text="{Binding ModifiedText}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                   FontSize="12" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ResponsivenessIndicator">
+            <Ellipse Width="140"
+                     Height="140"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.Fill>
+                    <SolidColorBrush Color="{StaticResource ResponsivenessStartColor}" />
+                </Ellipse.Fill>
+                <Ellipse.RenderTransform>
+                    <ScaleTransform ScaleX="0.72" ScaleY="0.72" />
+                </Ellipse.RenderTransform>
+                <Ellipse.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 From="0.72"
+                                                 To="1.42"
+                                                 Duration="0:0:1.6"
+                                                 AutoReverse="True" />
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 From="0.72"
+                                                 To="1.42"
+                                                 Duration="0:0:1.6"
+                                                 AutoReverse="True" />
+                                <ColorAnimation Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                                From="{StaticResource ResponsivenessStartColor}"
+                                                To="{StaticResource ResponsivenessEndColor}"
+                                                Duration="0:0:1.6"
+                                                AutoReverse="True" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Ellipse.Triggers>
+            </Ellipse>
+        </DataTemplate>
+
+        <DataTemplate x:Key="StandardBrowserTemplate">
+            <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="0,0,1,0">
+                    <ListBox x:Name="FolderList" ItemsSource="{Binding Folders}"
+                             SelectedItem="{Binding SelectedFolder, Mode=TwoWay}"
+                             Style="{StaticResource FolderListStyle}" />
+                </Border>
+
+                <DockPanel Grid.Column="1">
+                    <Border DockPanel.Dock="Top"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="0,0,0,1"
+                            Padding="16,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding CurrentFolder}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding StatusText}"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Grid ClipToBounds="True">
+                        <ListBox ItemsSource="{Binding CurrentFiles}"
+                                 behaviors:ItemsControlScroll.ResetOnItemsReset="True"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Padding="12"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ItemsPanel="{StaticResource FileItemsPanel}"
+                                 ItemContainerStyle="{StaticResource FileItemContainerStyle}"
+                                 ItemTemplate="{StaticResource FileItemTemplate}" />
+                        <ContentPresenter Content="{Binding}"
+                                          ContentTemplate="{StaticResource ResponsivenessIndicator}"
+                                          IsHitTestVisible="False"
+                                          Focusable="False" />
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="VirtualizedBrowserTemplate">
+            <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="0,0,1,0">
+                    <ListBox x:Name="FolderList" ItemsSource="{Binding Folders}"
+                             SelectedItem="{Binding SelectedFolder, Mode=TwoWay}"
+                             Style="{StaticResource FolderListStyle}" />
+                </Border>
+
+                <DockPanel Grid.Column="1">
+                    <Border DockPanel.Dock="Top"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="0,0,0,1"
+                            Padding="16,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding CurrentFolder}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding StatusText}"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Grid ClipToBounds="True">
+                        <ListBox ItemsSource="{Binding CurrentFiles}"
+                                 behaviors:ItemsControlScroll.ResetOnItemsReset="True"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Padding="12"
+                                 ScrollViewer.CanContentScroll="True"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 VirtualizingPanel.IsVirtualizing="True"
+                                 VirtualizingPanel.VirtualizationMode="Recycling"
+                                 ItemsPanel="{StaticResource VirtualizingFileItemsPanel}"
+                                 ItemContainerStyle="{StaticResource FileItemContainerStyle}"
+                                 ItemTemplate="{StaticResource FileItemTemplate}" />
+                        <ContentPresenter Content="{Binding}"
+                                          ContentTemplate="{StaticResource ResponsivenessIndicator}"
+                                          IsHitTestVisible="False"
+                                          Focusable="False" />
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="BufferedBrowserTemplate">
+            <Grid Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="0,0,1,0">
+                    <ListBox x:Name="FolderList" ItemsSource="{Binding Folders}"
+                             SelectedItem="{Binding SelectedFolder, Mode=TwoWay}"
+                             Style="{StaticResource FolderListStyle}" />
+                </Border>
+
+                <DockPanel Grid.Column="1">
+                    <Border DockPanel.Dock="Top"
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="0,0,0,1"
+                            Padding="16,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding CurrentFolder}"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding StatusText}"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Grid ClipToBounds="True">
+                        <ListBox behaviors:BufferedItems.Source="{Binding CurrentFiles}"
+                                 behaviors:ItemsControlScroll.ResetOnItemsReset="True"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Padding="12"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ItemsPanel="{StaticResource FileItemsPanel}"
+                                 ItemContainerStyle="{StaticResource FileItemContainerStyle}"
+                                 ItemTemplate="{StaticResource FileItemTemplate}" />
+                        <ContentPresenter Content="{Binding}"
+                                          ContentTemplate="{StaticResource ResponsivenessIndicator}"
+                                          IsHitTestVisible="False"
+                                          Focusable="False" />
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ContentPresenter x:Name="BrowserContent"
+                      Margin="16"
+                      Content="{Binding}" />
+</UserControl>
