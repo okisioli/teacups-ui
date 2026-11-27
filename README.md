@@ -1,6 +1,8 @@
 # Teacups UI
 
-Teacups UI is a collection of small, reusable UI building blocks for Teacups applications. Shared contracts live in a framework-neutral package; WPF and Avalonia packages provide the platform-specific implementations, controls, and interaction behaviors.
+A (hopefully) growing collection of small, narrow-focused, **reusable UI building blocks and helpers for .NET apps**, initially focusing on Avalonia and WPF.
+
+Stuff that I (and many of us) wrote many times over and over again. And even if today it's matter of seconds for an agent to write things like this, I don't want to repeat my prompts every time - I'd rather build my own foundation for every future project, and let it evolve over time.
 
 ## Packages
 
@@ -17,14 +19,20 @@ Teacups UI is a collection of small, reusable UI building blocks for Teacups app
 ## Features
 
 - Dialog and UI dispatcher services for WPF and Avalonia.
-- [Bottom sheet and circular progress bar](src/Okisioli.Teacups.UI.Controls.Avalonia/README.md) for Avalonia.
-- Long-press commands, list item double-click commands, text box submission, and tagging for WPF and Avalonia.
+- [Controls for Avalonia](src/Okisioli.Teacups.UI.Controls.Avalonia/README.md), including:
+  - An expandable overlay to serve as a dialog or a "bottom sheet"
+  - A an unique three-state floating action button
+  - A circular progress bar
+- XAML interaction behaviors for both WPF and Avalonia, such as:
+  - Long press on any element.
+  - List item double-taplist item double-click commands.
+  - Convenient text-box submission and tag entry.
 
 ## Demos
 
-- [WPF](demo/Okisioli.Teacups.UI.Demo.WPF)
-- [Fastr WPF](demo/Okisioli.Teacups.UI.Fastr.Demo.WPF) · Run the project on Windows with the .NET 10 SDK.
-- [Avalonia](demo/Okisioli.Teacups.UI.Demo.Avalonia) · [View demo](https://teacups-libs.github.io/teacups-ui/)
+- [WPF Controls](demo/Okisioli.Teacups.UI.Demo.WPF)
+- [WPF Fastr](demo/Okisioli.Teacups.UI.Fastr.Demo.WPF) · Run the project on Windows with the .NET 10 SDK.
+- [Avalonia](demo/Okisioli.Teacups.UI.Demo.Avalonia) · [View in browser](https://okisioli.github.io/teacups-ui/)
 
 To run the Avalonia browser demo locally, install the .NET 10 SDK and run
 `./start.ps1` in PowerShell. The script restores the required WebAssembly workload,
