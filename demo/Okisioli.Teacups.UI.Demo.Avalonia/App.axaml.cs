@@ -30,14 +30,16 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static DrawerSheet CreateDemoView()
+    private static RootView CreateDemoView()
     {
         var navigationPage = new NavigationPage();
         var dialogSheet = new DrawerSheet { Content = navigationPage };
         var dialogService = new DialogService<DialogViewModel, DialogView>(navigationPage, dialogSheet, confirmOnBackNavigation: false);
-        var demoPage = new ContentPage { Content = new MainWindow(dialogService) };
+        var root = new RootView { MainContent = dialogSheet };
+        var popupService = new PopupService(root);
+        var demoPage = new ContentPage { Content = new MainWindow(dialogService, popupService) };
         NavigationPage.SetHasNavigationBar(demoPage, false);
         navigationPage.Content = demoPage;
-        return dialogSheet;
+        return root;
     }
 }

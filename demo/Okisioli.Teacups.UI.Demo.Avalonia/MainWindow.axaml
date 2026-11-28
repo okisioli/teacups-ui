@@ -214,6 +214,10 @@
         <Button HorizontalAlignment="Left" Content="Show dialog"
                 IsEnabled="{Binding CanShowDialog}" Click="OnShowDialogClick" />
         <TextBlock Text="{Binding DialogResult}" />
+        <Button HorizontalAlignment="Left" Content="Show toast"
+                IsEnabled="{Binding CanShowPopup}" Click="OnShowToastClick" />
+        <Button HorizontalAlignment="Left" Content="Show snackbar"
+                IsEnabled="{Binding CanShowPopup}" Click="OnShowSnackbarClick" />
       </StackPanel>
     </TabItem>
   </TabControl>

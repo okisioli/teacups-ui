@@ -3,8 +3,8 @@
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.13.0</Version>
-        <PackageReleaseNotes>Slide centered dialogs in from the top with a fade-in.</PackageReleaseNotes>
+        <Version>0.14.0</Version>
+        <PackageReleaseNotes>Add PopupService for queued toasts and snackbars with named actions.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.Avalonia</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.Avalonia</RootNamespace>
         <PackageDescription>Avalonia implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>

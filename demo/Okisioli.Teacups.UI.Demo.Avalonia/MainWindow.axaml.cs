@@ -9,15 +9,17 @@ namespace Okisioli.Teacups.UI.Demo.Avalonia;
 public partial class MainWindow : UserControl
 {
     private readonly IDialogService<DialogViewModel, DialogView>? dialogService;
+    private readonly IPopupService? popupService;
 
     public MainWindow()
-        : this(null)
+        : this(null, null)
     {
     }
 
-    public MainWindow(IDialogService<DialogViewModel, DialogView>? dialogService)
+    public MainWindow(IDialogService<DialogViewModel, DialogView>? dialogService, IPopupService? popupService)
     {
         this.dialogService = dialogService;
+        this.popupService = popupService;
         DemoItems = ["First item", "Second item", "Third item"];
         LongPressCommand = new DelegateCommand(_ => LongPressResult.Text = "Long press detected.");
         ListBoxDoubleClickCommand = new DelegateCommand(item => ListBoxDoubleClickResult.Text = $"Double-clicked: {item}");
@@ -44,6 +46,8 @@ public partial class MainWindow : UserControl
     public ICommand TagSubmitCommand { get; }
 
     public bool CanShowDialog => dialogService is not null;
+
+    public bool CanShowPopup => popupService is not null;
 
     public string DialogResult { get; private set; } = "No dialog result yet.";
 
@@ -80,6 +84,19 @@ public partial class MainWindow : UserControl
         DialogResult = accepted ? "Dialog accepted." : "Dialog cancelled.";
         DataContext = null;
         DataContext = this;
+    }
+
+    private void OnShowToastClick(object? sender, RoutedEventArgs args)
+    {
+        popupService?.ShowToast("Settings saved.");
+    }
+
+    private void OnShowSnackbarClick(object? sender, RoutedEventArgs args)
+    {
+        if (popupService is { } service)
+        {
+            service.ShowSnackbar("Item removed.", "Undo", () => service.ShowToast("Item restored."));
+        }
     }
 
     private sealed class DelegateCommand(Action<object?> execute) : ICommand

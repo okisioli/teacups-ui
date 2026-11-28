@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
-    <Version>0.21.0</Version>
+    <Version>0.22.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
-    <PackageReleaseNotes>Add an optional fade-in to the built-in DrawerSheet opening slide.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add RootView with snackbar and toast layers above application content and DrawerSheet dialogs.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

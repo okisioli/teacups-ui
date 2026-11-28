@@ -513,7 +513,8 @@ public partial class DrawerSheet : UserControl
     {
         if (!e.Handled && CanHandleDismissal() && !IsModal &&
             (e.Pointer.Type == PointerType.Touch || e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) &&
-            e.Source is Visual source && !IsInsideSheet(source))
+            e.Source is Visual source && !IsInsideSheet(source) &&
+            source.FindAncestorOfType<RootView>()?.IsInSnackbar(source) != true)
         {
             Dismiss(e);
         }
