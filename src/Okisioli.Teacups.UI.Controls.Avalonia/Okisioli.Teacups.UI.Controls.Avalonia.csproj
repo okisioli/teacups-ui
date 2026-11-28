@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
-    <Version>0.19.0</Version>
+    <Version>0.22.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
-    <PackageReleaseNotes>Add GamepadButton, a three-choice Avalonia UserControl with configurable brushes and confirmation and cancellation events.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add RootView with snackbar and toast layers above application content and DrawerSheet dialogs.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

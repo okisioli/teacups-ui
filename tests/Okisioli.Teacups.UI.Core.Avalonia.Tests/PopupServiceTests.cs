@@ -1,7 +1,7 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using Okisioli.Teacups.UI.Controls.Avalonia;
 using Xunit;
 
 namespace Okisioli.Teacups.UI.Core.Avalonia.Tests;
@@ -10,42 +10,78 @@ namespace Okisioli.Teacups.UI.Core.Avalonia.Tests;
 public sealed class PopupServiceTests(AvaloniaUiThread uiThread)
 {
     [Fact]
-    public Task ShowSnackbar_DismissedOrUndoSelected_InvokesCallbackOnlyOnceOnUndo()
+    public Task ShowToast_AlreadyShowing_DisplaysNextToastAfterFirstCloses()
     {
-        return uiThread.RunAsync(() =>
+        return uiThread.RunAsync(async () =>
         {
-            var manager = new WindowNotificationManager();
-            var window = new Window { Content = manager, ShowInTaskbar = false };
+            var root = new RootView();
+            var window = new Window { Content = root, ShowInTaskbar = false };
             try
             {
                 window.Show();
-                var service = new PopupService(manager);
-                var undoCount = 0;
+                var service = new PopupService(root);
+                service.ShowToast("First");
+                var first = Assert.IsAssignableFrom<Control>(root.ToastContent);
+                service.ShowToast("Second");
 
-                service.ShowSnackbar("Dismissed message", () => undoCount++);
+                Assert.Same(first, root.ToastContent);
+                Assert.Null(root.SnackbarContent);
+                await WaitUntilAsync(() => root.ToastContent is not null && root.ToastContent != first);
+
                 window.UpdateLayout();
-                var dismissedCard = Assert.Single(manager.GetVisualDescendants().OfType<NotificationCard>());
-                dismissedCard.Close();
-                Assert.Equal(0, undoCount);
-
-                service.ShowSnackbar("Reversible message", () => undoCount++);
-                window.UpdateLayout();
-                var activeCard = Assert.Single(
-                    manager.GetVisualDescendants().OfType<NotificationCard>(), card => !card.IsClosing);
-                var undoButton = Assert.Single(activeCard.GetVisualDescendants().OfType<Button>());
-
-                undoButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                undoButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-
-                Assert.Equal(1, undoCount);
-                Assert.True(activeCard.IsClosing);
+                Assert.Contains(root.ToastContent!.GetVisualDescendants().OfType<TextBlock>(), text => text.Text == "Second");
             }
             finally
             {
                 window.Close();
             }
-
-            return Task.CompletedTask;
         });
+    }
+
+    [Fact]
+    public Task ShowSnackbar_ReplacedAndActionSelected_InvokesOnlyLatestActionOnce()
+    {
+        return uiThread.RunAsync(async () =>
+        {
+            var root = new RootView();
+            var window = new Window { Content = root, ShowInTaskbar = false };
+            try
+            {
+                window.Show();
+                var service = new PopupService(root);
+                var replacedCount = 0;
+                var actionCount = 0;
+                service.ShowSnackbar("First", "Undo", () => replacedCount++);
+                var first = Assert.IsAssignableFrom<Control>(root.SnackbarContent);
+                var previousButton = Assert.Single(first.GetVisualDescendants().OfType<Button>());
+
+                service.ShowSnackbar("Second", "Retry", () => actionCount++);
+                previousButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                Assert.Same(first, root.SnackbarContent);
+                await WaitUntilAsync(() => root.SnackbarContent is not null && root.SnackbarContent != first);
+
+                var actionButton = Assert.Single(root.SnackbarContent!.GetVisualDescendants().OfType<Button>());
+                Assert.Equal("RETRY", actionButton.Content);
+                actionButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                actionButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                await WaitUntilAsync(() => root.SnackbarContent is null);
+
+                Assert.Equal(0, replacedCount);
+                Assert.Equal(1, actionCount);
+            }
+            finally
+            {
+                window.Close();
+            }
+        });
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> condition)
+    {
+        using var timeout = new CancellationTokenSource(AvaloniaUiThread.Timeout);
+        while (!condition())
+        {
+            await Task.Delay(20, timeout.Token);
+        }
     }
 }

@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Controls.Notifications;
+using Okisioli.Teacups.UI.Controls.Avalonia;
 using Okisioli.Teacups.UI.Core.Avalonia;
 
 namespace Okisioli.Teacups.UI.Demo.Avalonia;
@@ -30,15 +30,16 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static Grid CreateDemoView()
+    private static RootView CreateDemoView()
     {
         var navigationPage = new NavigationPage();
-        var dialogService = new DialogService<DialogViewModel, DialogView>(navigationPage, confirmOnBackNavigation: false);
-        var notificationManager = new WindowNotificationManager { Position = NotificationPosition.BottomCenter };
-        var popupService = new PopupService(notificationManager);
+        var dialogSheet = new DrawerSheet { Content = navigationPage };
+        var dialogService = new DialogService<DialogViewModel, DialogView>(navigationPage, dialogSheet, confirmOnBackNavigation: false);
+        var root = new RootView { MainContent = dialogSheet };
+        var popupService = new PopupService(root);
         var demoPage = new ContentPage { Content = new MainWindow(dialogService, popupService) };
         NavigationPage.SetHasNavigationBar(demoPage, false);
         navigationPage.Content = demoPage;
-        return new Grid { Children = { navigationPage, notificationManager } };
+        return root;
     }
 }

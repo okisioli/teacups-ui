@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Okisioli.Teacups.UI.Core.Avalonia.PopupView"
+             x:ClassModifier="internal">
+  <UserControl.Resources>
+    <ControlTheme x:Key="PopupActionButton" TargetType="Button">
+      <Setter Property="Foreground" Value="{DynamicResource SystemControlHighlightAccentBrush}" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Padding" Value="12,8" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            Foreground="{TemplateBinding Foreground}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{DynamicResource ControlCornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center" />
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^:focus-visible">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlHighlightAccentBrush}" />
+      </Style>
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
+      </Style>
+    </ControlTheme>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="UserControl Border#Surface">
+      <Setter Property="Background" Value="{DynamicResource SystemRegionBrush}" />
+    </Style>
+    <Style Selector="UserControl.snackbar Border#Surface">
+      <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
+    </Style>
+  </UserControl.Styles>
+  <Border x:Name="Surface" MaxWidth="480" Padding="16,10"
+          BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" BorderThickness="1"
+          CornerRadius="{DynamicResource ControlCornerRadius}">
+    <DockPanel>
+      <Button x:Name="ActionButton" DockPanel.Dock="Right" Margin="8,0,0,0"
+              VerticalAlignment="Center" Theme="{StaticResource PopupActionButton}"
+              FontWeight="SemiBold" IsVisible="False" />
+      <TextBlock x:Name="Message" TextWrapping="Wrap" VerticalAlignment="Center"
+                 Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+    </DockPanel>
+  </Border>
+</UserControl>

@@ -33,8 +33,20 @@ public sealed class DialogServiceTests
         return RunDialogTestAsync((window, _) => window.Close(), expectedResult: false);
     }
 
+    [Theory]
+    [InlineData(false, WindowState.Normal)]
+    [InlineData(true, WindowState.Maximized)]
+    public Task ShowDialogAsync_FullScreenConfigured_UsesExpectedWindowState(bool fullScreen, WindowState expected)
+    {
+        return RunDialogTestAsync((window, _) =>
+        {
+            Assert.Equal(expected, window.WindowState);
+            window.Close();
+        }, expectedResult: false, fullScreen: fullScreen);
+    }
+
     private static async Task RunDialogTestAsync(
-        Action<Window, IDialogCompletion> dismiss, bool expectedResult)
+        Action<Window, IDialogCompletion> dismiss, bool expectedResult, bool fullScreen = false)
     {
         var dispatcherReady = new TaskCompletionSource<Dispatcher>(
             TaskCreationOptions.RunContinuationsAsynchronously);
@@ -52,7 +64,7 @@ public sealed class DialogServiceTests
         var dispatcher = await dispatcherReady.Task.WaitAsync(Timeout);
         try
         {
-            var test = dispatcher.InvokeAsync(() => CheckDialogAsync(dispatcher, dismiss, expectedResult));
+            var test = dispatcher.InvokeAsync(() => CheckDialogAsync(dispatcher, dismiss, expectedResult, fullScreen));
             await test.Task.Unwrap().WaitAsync(Timeout + Timeout);
         }
         finally
@@ -62,10 +74,10 @@ public sealed class DialogServiceTests
     }
 
     private static async Task CheckDialogAsync(
-        Dispatcher dispatcher, Action<Window, IDialogCompletion> dismiss, bool expectedResult)
+        Dispatcher dispatcher, Action<Window, IDialogCompletion> dismiss, bool expectedResult, bool fullScreen)
     {
         var loaded = new TaskCompletionSource<Window>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var service = new DialogService<TestViewModel, TestView>(dispatcher);
+        var service = new DialogService<TestViewModel, TestView>(dispatcher) { FullScreen = fullScreen };
         TestViewModel? model = null;
         var result = service.ShowDialogAsync(completion => model = new TestViewModel(completion, loaded));
         var first = await Task.WhenAny(loaded.Task, result).WaitAsync(Timeout);

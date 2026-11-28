@@ -79,6 +79,7 @@ public partial class MainWindow : UserControl
             return;
         }
 
+        dialogService.FullScreen = FullScreenDialog.IsChecked == true;
         var accepted = await dialogService.ShowDialogAsync(completion => new DialogViewModel(completion));
         DialogResult = accepted ? "Dialog accepted." : "Dialog cancelled.";
         DataContext = null;
@@ -94,7 +95,7 @@ public partial class MainWindow : UserControl
     {
         if (popupService is { } service)
         {
-            service.ShowSnackbar("Item removed.", () => service.ShowToast("Item restored."));
+            service.ShowSnackbar("Item removed.", "Undo", () => service.ShowToast("Item restored."));
         }
     }
 

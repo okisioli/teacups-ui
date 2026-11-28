@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <Version>0.12.0</Version>
+      <Version>0.13.0</Version>
       <AssemblyName>Okisioli.Teacups.UI.Core</AssemblyName>
       <RootNamespace>Okisioli.Teacups.UI.Core</RootNamespace>
-      <PackageReleaseNotes>Add the IPopupService contract for in-app toasts and Undo snackbars.</PackageReleaseNotes>
+      <PackageReleaseNotes>Add the IPopupService contract for in-app toasts and snackbars with named actions.</PackageReleaseNotes>
       <PackageDescription>
         Base library providing abstractions for every other UI-related component in the Okisioli.Teacups family.
         Contains interfaces to be implemented in a framework-specific way (WPF, Avalonia), abstracting away their specifics.

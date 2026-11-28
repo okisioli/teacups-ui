@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.11.1</Version>
-        <PackageReleaseNotes>Fix the UI-freezing regression by always queueing dispatcher actions and exposing ApplicationIdle, Background, Input, and Normal priorities.</PackageReleaseNotes>
+        <Version>0.12.0</Version>
+        <PackageReleaseNotes>Allow dialog windows to open maximized when FullScreen is enabled.</PackageReleaseNotes>
         <AssemblyName>Okisioli.Teacups.UI.Core.WPF</AssemblyName>
         <RootNamespace>Okisioli.Teacups.UI.Core.WPF</RootNamespace>
         <PackageDescription>WPF implementation of the Okisioli.Teacups.UI abstractions.</PackageDescription>

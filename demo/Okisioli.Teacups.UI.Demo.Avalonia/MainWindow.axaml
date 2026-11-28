@@ -191,6 +191,8 @@
                 <CheckBox Content="Modal" IsChecked="{Binding #DemoDrawerSheet.IsModal, Mode=TwoWay}" />
                 <CheckBox x:Name="DrawerOverflow" Content="Oversized content" IsChecked="False" />
               </StackPanel>
+              <CheckBox Content="Fade in on open"
+                        IsChecked="{Binding #DemoDrawerSheet.Fade, Mode=TwoWay}" />
               <CheckBox Content="Reset scroll position on open"
                         IsChecked="{Binding #DemoDrawerSheet.ResetScrollPosition, Mode=TwoWay}" />
             </StackPanel>
@@ -207,7 +209,8 @@
         <TextBlock FontSize="28" FontWeight="SemiBold" Text="Dialog service" />
         <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                    TextWrapping="Wrap"
-                   Text="Open a full-screen dialog implemented by the Avalonia dialog service." />
+                   Text="Open a centered or full-screen dialog." />
+        <CheckBox x:Name="FullScreenDialog" Content="Full screen" />
         <Button HorizontalAlignment="Left" Content="Show dialog"
                 IsEnabled="{Binding CanShowDialog}" Click="OnShowDialogClick" />
         <TextBlock Text="{Binding DialogResult}" />

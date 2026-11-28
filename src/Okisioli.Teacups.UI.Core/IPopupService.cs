@@ -6,15 +6,16 @@ namespace Okisioli.Teacups.UI.Core;
 public interface IPopupService
 {
     /// <summary>
-    /// Briefly displays a message that requires no user interaction.
+    /// Queues a brief, passive message for display.
     /// </summary>
     /// <param name="text">The message to display.</param>
     void ShowToast(string text);
 
     /// <summary>
-    /// Displays a message with an Undo button.
+    /// Displays a timed message with an action button, replacing any active snackbar.
     /// </summary>
     /// <param name="text">The message to display.</param>
-    /// <param name="undoAction">The action to invoke when the user selects Undo.</param>
-    void ShowSnackbar(string text, Action undoAction);
+    /// <param name="actionText">The label of the action button.</param>
+    /// <param name="action">The callback invoked when the user selects the action.</param>
+    void ShowSnackbar(string text, string actionText, Action action);
 }
