@@ -22,7 +22,7 @@ public sealed class PopupServiceTests(AvaloniaUiThread uiThread)
                 var service = new PopupService(root);
                 service.ShowToast("First");
                 var first = Assert.IsAssignableFrom<Control>(root.ToastContent);
-                service.ShowToast("Second");
+                service.ShowToast("Second", ToastDuration.Long);
 
                 Assert.Same(first, root.ToastContent);
                 Assert.Null(root.SnackbarContent);
@@ -68,6 +68,32 @@ public sealed class PopupServiceTests(AvaloniaUiThread uiThread)
 
                 Assert.Equal(0, replacedCount);
                 Assert.Equal(1, actionCount);
+            }
+            finally
+            {
+                window.Close();
+            }
+        });
+    }
+
+    [Fact]
+    public Task ShowSnackbar_ShortDuration_TimesOutWithoutInvokingAction()
+    {
+        return uiThread.RunAsync(async () =>
+        {
+            var root = new RootView();
+            var window = new Window { Content = root, ShowInTaskbar = false };
+            try
+            {
+                window.Show();
+                var service = new PopupService(root);
+                var actionCount = 0;
+                service.ShowSnackbar("Timed message", "Retry", () => actionCount++, SnackbarDuration.Short);
+                Assert.NotNull(root.SnackbarContent);
+
+                await WaitUntilAsync(() => root.SnackbarContent is null).WaitAsync(TimeSpan.FromSeconds(5));
+
+                Assert.Equal(0, actionCount);
             }
             finally
             {

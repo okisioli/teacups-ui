@@ -12,12 +12,10 @@ namespace Okisioli.Teacups.UI.Core.Avalonia;
 /// <remarks>Use one service per <see cref="RootView"/> and call it on the UI thread after the view is attached.</remarks>
 public sealed class PopupService : IPopupService
 {
-    private static readonly TimeSpan ToastDuration = TimeSpan.FromSeconds(3);
-    private static readonly TimeSpan SnackbarDuration = TimeSpan.FromSeconds(6);
     private static readonly TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(150);
 
     private readonly RootView root;
-    private readonly Queue<string> toasts = new();
+    private readonly Queue<(string Text, TimeSpan Duration)> toasts = new();
     private Snackbar? pendingSnackbar;
     private TaskCompletionSource? dismissSnackbar;
     private CancellationTokenSource? activeRun;
@@ -36,24 +34,38 @@ public sealed class PopupService : IPopupService
     }
 
     /// <inheritdoc />
-    public void ShowToast(string text)
+    public void ShowToast(string text, ToastDuration duration = ToastDuration.Short)
     {
         VerifyHost();
         ArgumentNullException.ThrowIfNull(text);
 
-        toasts.Enqueue(text);
+        var displayDuration = duration switch
+        {
+            ToastDuration.Short => TimeSpan.FromSeconds(2),
+            ToastDuration.Long => TimeSpan.FromSeconds(3.5),
+            _ => throw new ArgumentOutOfRangeException(nameof(duration))
+        };
+
+        toasts.Enqueue((text, displayDuration));
         PresentQueuedPopups();
     }
 
     /// <inheritdoc />
-    public void ShowSnackbar(string text, string actionText, Action action)
+    public void ShowSnackbar(string text, string actionText, Action action, SnackbarDuration duration = SnackbarDuration.Long)
     {
         VerifyHost();
         ArgumentNullException.ThrowIfNull(text);
         ArgumentException.ThrowIfNullOrWhiteSpace(actionText);
         ArgumentNullException.ThrowIfNull(action);
 
-        pendingSnackbar = new Snackbar(text, actionText, action);
+        var displayDuration = duration switch
+        {
+            SnackbarDuration.Short => TimeSpan.FromMilliseconds(1500),
+            SnackbarDuration.Long => TimeSpan.FromMilliseconds(2750),
+            _ => throw new ArgumentOutOfRangeException(nameof(duration))
+        };
+
+        pendingSnackbar = new Snackbar(text, actionText, action, displayDuration);
         dismissSnackbar?.TrySetResult();
         PresentQueuedPopups();
     }
@@ -85,9 +97,9 @@ public sealed class PopupService : IPopupService
                     pendingSnackbar = null;
                     await PresentSnackbarAsync(snackbar, run.Token);
                 }
-                else if (toasts.TryDequeue(out var text))
+                else if (toasts.TryDequeue(out var toast))
                 {
-                    await PresentToastAsync(text, run.Token);
+                    await PresentToastAsync(toast.Text, toast.Duration, run.Token);
                 }
                 else
                 {
@@ -112,13 +124,13 @@ public sealed class PopupService : IPopupService
         }
     }
 
-    private async Task PresentToastAsync(string text, CancellationToken cancellationToken)
+    private async Task PresentToastAsync(string text, TimeSpan duration, CancellationToken cancellationToken)
     {
         var popup = new PopupView(text);
         var fade = (IPageTransition)new CrossFade(AnimationDuration);
         root.ToastContent = popup;
         await fade.Start(null, popup, true, cancellationToken);
-        await Task.Delay(ToastDuration, cancellationToken);
+        await Task.Delay(duration, cancellationToken);
         await fade.Start(popup, null, false, cancellationToken);
         root.ToastContent = null;
     }
@@ -150,7 +162,7 @@ public sealed class PopupService : IPopupService
         if (!dismissed.Task.IsCompleted)
         {
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            await Task.WhenAny(dismissed.Task, Task.Delay(SnackbarDuration, timeout.Token));
+            await Task.WhenAny(dismissed.Task, Task.Delay(snackbar.Duration, timeout.Token));
             timeout.Cancel();
         }
 
@@ -161,5 +173,5 @@ public sealed class PopupService : IPopupService
         dismissSnackbar = null;
     }
 
-    private sealed record Snackbar(string Text, string ActionText, Action Action);
+    private sealed record Snackbar(string Text, string ActionText, Action Action, TimeSpan Duration);
 }

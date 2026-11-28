@@ -9,7 +9,8 @@ public interface IPopupService
     /// Queues a brief, passive message for display.
     /// </summary>
     /// <param name="text">The message to display.</param>
-    void ShowToast(string text);
+    /// <param name="duration">The display duration, which defaults to <see cref="ToastDuration.Short"/>.</param>
+    void ShowToast(string text, ToastDuration duration = ToastDuration.Short);
 
     /// <summary>
     /// Displays a timed message with an action button, replacing any active snackbar.
@@ -17,5 +18,6 @@ public interface IPopupService
     /// <param name="text">The message to display.</param>
     /// <param name="actionText">The label of the action button.</param>
     /// <param name="action">The callback invoked when the user selects the action.</param>
-    void ShowSnackbar(string text, string actionText, Action action);
+    /// <param name="duration">The display duration, which defaults to <see cref="SnackbarDuration.Long"/>.</param>
+    void ShowSnackbar(string text, string actionText, Action action, SnackbarDuration duration = SnackbarDuration.Long);
 }
