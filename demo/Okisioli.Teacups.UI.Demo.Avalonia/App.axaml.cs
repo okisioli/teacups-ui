@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Okisioli.Teacups.UI.Controls.Avalonia;
 using Okisioli.Teacups.UI.Core.Avalonia;
 
 namespace Okisioli.Teacups.UI.Demo.Avalonia;
@@ -29,13 +30,14 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static NavigationPage CreateDemoView()
+    private static DrawerSheet CreateDemoView()
     {
         var navigationPage = new NavigationPage();
-        var dialogService = new DialogService<DialogViewModel, DialogView>(navigationPage, confirmOnBackNavigation: false);
+        var dialogSheet = new DrawerSheet { Content = navigationPage };
+        var dialogService = new DialogService<DialogViewModel, DialogView>(navigationPage, dialogSheet, confirmOnBackNavigation: false);
         var demoPage = new ContentPage { Content = new MainWindow(dialogService) };
         NavigationPage.SetHasNavigationBar(demoPage, false);
         navigationPage.Content = demoPage;
-        return navigationPage;
+        return dialogSheet;
     }
 }

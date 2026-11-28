@@ -3,7 +3,7 @@
              x:Class="Okisioli.Teacups.UI.Demo.Avalonia.DialogView">
   <Grid Margin="28" RowDefinitions="*,Auto">
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
-      <TextBlock FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" Text="Full-screen dialog" />
+      <TextBlock FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" Text="Dialog" />
       <TextBlock HorizontalAlignment="Center" Text="This XAML view is being hosted by DialogService." />
     </StackPanel>
     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">

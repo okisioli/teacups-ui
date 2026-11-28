@@ -20,6 +20,9 @@ public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogSe
     where TView : UserControl, new()
 {
     /// <inheritdoc />
+    public bool FullScreen { get; set; }
+
+    /// <inheritdoc />
     public Task<bool> ShowDialogAsync(TViewModel viewModel)
     {
         return ShowDialogAsync(_ => viewModel);
@@ -28,6 +31,7 @@ public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogSe
     /// <inheritdoc />
     public async Task<bool> ShowDialogAsync(Func<IDialogCompletion, TViewModel> viewModelFactory)
     {
+        var fullScreen = FullScreen;
         var completion = new DialogCompletion();
         var operation = dispatcher.InvokeAsync(() =>
         {
@@ -47,6 +51,12 @@ public class DialogService<TViewModel, TView>(Dispatcher dispatcher) : IDialogSe
             {
                 window.Owner = owner;
                 window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            }
+
+            if (fullScreen)
+            {
+                window.SizeToContent = SizeToContent.Manual;
+                window.WindowState = WindowState.Maximized;
             }
 
             window.Closed += (_, _) => completion.Cancel();
