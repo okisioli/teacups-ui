@@ -85,6 +85,12 @@ public partial class DrawerSheet : UserControl
         AvaloniaProperty.Register<DrawerSheet, IPageTransition?>(nameof(CloseTransition));
 
     /// <summary>
+    /// Defines whether the built-in opening slide also fades in the sheet.
+    /// </summary>
+    public static readonly StyledProperty<bool> FadeProperty =
+        AvaloniaProperty.Register<DrawerSheet, bool>(nameof(Fade), defaultValue: false);
+
+    /// <summary>
     /// Defines the speed multiplier for the built-in opening and closing transitions.
     /// </summary>
     public static readonly StyledProperty<double> TransitionSpeedProperty =
@@ -243,6 +249,17 @@ public partial class DrawerSheet : UserControl
     {
         get => GetValue(CloseTransitionProperty);
         set => SetValue(CloseTransitionProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the sheet fades in during the built-in opening slide.
+    /// Defaults to <see langword="false"/>.
+    /// </summary>
+    /// <remarks>Custom <see cref="OpenTransition"/> values control their own animation.</remarks>
+    public bool Fade
+    {
+        get => GetValue(FadeProperty);
+        set => SetValue(FadeProperty, value);
     }
 
     /// <summary>
@@ -423,6 +440,14 @@ public partial class DrawerSheet : UserControl
                 SlideInEasing = slide.SlideInEasing,
                 SlideOutEasing = slide.SlideOutEasing,
             };
+
+            if (opening && Fade)
+            {
+                transition = new CompositePageTransition
+                {
+                    PageTransitions = { transition, new CrossFade(duration) }
+                };
+            }
         }
 
         using var cancellation = new CancellationTokenSource();

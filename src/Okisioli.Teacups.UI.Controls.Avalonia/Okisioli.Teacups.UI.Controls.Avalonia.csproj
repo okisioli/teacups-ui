@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>Okisioli.Teacups.UI.Controls.Avalonia</PackageId>
-    <Version>0.20.0</Version>
+    <Version>0.21.0</Version>
     <Description>Reusable Avalonia control styles for Okisioli.Teacups applications.</Description>
-    <PackageReleaseNotes>Route dismissal to the most recently opened visible DrawerSheet per top level and notify when its close transition finishes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add an optional fade-in to the built-in DrawerSheet opening slide.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
