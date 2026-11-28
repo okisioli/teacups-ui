@@ -23,12 +23,15 @@ public sealed class DialogServiceTests(AvaloniaUiThread uiThread)
             try
             {
                 window.Show();
+                Assert.False(sheet.Fade);
                 var service = new DialogService<IDialogCompletion, UserControl>(navigation, sheet, confirmOnBackNavigation: true);
                 var result = service.ShowDialogAsync(completion => completion);
 
                 Assert.True(sheet.IsExpanded);
                 Assert.Equal(HorizontalAlignment.Center, sheet.SheetHorizontalAlignment);
                 Assert.Equal(VerticalAlignment.Center, sheet.SheetVerticalAlignment);
+                Assert.Equal(Dock.Top, sheet.Placement);
+                Assert.True(sheet.Fade);
                 Assert.Same(page, navigation.CurrentPage);
                 var view = Assert.IsType<UserControl>(sheet.SheetContent);
                 if (confirm)

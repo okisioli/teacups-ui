@@ -21,6 +21,7 @@ namespace Okisioli.Teacups.UI.Core.Avalonia;
 /// </param>
 /// <remarks>
 /// For the default centered presentation, wrap the navigation page in the dialog sheet at app startup.
+/// The centered dialog uses the sheet's built-in top slide with a fade-in.
 /// Dismissing the sheet returns false. Escape also cancels full-screen dialogs.
 /// Set <see cref="Button.IsDefault"/> on the view's confirmation button
 /// to enable Enter.
@@ -82,6 +83,8 @@ public class DialogService<TViewModel, TView>(NavigationPage navigationPage, Dra
         {
             dialogSheet.SheetHorizontalAlignment = HorizontalAlignment.Center;
             dialogSheet.SheetVerticalAlignment = VerticalAlignment.Center;
+            dialogSheet.Placement = Dock.Top;
+            dialogSheet.Fade = true;
             dialogSheet.SheetContent = view;
             dialogSheet.IsExpanded = true;
             var result = await completion.Result;
