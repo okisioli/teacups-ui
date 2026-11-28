@@ -7,54 +7,79 @@
         x:Class="Okisioli.Teacups.UI.Demo.Avalonia.MainWindow"
         x:DataType="demo:MainWindow">
   <TabControl Margin="20,0,20,20">
-    <TabItem Header="Circular ProgressBar">
-      <Grid Margin="16" ColumnDefinitions="280,*" ColumnSpacing="44">
-    <Border Grid.Column="0"
-            Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
-            CornerRadius="16"
-            Padding="28">
-      <StackPanel HorizontalAlignment="Center" Spacing="18">
-        <ProgressBar x:Name="DemoProgress"
-                     Classes="circular"
-                     Width="190"
-                     Height="190"
-                     Minimum="0"
-                     Maximum="100"
-                     Value="64"
-                     Background="#323946"
-                     Foreground="#4FD1C5"
-                     local:CircularProgress.RingThickness="14" />
-        <TextBlock HorizontalAlignment="Center"
-                   FontSize="20"
-                   FontWeight="SemiBold"
-                   Text="{Binding #DemoProgress.Value, StringFormat={}{0:0}% complete}" />
-      </StackPanel>
-    </Border>
+    <TabItem Header="Controls">
+      <ListBox Margin="0,4,0,0"
+               AutomationProperties.Name="Control showcases"
+               ScrollViewer.VerticalScrollBarVisibility="Auto"
+               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="MinHeight" Value="100" />
+          </Style>
+          <Style Selector="TextBlock.showcase-heading">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+          </Style>
+        </ListBox.Styles>
 
-    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="16">
-      <TextBlock FontSize="28" FontWeight="SemiBold" Text="Circular ProgressBar" />
-      <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
-                 TextWrapping="Wrap"
-                 Text="This is an ordinary ProgressBar using the circular style from the controls package." />
+        <ListBoxItem AutomationProperties.Name="Circular Progress Bar">
+          <Grid ColumnDefinitions="2*,3*" ColumnSpacing="16">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Spacing="8">
+              <ProgressBar x:Name="DemoProgress"
+                           Classes="circular"
+                           Width="80"
+                           Height="80"
+                           Minimum="0"
+                           Maximum="100"
+                           Value="64"
+                           Background="#323946"
+                           Foreground="#4FD1C5"
+                           local:CircularProgress.RingThickness="14" />
+              <TextBlock VerticalAlignment="Center"
+                         Text="{Binding #DemoProgress.Value, StringFormat={}{0:0}%}" />
+            </StackPanel>
 
-      <TextBlock Margin="0,12,0,0" Text="Progress" />
-      <Slider Minimum="0"
-              Maximum="100"
-              Value="{Binding #DemoProgress.Value, Mode=TwoWay}" />
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+              <TextBlock Classes="showcase-heading" Text="Circular Progress Bar" />
+              <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <StackPanel>
+                  <TextBlock Text="Progress" />
+                  <Slider AutomationProperties.Name="Progress"
+                          Minimum="0"
+                          Maximum="100"
+                          Value="{Binding #DemoProgress.Value, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                  <TextBlock Text="Ring thickness" />
+                  <Slider AutomationProperties.Name="Ring thickness"
+                          Minimum="1"
+                          Maximum="40"
+                          Value="{Binding #DemoProgress.(local:CircularProgress.RingThickness), Mode=TwoWay}" />
+                </StackPanel>
+              </Grid>
+              <CheckBox Content="Reverse (counter-clockwise)"
+                        MinHeight="24"
+                        IsChecked="{Binding #DemoProgress.(local:CircularProgress.Reverse), Mode=TwoWay}" />
+            </StackPanel>
+          </Grid>
+        </ListBoxItem>
 
-      <TextBlock Text="Ring thickness" />
-      <Slider Minimum="1"
-              Maximum="40"
-              Value="{Binding #DemoProgress.(local:CircularProgress.RingThickness), Mode=TwoWay}" />
-
-      <CheckBox Content="Reverse (counter-clockwise)"
-                IsChecked="{Binding #DemoProgress.(local:CircularProgress.Reverse), Mode=TwoWay}" />
-
-      <TextBlock Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
-                 TextWrapping="Wrap"
-                 Text="Foreground is the filled arc; Background is the remaining ring." />
-    </StackPanel>
-      </Grid>
+        <ListBoxItem AutomationProperties.Name="Gamepad Button">
+          <Grid ColumnDefinitions="2*,3*" ColumnSpacing="16">
+            <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center"
+                     MaxHeight="88" StretchDirection="DownOnly">
+              <local:GamepadButton />
+            </Viewbox>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+              <TextBlock Classes="showcase-heading" Text="Gamepad Button" />
+              <TextBlock TextWrapping="Wrap" Text="Press for the center choice, or drag left or right and release." />
+            </StackPanel>
+          </Grid>
+        </ListBoxItem>
+      </ListBox>
     </TabItem>
 
     <TabItem Header="Behaviors">
@@ -184,7 +209,8 @@
                    TextWrapping="Wrap"
                    Text="Open a centered or full-screen dialog." />
         <CheckBox x:Name="FullScreenDialog" Content="Full screen" />
-        <Button HorizontalAlignment="Left" Content="Show dialog" Click="OnShowDialogClick" />
+        <Button HorizontalAlignment="Left" Content="Show dialog"
+                IsEnabled="{Binding CanShowDialog}" Click="OnShowDialogClick" />
         <TextBlock Text="{Binding DialogResult}" />
       </StackPanel>
     </TabItem>
