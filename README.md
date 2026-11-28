@@ -14,8 +14,7 @@ A sibling repository, focused on various non-UI functionality and helpers, can b
 | [Okisioli.Teacups.UI.Core.WPF](src/Okisioli.Teacups.UI.Core.WPF) | WPF implementations of the Core dialog and UI dispatcher services. |
 | [Okisioli.Teacups.UI.Core.Avalonia](src/Okisioli.Teacups.UI.Core.Avalonia) | Avalonia implementations of the Core dialog and UI dispatcher services. |
 | [Okisioli.Teacups.UI.Controls.Avalonia](src/Okisioli.Teacups.UI.Controls.Avalonia) | Avalonia controls and styles.<ul><li>Expandable drawer sheet for dialogs and bottom sheets</li><li>Three-state floating action button</li><li>Circular progress bar</li></ul> |
-| [Okisioli.Teacups.UI.Behaviors.Avalonia](src/Okisioli.Teacups.UI.Behaviors.Avalonia)
-[Okisioli.Teacups.UI.Behaviors.WPF](src/Okisioli.Teacups.UI.Behaviors.WPF)| XAML interaction behaviors.<ul><li>Long press on any element</li><li>List item double-click commands</li><li>Text box submission and tag entry</li></ul> |
+| [Okisioli.Teacups.UI.Behaviors.Avalonia](src/Okisioli.Teacups.UI.Behaviors.Avalonia)<br>[Okisioli.Teacups.UI.Behaviors.WPF](src/Okisioli.Teacups.UI.Behaviors.WPF) | XAML interaction behaviors.<ul><li>Long press on any element</li><li>List item double-click commands</li><li>Text box submission and tag entry</li></ul> |
 | [Okisioli.Teacups.UI.Fastr.WPF](src/Okisioli.Teacups.UI.Fastr.WPF) | Buffered item sources, incremental collection updates, and optional scroll resets for WPF item controls. |
 
 ## Demos
