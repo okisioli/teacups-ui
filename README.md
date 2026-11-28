@@ -10,26 +10,13 @@ A sibling repository, focused on various non-UI functionality and helpers, can b
 
 | Package | Purpose |
 | --- | --- |
-| `Okisioli.Teacups.UI.Core` | Framework-neutral UI service contracts. |
-| `Okisioli.Teacups.UI.Core.WPF` | WPF implementations of Core services. |
-| `Okisioli.Teacups.UI.Core.Avalonia` | Avalonia implementations of Core services. |
-| `Okisioli.Teacups.UI.Controls.Avalonia` | Avalonia controls and styles. |
-| `Okisioli.Teacups.UI.Behaviors.WPF` | WPF interaction behaviors. |
-| `Okisioli.Teacups.UI.Fastr.WPF` | Buffered item sources, incremental collection updates, and optional scroll resets for WPF item controls. |
-| `Okisioli.Teacups.UI.Behaviors.Avalonia` | Avalonia interaction behaviors. |
-
-## Features
-
-- Dialog and UI dispatcher services for WPF and Avalonia.
-- [Controls for Avalonia](src/Okisioli.Teacups.UI.Controls.Avalonia/README.md), including:
-  - An expandable overlay to serve as a dialog or a "bottom sheet".
-  - A an unique three-state floating action button.
-  - A circular progress bar.
-- [Fastr](src/Okisioli.Teacups.UI.Fastr.WPF/README.md) aims to speed up UI frameworks with tricks, workarounds, and hacks. It currently supports WPF.
-- XAML interaction behaviors for both WPF and Avalonia, such as:
-  - Long press on any element.
-  - List item double-taplist item double-click commands.
-  - Convenient text-box submission and tag entry.
+| [Okisioli.Teacups.UI.Core](src/Okisioli.Teacups.UI.Core) | Framework-neutral UI service contracts. |
+| [Okisioli.Teacups.UI.Core.WPF](src/Okisioli.Teacups.UI.Core.WPF) | WPF implementations of the Core dialog and UI dispatcher services. |
+| [Okisioli.Teacups.UI.Core.Avalonia](src/Okisioli.Teacups.UI.Core.Avalonia) | Avalonia implementations of the Core dialog and UI dispatcher services. |
+| [Okisioli.Teacups.UI.Controls.Avalonia](src/Okisioli.Teacups.UI.Controls.Avalonia) | Avalonia controls and styles.<ul><li>Expandable drawer sheet for dialogs and bottom sheets</li><li>Three-state floating action button</li><li>Circular progress bar</li></ul> |
+| [Okisioli.Teacups.UI.Behaviors.WPF](src/Okisioli.Teacups.UI.Behaviors.WPF) | WPF XAML interaction behaviors.<ul><li>Long press on any element</li><li>List item double-click commands</li><li>Text box submission and tag entry</li></ul> |
+| [Okisioli.Teacups.UI.Fastr.WPF](src/Okisioli.Teacups.UI.Fastr.WPF) | Buffered item sources, incremental collection updates, and optional scroll resets for WPF item controls. |
+| [Okisioli.Teacups.UI.Behaviors.Avalonia](src/Okisioli.Teacups.UI.Behaviors.Avalonia) | Avalonia XAML interaction behaviors.<ul><li>Long press on any element</li><li>List item double-tap commands</li><li>Text box submission and tag entry</li></ul> |
 
 ## Demos
 
